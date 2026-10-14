@@ -1,0 +1,84 @@
+{
+  "artifact": {
+    "path": "C:\\Users\\txyc_\\AppData\\Local\\Programs\\antigravity\\resources\\app.asar",
+    "sha256": "4e99093662d797ecba823e92823d352413e3bf2ca721257df4a255c045df1598"
+  },
+  "reaParentEvidence": "ev_d9a27a76443766765251fda7d6a6ae87084316a32c60ce3b1cc15a958774ec5f",
+  "statistics": {
+    "relevant_files": 776,
+    "nested_asar_containers": 0,
+    "text_bytes_read": 17058210,
+    "invalid_utf8_files": 0,
+    "parsed_javascript_files": 676,
+    "visited_ast_nodes": 1769527,
+    "findings": 3647,
+    "modules": 560,
+    "parse_failures": 0
+  },
+  "electron": {
+    "browser_windows": 3,
+    "explicit_web_preferences": 9,
+    "preload_entrypoints": 2,
+    "context_bridge_apis": 12,
+    "exposed_api_members": 0,
+    "ipc": {
+      "operations": 69,
+      "literal_channels": 37,
+      "dynamic_channel_operations": 0,
+      "renderer_transmissions": 32,
+      "renderer_listeners": 5,
+      "main_handlers": 32,
+      "paired_renderer_transmissions": 32,
+      "ambiguous_renderer_transmissions": 0,
+      "unpaired_literal_renderer_transmissions": 0
+    },
+    "sender_validation_observations": 37,
+    "utility_processes": 0,
+    "resolved_utility_entrypoints": 0,
+    "native_addon_bindings": 0,
+    "resolved_native_addon_bindings": 0
+  },
+  "coverage": {
+    "application": "partial",
+    "semantic": "partial",
+    "semanticTruncated": true
+  },
+  "selectedResourceEvidence": "ev_e7eb338d04d1beaeabb31b1d79e0cdc500649bbfd748f48f4d4760635de114a0",
+  "selectedViews": [
+    {
+      "path": "dist/preload.js",
+      "evidence": "ev_b5043e28abad8576acba5661da7269889b191a8fb61a45cd89ca03e2127af4eb",
+      "sha256": "81d220de63447d27db95adf67d9711b59ee317b2338ba538f419b354a54b1f60"
+    },
+    {
+      "path": "dist/utils.js",
+      "evidence": "ev_88549d379365e7551c6c4583717144465f29e67d0d038dbd658637fdda0a8ec4",
+      "sha256": "6f01d746963c0cd964dbcb057ed34374c129c4381b5ebddd2509ca37b12519a7"
+    },
+    {
+      "path": "dist/languageServer.js",
+      "evidence": "ev_90664186e951280e28cdc4450b80f8ed267d01098bc53e23466f4ecd99e25bcf",
+      "sha256": "5c781d05050506d7643a88b1eeadc9bb4f320d7133f84b075e6338a6ce158d26"
+    }
+  ],
+  "runtime": {
+    "targetListEvidence": "ev_df245747a709e44d46feec6951cca5c4319ac3ab869dc0e730913c2366b630fa",
+    "pageInspectionSucceeded": false,
+    "reason": "Original UI HTTPS/HTTP requests timed out; later selected CDP page was not eligible after load failure."
+  },
+  "limitations": [
+    "Boundary extraction covers unshadowed JSON/global coercions plus parse and validation method candidates.",
+    "Child-process extraction covers asynchronous node:child_process creation, literal argv/env/stdio options, exit/error listeners, and kill signals.",
+    "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+    "Configuration extraction covers process.env, process.argv, node:fs reads, and direct logical defaults.",
+    "Electron API identity follows proven lexical module aliases. Reassigned bindings, dynamic selections, and visibly overwritten namespace members are unresolved; missing findings do not establish absence. Arbitrary call side effects and runtime registration are not evaluated.",
+    "Electron relationships are derived from inert syntax; runtime registration, reachability, defaults, and enforcement remain unproven.",
+    "Event extraction covers EventEmitter-style literal registrations, removals, and dispatch candidates; dynamic names remain unknown.",
+    "Function fingerprints are static candidates; equal digests can remain ambiguous and do not prove behavioral equivalence.",
+    "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+    "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+    "Local data flow does not claim control-flow-sensitive reaching definitions or arbitrary dynamic property resolution.",
+    "Promise ownership covers explicit unshadowed Promise construction, static factories, aggregation, chaining, and await syntax only.",
+    "Request extraction covers fetch, WebSocket, node:http/node:https construction, direct option fields, and exact local response consumers."
+  ]
+}

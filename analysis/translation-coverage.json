@@ -1,0 +1,1815 @@
+{
+  "source": "analysis/embedded/142809195-main.js",
+  "source_sha256": "867d1990b61d87f4b9ff8c5ecb1551c8688135267f32e56e02563f2d3e78fd68",
+  "entry_count": 450,
+  "exact_literal_occurrence_count": 1302,
+  "validation": "Every dictionary key is an exact quoted string in the recovered shipped bundle. Candidates were manually selected from UI labels/descriptions/visible text; string existence does not establish rendered/runtime coverage.",
+  "limitations": [
+    "No runtime coverage measured.",
+    "Dynamic template strings, concatenated fragments and server-provided strings are not covered.",
+    "Translation applied only by renderer scope; occurrence counts are not translated screen coverage.",
+    "English user messages, code and arbitrary document content must remain excluded."
+  ],
+  "entries": [
+    {
+      "text": "Accept Step",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open Conversation Picker",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Toggle Model Selector",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Start Voice Recording",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Stop Voice Recording",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Toggle Voice Recording",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Toggle Terminal",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Toggle Editor",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Toggle Project Selector",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Toggle Environment Selector",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Toggle Auxiliary Pane",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Toggle Overview Panel",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "New Conversation",
+      "literal_occurrences": 12
+    },
+    {
+      "text": "New Editor Window",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "New Window",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Close Tab",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open Settings",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Open Workspace",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Split Terminal",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Split Conversation Vertically",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Split Conversation Horizontally",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Equalize Split Panes",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "New Terminal Tab",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "New Tab",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "File Picker",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open Command Palette",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Search Conversations",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Open Workspace Selector",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Add to Chat",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Quote Selection",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open in Code Search",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Comment on Selection",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Focus Input",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Zoom In",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Zoom Out",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Reset Zoom",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Find in Pane",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Go Back",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Go Forward",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Code Search",
+      "literal_occurrences": 21
+    },
+    {
+      "text": "Open Conversation History",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Scheduled Tasks",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Select Next Conversation",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Select Previous Conversation",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open Keyboard Shortcuts",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Terminal: Add to Chat",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Toggle Sidebar",
+      "literal_occurrences": 7
+    },
+    {
+      "text": "Provide Feedback",
+      "literal_occurrences": 13
+    },
+    {
+      "text": "Download Diagnostics",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Toggle Between Light/Dark Themes",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Previous Aux Pane Tab",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Next Aux Pane Tab",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Collapse All Folders",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Expand All Folders",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Select All",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Inline Actions",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Chief of Staff",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Autonomous Mode",
+      "literal_occurrences": 7
+    },
+    {
+      "text": "Add inline comment",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Edit comment",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Copy Image",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Custom Agents",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "MCP Servers",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Conversation History",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Fork conversation in this folder",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Keeps working in this folder. Nothing is copied.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Explore the plugin marketplace",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Last 7 days",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Create Project",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Create Cloud Project",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "New Workspace",
+      "literal_occurrences": 8
+    },
+    {
+      "text": "Group By Workspace",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Group By Project",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Sidebar grouped by workspace",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Sidebar grouped by project",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Updated sidebar grouping",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Learn more",
+      "literal_occurrences": 15
+    },
+    {
+      "text": "Folders these agents can access.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Access grants",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Commands and files these agents can use.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Create a Plugin with the Agent",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Built In",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Delete Task",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Add MCP Server",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Search MCP servers by name",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Delete MCP Server",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Delete Skill",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Ask the agent to diagnose and fix this server",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Sign-in required",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enter authorization code...",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Copy Path",
+      "literal_occurrences": 9
+    },
+    {
+      "text": "Skills & Rules",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Copy Config File Path",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "UI Extensions",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "See more results",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Paste code",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Copy command",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "MCP servers",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "UI extensions",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Setup required",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Search customizations...",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Recent Files",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Import AI Studio Project",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Type absolute path or navigate folders...",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Failed to create terminal",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Pinned Conversations",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "No conversations yet",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "In Progress",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Copy full URL to clipboard",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Copy Link",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Search conversations...",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Permissions",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Customizations",
+      "literal_occurrences": 23
+    },
+    {
+      "text": "Subagents",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Background Tasks",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Documents",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Artifacts",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Uploads",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Settings",
+      "literal_occurrences": 9
+    },
+    {
+      "text": "General",
+      "literal_occurrences": 67
+    },
+    {
+      "text": "Account",
+      "literal_occurrences": 22
+    },
+    {
+      "text": "Appearance",
+      "literal_occurrences": 13
+    },
+    {
+      "text": "Notifications",
+      "literal_occurrences": 10
+    },
+    {
+      "text": "Shortcuts",
+      "literal_occurrences": 9
+    },
+    {
+      "text": "Browser",
+      "literal_occurrences": 10
+    },
+    {
+      "text": "Terminal",
+      "literal_occurrences": 14
+    },
+    {
+      "text": "Skills",
+      "literal_occurrences": 7
+    },
+    {
+      "text": "Agents",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Rules",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Hooks",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Overview",
+      "literal_occurrences": 9
+    },
+    {
+      "text": "Marketplace",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Installed",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Stopped",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Unknown",
+      "literal_occurrences": 14
+    },
+    {
+      "text": "Blocked",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Idle",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Delete",
+      "literal_occurrences": 30
+    },
+    {
+      "text": "Developer",
+      "literal_occurrences": 10
+    },
+    {
+      "text": "Deny",
+      "literal_occurrences": 11
+    },
+    {
+      "text": "Add",
+      "literal_occurrences": 13
+    },
+    {
+      "text": "Cancel",
+      "literal_occurrences": 29
+    },
+    {
+      "text": "Back",
+      "literal_occurrences": 20
+    },
+    {
+      "text": "Save",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Copy",
+      "literal_occurrences": 19
+    },
+    {
+      "text": "Copied",
+      "literal_occurrences": 22
+    },
+    {
+      "text": "Close",
+      "literal_occurrences": 23
+    },
+    {
+      "text": "Next",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Sign in",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Sign out",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Search",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Refresh",
+      "literal_occurrences": 13
+    },
+    {
+      "text": "Retry",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Enable",
+      "literal_occurrences": 8
+    },
+    {
+      "text": "Disable",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Disabled",
+      "literal_occurrences": 13
+    },
+    {
+      "text": "Reject Step",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Toggle File Viewer",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Open Launchpad",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Continue Response",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Close Terminal Tab",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Go Back in Pane",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Go Forward in Pane",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Complete Onboarding Step",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Open Commit Graph",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Open Conversation",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Mark as Read",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Mark as Unread",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Delete Conversation",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Archive / Restore",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Copy Conversation Markdown",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Restart Main Language Server",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Archive This Conversation",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Pin This Conversation",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Unpin This Conversation",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Find in Conversation",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open Folder",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Mark This Conversation as Read",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Mark This Conversation as Unread",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Rename This Conversation",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Move to New Group",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Remove from Group",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Copy Conversation ID",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Copy Trajectory ID",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Delete comment",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Amend succeeded",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Failed to Generate Commit Message",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Commit succeeded",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Failed to Commit",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Failed to Amend",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Push succeeded",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Failed to Push",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Include unstaged changes",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Unstage change",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Stage change",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Discard unstaged changes",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Added (Staged)",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Untracked (Unstaged)",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Always Proceed",
+      "literal_occurrences": 11
+    },
+    {
+      "text": "Always Ask",
+      "literal_occurrences": 7
+    },
+    {
+      "text": "Agent always asks for review.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "No Model Selected",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Request Review",
+      "literal_occurrences": 7
+    },
+    {
+      "text": "Every command requires approval.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Ask before sensitive operations.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Vetted (Preview)",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Security agent decides if commands run.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Auto (Preview)",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Automatically decide if commands run.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Run all commands without restrictions.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Chat Settings",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Context Menus",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Default Customizations",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Customize Global Skills",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Allow List Terminal Commands",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "The agent auto-executes commands matched by an allow list entry.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Deny List Terminal Commands",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "The agent asks for permission before executing commands matched by a deny list entry.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Agent Auto-Fix Lints",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Give the agent awareness of lint errors created by its edits so it can fix them without explicit prompting.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Queued Messages",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Configure when follow-up messages are sent.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Confirm Window Reload",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable Demo Mode (Beta)",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Explain and Fix in Current Conversation",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Strict Mode",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Agent Non-Workspace File Access",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Command Setup Script",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "A shell setup script run before every command the agent executes.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable Terminal Sandbox",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Run terminal commands with sandbox restrictions.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Sandbox Allow Network",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Allow sandboxed commands to make network requests.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable Shell Integration",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Terminal Command Auto Execution",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Agent Host Address",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Review Policy",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable Sounds for Agent",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Play a sound when the agent finishes generating a response.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable Notifications for Agent",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Show browser notifications when your action is needed or execution finishes.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Auto-Expand Changes Overview",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Automatically expand the Changes Overview toolbar when the agent finishes generating a response.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Let the agent access past conversations to inform its responses.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Auto-Open Edited Files",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open files in the background if the agent creates or edits them",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Open Agent on Reload",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open the agent panel on window reload",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Verbose Agent Chat",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Display and preserve intermediate thinking steps.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Custom Context Menus",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Replace the default browser right-click menu with quick actions.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Conversation Width",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure the maximum width of the conversation panel.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Markdown Artifact Width",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure the default width of markdown artifacts.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Suggestions in Editor",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Show suggestions when typing in the editor",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Tab to Jump",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Predict the location of your next edit and navigate you there with a tab keypress.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Tab to Import",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Quickly add and update imports with a tab keypress.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Tab Speed",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Set the speed of tab suggestions",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Highlight After Accept",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Highlight newly inserted text after accepting a Tab completion.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Tab Gitignore Access",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable Browser Tools",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Browser Javascript Execution Policy",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Controls whether the agent can run custom JavaScript to automate complex browser actions.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Chrome Binary Path",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Path to the Chrome/Chromium executable. Leave empty for auto-detection.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Absolute path to the Chrome/Chromium executable",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Browser User Profile Path",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Browser CDP Port",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Port number for Chrome DevTools Protocol remote debugging. Leave empty for default (9222).",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Show Selection Actions",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Include Jetski Default Customizations",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Include default customizations, such as default skills.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Prevent Sleep",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Prevent the computer from sleeping while the app is running.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Keep In Menu Bar",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Keep the app accessible from the menu bar and running in the background when all windows are closed.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Automatic Check for Updates",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable Remote Control",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Manage your conversations from the companion website.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Default Workspace VCS",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Sync JJ Worktrees to Head",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Sync newly created JJ worktrees to head when starting a conversation.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Use full VCS clones for Best of N",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Use full Git clones for Best of N",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Manage your plan, credentials, and general preferences.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable Telemetry",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Marketing Emails",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Managed by Enterprise Gateway",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Not Signed In",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "App version",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Remote Control",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Work with local agents from another device.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Device Name",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Enter device name...",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open in Remote Control",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Local Windows environment",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Advanced Settings",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Configure the agent's visual theme and display preferences.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Editor Settings",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Configure editor-specific behaviors and shortcuts.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Selection Actions",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "UI Actions",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Model Quota",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Refresh quota and credits data",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Manage your model quota and credits.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Model Credits",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enable AI Credit Overages",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Set the volume of agent sounds.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Manage your notification preferences.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Open File Search",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Add to Chat/Quote",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Layout Controls",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Previous Pane Tab",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Next Pane Tab",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Keyboard shortcuts for quick navigation and control.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Choose the experience that fits how you work.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure tab completion, suggestions, and navigation behavior.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure workspace-specific permissions, resources, and customizations.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Workspace File Access",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Read Files",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Paths the agent can read inside this workspace.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enter file or directory path...",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Write Files",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Paths the agent can modify inside this workspace.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Workspace Command Access",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Terminal Commands",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Terminal commands the agent can execute in this workspace.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enter command (e.g., git, blaze)...",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Commands Outside Sandbox",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "Commands the agent can run outside the sandbox in this workspace.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "MCP Tools",
+      "literal_occurrences": 6
+    },
+    {
+      "text": "External tools the agent can call via Model Context Protocol.",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Enter tool name or server...",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Workspace Web Access",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Read URLs",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "URLs the agent can read or open in this workspace.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enter URL pattern...",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Execute URLs",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "URLs the agent can actuate on in this workspace.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Browser Actuation Permissions",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Allow/deny agent browser actuation access to specific URLs.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Organization Allowed Domains (Read-Only)",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Controls the actions the agent can take.",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Whether the agent asks you to review its documents.",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "File Reads",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Allow/deny agent read access to specific files or directories.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "File Writes",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Allow/deny agent write access to specific files or directories.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Allow/deny agent read access to specific URLs or domains.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Allow/deny specific terminal commands.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Allow/deny agent command execution outside the sandbox.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "File Access Rules",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure allowed and denied paths for file reads and writes.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Network Access Rules",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure allowed and denied URLs for reading.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure allowed terminal commands.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure allowed commands outside the sandbox.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure external tools via Model Context Protocol.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure GitHub access policies.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Tool Permissions",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "File Permissions",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Network Permissions",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Outside of folders file access policy",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Configures how the agent tries to access files outside of its working folders.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Controls whether terminal commands require your approval before running.",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Enable Sandbox Mode (Preview)",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Restricts agent tools to a secure, isolated local sandbox.",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Security Preset",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Agent Behavior",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Plan Review Policy",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Global Permissions",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Permission Preset",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Terminal & Tooling Permissions",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Permission Settings",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Local Permissions",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Permission Details",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "When enabled, sandboxed commands are allowed to make network requests.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Allows the agent to access files outside of your current workspace.",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open files in the background if Agent creates or edits them",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Open Agent panel on window reload",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Paths the agent can read.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Paths the agent can modify.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Terminal commands the agent can execute.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Commands the agent can run outside the sandbox.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "URLs the agent can read or open in the browser.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "URLs the agent can actuate on using the browser.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Browser Actuation Rules",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure allowed and denied URLs for browser actuation.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Workspace Creation",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Best of N",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Configure agent execution, queued message delivery, and permissions.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Installed MCP Servers",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Refresh MCP servers",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Delete Hook",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Add Hook Card",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Delete Handler",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Manage Skills",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Refresh skills paths",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Skill Custom Paths",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enter directory path...",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Add MCP Servers",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Manage Hooks",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Token Usage",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Configure hooks that run on agent lifecycle events.",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Danger Zone",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Goals",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Links",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Modified Files",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Open Preview",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Agent Edits",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Uncommitted",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Branch",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Sound",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Recommended",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Labs",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Output",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Logs",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Errors",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Mention",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Screenshot",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Filter",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Display",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Rename",
+      "literal_occurrences": 5
+    },
+    {
+      "text": "Fork",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Split",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Share",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Archive",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Restore",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Stop",
+      "literal_occurrences": 7
+    },
+    {
+      "text": "Email",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Plan",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Options",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Edit",
+      "literal_occurrences": 7
+    },
+    {
+      "text": "Completed",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Setup",
+      "literal_occurrences": 2
+    },
+    {
+      "text": "Undo",
+      "literal_occurrences": 4
+    },
+    {
+      "text": "Continue",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Done",
+      "literal_occurrences": 3
+    },
+    {
+      "text": "Loading",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Sign In",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Sign Out",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Apply",
+      "literal_occurrences": 1
+    },
+    {
+      "text": "Enabled",
+      "literal_occurrences": 7
+    }
+  ]
+}

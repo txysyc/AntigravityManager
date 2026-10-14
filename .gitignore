@@ -1,0 +1,7 @@
+analysis/original/
+analysis/embedded/
+output/
+dist/*.asar
+node_modules/
+*.zh-CN-new
+*.zh-CN-original
