@@ -38,13 +38,12 @@ public sealed class NodeEngineClient(ManagerEnvironment environment)
             var effectiveToken = operation is "install" or "restore" ? CancellationToken.None : cancellationToken;
             var stdout = process.StandardOutput.ReadToEndAsync(effectiveToken);
             var stderr = process.StandardError.ReadToEndAsync(effectiveToken);
-            // Once a write operation starts, allow it to finish its atomic transaction.
-            // Read-only tasks can be cancelled with the window.
+            // 写操作开始后允许原子事务完成；只读任务可以取消。
             try { await process.WaitForExitAsync(operation is "install" or "restore" ? CancellationToken.None : cancellationToken); }
             catch (OperationCanceledException) { if (!process.HasExited) process.Kill(entireProcessTree: true); throw; }
             var output = await stdout;
             var error = await stderr;
-            if (string.IsNullOrWhiteSpace(output)) return new() { Message = string.IsNullOrWhiteSpace(error) ? "引擎未返回结果。" : error.Trim() };
+            if (string.IsNullOrWhiteSpace(output)) return new() { Message = string.IsNullOrWhiteSpace(error) ? "引擎未返回结果。" : "引擎执行失败。原始信息：" + error.Trim() };
             var result = JsonSerializer.Deserialize<EngineResult>(output, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             if (result is null) return new() { Message = "无法读取引擎结果。" };
             if (process.ExitCode != 0) result.Success = false;

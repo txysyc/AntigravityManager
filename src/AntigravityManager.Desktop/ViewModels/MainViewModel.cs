@@ -42,7 +42,12 @@ public sealed class MainViewModel : ObservableObject
         OpenLocalizationCommand = new(() => SelectedNavigation = Navigation[1]);
         MigrateDataCommand = new(MigrateAsync, () => !IsBusy && !string.IsNullOrWhiteSpace(PendingDataDirectory) && !string.Equals(PendingDataDirectory.TrimEnd('\\', '/'), DataDirectory.TrimEnd('\\', '/'), StringComparison.OrdinalIgnoreCase));
     }
-    public async Task InitializeAsync() { ApplyTheme(); await Localization.RunAsync("inspect"); await Localization.RunAsync("backups"); }
+    public async Task InitializeAsync()
+    {
+        ApplyTheme();
+        await Localization.RunAsync("inspect");
+        if (Localization.HasSnapshot) await Localization.RunAsync("backups");
+    }
     public NavigationItem SelectedNavigation { get => selectedNavigation; set { if (value is not null) { selectedNavigation = value; NotifyAll(); } } }
     public string ApplicationDirectory { get => applicationDirectory; set { if (value == applicationDirectory) return; applicationDirectory = value; Localization.InvalidateApplication(); NotifyAll(); } }
     public string PendingDataDirectory { get => pendingDataDirectory; set { pendingDataDirectory = value; Notify(); MigrateDataCommand?.Refresh(); } }
@@ -67,7 +72,7 @@ public sealed class MainViewModel : ObservableObject
     private void SaveSettings()
     {
         try { settings.ApplicationDirectory = ApplicationDirectory; environment.SaveSettings(settings); SetStatus("设置已保存。"); }
-        catch (Exception error) { SetStatus(error.Message); }
+        catch (Exception error) { SetStatus(UserFacingErrors.Describe(error, "保存设置")); }
     }
     public async Task MigrateAsync()
     {
@@ -82,7 +87,7 @@ public sealed class MainViewModel : ObservableObject
             pendingDataDirectory = environment.DataDirectory;
             SetStatus("数据目录已切换。设置、记录和备份已校验复制，原目录保留。");
         }
-        catch (Exception error) { SetStatus("未切换数据目录：" + error.Message); }
+        catch (Exception error) { SetStatus("数据目录未切换。" + UserFacingErrors.Describe(error, "迁移数据")); }
         finally { settingsBusy = false; NotifyAll(); RefreshCommands(); Localization.RefreshCommands(); }
     }
     private void RefreshCommands() { BrowseCommand.Refresh(); BrowseDataCommand.Refresh(); SaveSettingsCommand.Refresh(); MigrateDataCommand.Refresh(); }

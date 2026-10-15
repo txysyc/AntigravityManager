@@ -55,13 +55,13 @@ public sealed class ManagerEnvironment
         CheckParents(target); CheckParents(source);
         if (Directory.Exists(target) && Directory.EnumerateFileSystemEntries(target).Any()) throw new IOException("目标目录非空，请选择新的或空的数据目录，避免覆盖现有文件。");
         Directory.CreateDirectory(source);
-        // The engine uses the same exclusive lock for install/restore operations.
+        // 与引擎安装、恢复共用独占锁，防止迁移时仍有写事务。
         using var engineLock = new FileStream(Path.Combine(source, "localization.lock"), FileMode.CreateNew, FileAccess.Write, FileShare.None, 1, FileOptions.DeleteOnClose);
         var parent = Path.GetDirectoryName(target)!;
         Directory.CreateDirectory(parent);
         var staging = Path.Combine(parent, ".manager-migration-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(staging);
-        // On failure retain the original data and any staged copy for recovery.
+        // 失败时保留原始数据和暂存副本，方便恢复。
         CopyVerified(source, staging, source);
         if (Directory.Exists(target)) Directory.Delete(target, recursive: false);
         Directory.Move(staging, target);

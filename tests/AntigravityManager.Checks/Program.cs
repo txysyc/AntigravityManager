@@ -26,6 +26,9 @@ try { registry.Register(module); throw new Exception("duplicate registration acc
 catch (InvalidOperationException) { Console.WriteLine("PASS: duplicate module ids rejected"); }
 var invalid = await new NodeEngineClient(environment).ExecuteAsync("invalid-operation", "D:\\unused path with spaces");
 Check(!invalid.Success && invalid.Message.Contains("不支持"), "C# to Node JSON protocol returns structured failures without shell interpolation");
+var diagnostic = UserFacingErrors.Describe(new IOException("sharing violation"), "保存设置");
+Check(diagnostic.StartsWith("保存设置失败") && diagnostic.Contains("原始信息：sharing violation"), "用户错误提示先给中文说明，并保留原始诊断");
+Check(UserFacingErrors.Describe(new System.Text.Json.JsonException("invalid JSON"), "读取配置").Contains("JSON 格式无效"), "配置解析错误给出中文处理建议");
 if (args.Length > 0)
 {
     var inspect = await module.ExecuteAsync("inspect", args[0]);

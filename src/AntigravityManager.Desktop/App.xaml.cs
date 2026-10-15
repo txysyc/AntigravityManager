@@ -81,7 +81,7 @@ public partial class App : Application
                 Directory.CreateDirectory(e.Args[index + 1]);
                 File.WriteAllText(Path.Combine(e.Args[index + 1], "error.txt"), error.ToString());
             }
-            else MessageBox.Show(error.Message, "Antigravity Manager");
+            else MessageBox.Show(UserFacingErrors.Describe(error, "启动管理器"), "Antigravity Manager");
             Shutdown(1);
         }
     }

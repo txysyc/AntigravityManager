@@ -47,7 +47,7 @@ public sealed class LocalizationViewModel : ObservableObject
         try
         {
             var file = HistoryPath;
-            if (!File.Exists(file)) file = Path.Combine(environment.DataDirectory, "tasks.json"); // Read records from preview 0.1.0.
+            if (!File.Exists(file)) file = Path.Combine(environment.DataDirectory, "tasks.json"); // 兼容读取预览版 0.1.0 的历史记录。
             if (File.Exists(file)) foreach (var entry in JsonSerializer.Deserialize<List<TaskEntry>>(File.ReadAllText(file)) ?? []) History.Add(entry);
         }
         catch (Exception error) when (error is IOException or JsonException or UnauthorizedAccessException) { publishStatus("汉化操作记录无法读取，可以继续检查应用。"); }
@@ -110,7 +110,11 @@ public sealed class LocalizationViewModel : ObservableObject
             if (!result.Success && operation != "backups") { snapshot = null; Comparisons.Clear(); }
             AddHistory(operationName, result.Success, result.Message);
         }
-        catch (Exception error) { publishStatus(error.Message); snapshot = null; AddHistory(operationName, false, error.Message); }
+        catch (Exception error)
+        {
+            var message = UserFacingErrors.Describe(error, operationName);
+            publishStatus(message); snapshot = null; AddHistory(operationName, false, message);
+        }
         finally { isBusy = false; Changed(); }
     }
     private void AddHistory(string operation, bool success, string message)
