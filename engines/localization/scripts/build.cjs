@@ -5,23 +5,24 @@ const vm = require('node:vm');
 const { readAsar, writeAsar, sha } = require('../src/asar.cjs');
 const { patchNativeSource, nativeManifest } = require('../src/native-localize.cjs');
 const ROOT = path.resolve(__dirname, '..');
-const APP = process.argv[2] || 'C:\\Users\\txyc_\\AppData\\Local\\Programs\\antigravity';
-const SUPPORTED_SHA = '4e99093662d797ecba823e92823d352413e3bf2ca721257df4a255c045df1598';
+const DEFAULT_OUTPUT = path.resolve(ROOT, '../../artifacts/localization');
+function buildPatch({ appDir, outputDirectory = DEFAULT_OUTPUT, backupPath, profile = require('../profiles/2.23.0.json') }) {
+const SUPPORTED_SHA = profile.originalSha256;
 let previousManifest;
-try { previousManifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/manifest.json'), 'utf8')); } catch {}
-const priorHashes = previousManifest?.originalSha256 === SUPPORTED_SHA ? [...new Set([previousManifest.patchedSha256, ...(previousManifest.acceptedPatchedSha256 || [])])].filter(value => /^[a-f0-9]{64}$/.test(value)) : [];
-const installedPath = path.join(APP, 'resources', 'app.asar');
+try { previousManifest = JSON.parse(fs.readFileSync(path.join(outputDirectory, 'manifest.json'), 'utf8')); } catch {}
+const priorHashes = [...new Set([profile.patchedSha256, ...(profile.acceptedPatchedSha256 || []), ...(previousManifest?.originalSha256 === SUPPORTED_SHA ? [previousManifest.patchedSha256, ...(previousManifest.acceptedPatchedSha256 || [])] : [])])].filter(value => /^[a-f0-9]{64}$/.test(value));
+const installedPath = path.join(appDir, 'resources', 'app.asar');
 let input = fs.readFileSync(installedPath);
-if (priorHashes.includes(sha(input))) input = fs.readFileSync(installedPath + '.zh-CN-original');
-if (sha(input) !== SUPPORTED_SHA) throw Error('Unsupported Antigravity build. Re-analyze this version before patching.');
+if (priorHashes.includes(sha(input))) input = fs.readFileSync(backupPath || installedPath + '.zh-CN-original');
+if (sha(input) !== SUPPORTED_SHA) throw Error('Unsupported Antigravity build. No application files changed.');
 const archive = readAsar(input), replacements = new Map(), changes = [];
 const pkg = JSON.parse(archive.files.get('package.json').data);
-if (pkg.name !== 'antigravity' || pkg.version !== '2.23.0') throw Error('Wrong application');
+if (pkg.name !== 'antigravity' || pkg.version !== profile.version) throw Error('Wrong application');
 for (const file of Object.keys(nativeManifest)) {
   const member = archive.files.get(file);
   if (!member) throw Error('Missing expected member ' + file);
   const result = patchNativeSource(file, member.data.toString('utf8'));
-  if (!result.replacements.length) throw Error('No native anchors matched: ' + file);
+  if (result.replacements.length !== nativeManifest[file].length) throw Error('No native anchors matched: ' + file);
   const localePath = file.includes('/ideInstall/') ? '../locale.cjs' : './locale.cjs';
   const setup = file === 'dist/main.js' ? 'require("./locale.cjs").setup();\n' : '';
   const conditional = '"use strict";\n' + setup + 'if (require(' + JSON.stringify(localePath) + ').startupLanguage === "zh-CN") {\n' + result.source + '\n} else {\n' + member.data.toString('utf8') + '\n}\n';
@@ -56,7 +57,15 @@ for (const [file, original] of archive.files) {
   const expected = replacements.get(file) ?? original.data;
   if (!check.files.get(file).data.equals(expected)) throw Error('Round-trip mismatch: ' + file);
 }
-fs.mkdirSync(path.join(ROOT, 'dist'), { recursive: true });
-fs.writeFileSync(path.join(ROOT, 'dist/app.asar'), output);
-fs.writeFileSync(path.join(ROOT, 'dist/manifest.json'), JSON.stringify({ product: pkg.productName, version: pkg.version, patchVersion: require('../package.json').version, originalSha256: sha(input), patchedSha256: sha(output), acceptedPatchedSha256: priorHashes.filter(value => value !== sha(output)), dictionaryEntries: Object.keys(dictionary).length, remoteDictionaryEntries: Object.keys(rendererConfig.remote).length, dynamicRules: rendererConfig.rules.length, changedFiles: [...replacements.keys()], nativeChanges: changes }, null, 2));
-console.log(JSON.stringify({ version: pkg.version, changedFiles: replacements.size, dictionaryEntries: Object.keys(dictionary).length, nativeAnchors: changes.length, output: path.join(ROOT, 'dist/app.asar') }));
+fs.mkdirSync(outputDirectory, { recursive: true });
+fs.writeFileSync(path.join(outputDirectory, 'app.asar'), output);
+const manifest = { product: pkg.productName, version: pkg.version, patchVersion: require('../package.json').version, originalSha256: sha(input), patchedSha256: sha(output), acceptedPatchedSha256: priorHashes.filter(value => value !== sha(output)), dictionaryEntries: Object.keys(dictionary).length, remoteDictionaryEntries: Object.keys(rendererConfig.remote).length, dynamicRules: rendererConfig.rules.length, changedFiles: [...replacements.keys()], nativeChanges: changes };
+fs.writeFileSync(path.join(outputDirectory, 'manifest.json'), JSON.stringify(manifest, null, 2));
+return manifest;
+}
+module.exports = { buildPatch };
+if (require.main === module) {
+  const { defaultApplicationDirectory } = require('../src/paths.cjs');
+  const manifest = buildPatch({ appDir: process.argv[2] || defaultApplicationDirectory() });
+  console.log(JSON.stringify({ version: manifest.version, dictionaryEntries: manifest.dictionaryEntries, output: DEFAULT_OUTPUT }));
+}

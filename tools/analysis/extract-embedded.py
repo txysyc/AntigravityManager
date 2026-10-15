@@ -4,11 +4,14 @@ import json
 import re
 import zlib
 import struct
+import os
+import sys
 from pathlib import Path
 
-binary = Path(r'C:\Users\txyc_\AppData\Local\Programs\antigravity\resources\bin\language_server.exe')
+root = Path(__file__).resolve().parents[2]
+binary = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(os.environ.get('ANTIGRAVITY_APP_DIR', str(Path(os.environ.get('LOCALAPPDATA', str(Path.home() / 'AppData/Local'))) / 'Programs/antigravity'))) / 'resources/bin/language_server.exe'
 data = binary.read_bytes()
-out = Path('analysis/embedded')
+out = root / 'analysis/embedded'
 out.mkdir(parents=True, exist_ok=True)
 records = []
 for match in re.finditer(b'\x1f\x8b\x08', data):

@@ -13,4 +13,4 @@
 
 候选清单、字符串出现次数和 AST 扫描范围均不等于运行时汉化覆盖率。人工检查和实机验证的边界见 [0.4.0 报告](../docs/reports/full-audit-0.4.0.md) 与 [0.4.1 报告](../docs/reports/appearance-0.4.1.md)。
 
-归档的 `fetch-ui.py` 使用当时记录的固定端口，不是通用抓取工具；`settings-scan.cjs` 只覆盖历史分析指定的源码范围。新的全包候选提取使用 `scripts/audit-ui.cjs`。
+归档的 `fetch-ui.py` 使用当时记录的固定端口，不是通用抓取工具；`settings-scan.cjs` 只覆盖历史分析指定的源码范围。新的全包候选提取使用 `tools/analysis/audit-ui.cjs`。原工程目录迁移见 [迁移说明](../docs/workspace-migration.md)。

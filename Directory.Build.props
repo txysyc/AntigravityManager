@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Version>0.1.1</Version>
+    <Company>Antigravity Manager contributors</Company>
+    <Product>Antigravity Manager</Product>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

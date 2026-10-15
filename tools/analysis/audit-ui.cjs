@@ -3,8 +3,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const root = path.resolve(__dirname, '..');
-const parserPath = process.argv[2] || 'C:/Users/txyc_/AppData/Local/npm-cache/_npx/9b9809298fe40d2c/node_modules/@babel/parser/lib/index.js';
+const root = path.resolve(__dirname, '../..');
+const parserPath = process.argv[2] || process.env.BABEL_PARSER_MODULE || '@babel/parser';
 const parser = require(parserPath);
 const source = fs.readFileSync(path.join(root, 'analysis/embedded/142809195-main.js'), 'utf8');
 const ast = parser.parse(source, { sourceType: 'unambiguous' });
@@ -43,7 +43,7 @@ function walk(node) {
   }
 }
 walk(ast.program);
-const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'translations/zh-CN.json'), 'utf8'));
+const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'engines/localization/translations/zh-CN.json'), 'utf8'));
 const list = [...entries.values()];
 const report = {
   sourceSha256: crypto.createHash('sha256').update(source).digest('hex'),

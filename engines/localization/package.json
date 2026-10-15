@@ -1,0 +1,12 @@
+{
+  "name": "antigravity-zh-cn-patch",
+  "version": "0.4.1",
+  "private": true,
+  "description": "Reversible Chinese UI patch for Google Antigravity 2.23.0",
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "install": "node scripts/install.cjs",
+    "restore": "node scripts/install.cjs --restore"
+  }
+}

@@ -4,10 +4,10 @@ const path = require('node:path');
 const http = require('node:http');
 const { spawn } = require('node:child_process');
 const assert = require('node:assert/strict');
-const { readAsar } = require('../src/asar.cjs');
-const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/txyc_/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const root = path.resolve(__dirname, '..');
-const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'translations/zh-CN.json'), 'utf8'));
+const { readAsar } = require('../../engines/localization/src/asar.cjs');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const root = path.resolve(__dirname, '../..');
+const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'engines/localization/translations/zh-CN.json'), 'utf8'));
 const portable = path.join(root, 'output/portable');
 const profile = path.join(root, 'output/smoke-profile');
 const checkEnglish = process.argv.includes('--check-english');
@@ -26,8 +26,8 @@ const fixture = `<!doctype html><html><head><meta charset="utf-8"><title>Antigra
 <div data-testid="conversation-row-abc"><button><span id="actual-name" title="Settings" class="truncate text-left w-full text-sm">Settings</span></button><button id="row-action">Cancel</button></div>
 <button data-testid="project-selector-item"><span id="project-name" title="Settings" class="truncate">Settings</span></button>
 <div id="dynamic"></div><script>window.clickCount=0;document.querySelector('#settings').onclick=()=>window.clickCount++;</script>
-${fs.readFileSync(path.join(root, 'tests/fixtures/ui-coverage.html'), 'utf8')}
-${fs.readFileSync(path.join(root, 'tests/fixtures/full-audit.html'), 'utf8')}
+${fs.readFileSync(path.join(root, 'engines/localization/tests/fixtures/ui-coverage.html'), 'utf8')}
+${fs.readFileSync(path.join(root, 'engines/localization/tests/fixtures/full-audit.html'), 'utf8')}
 </body></html>`;
 const assetMap = { '/main.js': '142809195-main.js', '/prism_bundle.js': '145690865-prism_bundle.js', '/jetbox.css': '142785440-jetbox.css', '/compiled_tailwind.css': '142736347-compiled_tailwind.css', '/diff_worker.js': '142773510-diff_worker.js', '/audio_processor.js': '142735456-audio_processor.js' };
 const server = http.createServer((req, res) => {

@@ -1,118 +1,114 @@
-# Antigravity 简体中文补丁
+# Antigravity Manager
 
-为 Google Antigravity 桌面应用提供简体中文界面和中英文切换。项目通过修改 Electron 的 `app.asar` 加载翻译层，支持恢复原版；不修改应用 EXE、语言服务程序或用户会话数据。
+面向 Windows 的模块化 Antigravity 管理工具。首个功能模块提供简体中文补丁管理，后续功能通过统一模块接口扩展。
 
-这是非官方本地补丁，目前仅适配已验证的 **Windows Antigravity 2.23.0**。
+管理器按需打开，不驻留后台，不接管 Antigravity 的日常启动，也不会修改现有代理启动器。
+
+## 当前状态
+
+- 管理器预览版：**0.1.1**。
+- 技术栈：**C# / .NET 10 / WPF / WPF UI 4.3.0**。
+- 汉化引擎：**JavaScript / Node.js，补丁版本 0.4.1**。
+- 已验证汉化目标：**Windows Antigravity 2.23.0 的指定原始文件指纹**。
+- **2.23.1 尚未完成汉化兼容性验证**。可以检查版本和 Electron 模块变化，安装按钮保持禁用。
+
+这是独立的非官方工具。界面中的版本检查来自本地安装文件，不代表对未来版本的兼容承诺。
 
 ## 功能
 
-- 翻译菜单、侧栏、设置、外观主题、模型额度、自动化、插件市场及对话相关控件。
-- 支持简体中文与 English 切换，并保存语言偏好。
-- 处理已确认的动态文案，包括版本、数量、额度恢复时间和提示信息。
-- 保护聊天正文、代码、终端、输入值、项目名称、文件路径和第三方主题名称。
-- 安装前检查文件指纹，保留原始备份，支持恢复和已知补丁版本之间的升级。
-
-当前补丁版本为 **0.4.1**，包含 2537 条界面词条、14 条服务端文案和 35 条动态规则。词条数量不代表页面覆盖率，仍存在未覆盖的文案。
-
-## 兼容性与运行要求
-
-| 项目 | 要求 |
+| 页面 | 功能 |
 | --- | --- |
-| 操作系统 | Windows；其他平台尚未适配 |
-| 目标应用 | Google Antigravity 2.23.0 |
-| 构建与安装 | Node.js；基础脚本仅使用内置模块，无需安装 npm 依赖 |
-| 原始 ASAR 指纹 | `4e99093662d797ecba823e92823d352413e3bf2ca721257df4a255c045df1598` |
+| 概览 | 当前应用信息与功能模块入口 |
+| 界面汉化 | 内含汉化概况、版本检查、备份与恢复、操作记录四个页签 |
+| 设置 | 安装目录、明暗主题、数据目录选择与校验迁移 |
 
-版本号相同也必须通过指纹校验。应用更新或文件存在未知修改时，脚本会拒绝覆盖；需要重新分析对应版本。
+安装和恢复前需要完全退出 Antigravity。未知指纹、损坏备份或操作期间发生的文件变化会阻止替换。
 
-## 安装
+## 开发运行
 
-在项目根目录运行以下 PowerShell 命令。先完全退出 Antigravity，将 `$appDir` 设置为实际安装目录：
-
-```powershell
-$appDir = Join-Path $env:LOCALAPPDATA 'Programs\antigravity'
-
-# 构建补丁
-node scripts/build.cjs "$appDir"
-
-# 安装补丁
-node scripts/install.cjs "$appDir"
-```
-
-重新打开 Antigravity 后生效。若 `dist/app.asar` 已构建且与 `dist/manifest.json` 一致，可以直接执行安装命令。
-
-原始文件保存在安装目录的 `resources/app.asar.zh-CN-original`。升级补丁时不会覆盖这份备份；请保留它。安装脚本会校验当前文件、补丁和备份的 SHA-256，重复安装同一补丁不会再次替换文件。
-
-脚本也支持省略安装目录，但当前默认值是开发环境的固定路径。建议始终显式传入 `$appDir`。
-
-## 切换语言
-
-点击页面右下角的 **Language / 语言**，选择 **简体中文** 或 **English**。也可以按 `Ctrl+Alt+L` 打开选择器，或使用原生 **Language / 语言** 菜单。
-
-网页界面即时切换，并向其他应用窗口同步。原生菜单、对话框和独立向导在下次启动时使用所选语言，切换操作不会自动退出应用。
-
-语言偏好保存在 Electron 用户数据目录的 `ui-language.json`，默认简体中文。切回英文时恢复记录的原文和提示属性；应用随后更新的内容会保留。
-
-## 恢复原版
-
-完全退出 Antigravity，在项目根目录执行：
+要求 Windows、.NET 10 SDK 和 Node.js。无需单独安装 WPF UI；NuGet 会还原项目依赖。Visual Studio 是可选的，也可以使用命令行。
 
 ```powershell
-$appDir = Join-Path $env:LOCALAPPDATA 'Programs\antigravity'
-node scripts/install.cjs "$appDir" --restore
+# 编译整个解决方案
+npm run build
+
+# 启动桌面管理器
+./scripts/run.ps1
 ```
 
-重新打开应用即可使用原版界面。恢复操作同样检查当前文件和备份指纹，不覆盖未知版本或未知修改。
+构建命令也可直接使用 `dotnet build AntigravityManager.slnx`。管理器会查找可执行文件上级目录中的引擎入口，项目根目录可以重命名。
 
-## 开发与验证
-
-修改 `translations/` 中的对应词库，重新构建并安装：
+## 发布可运行版本
 
 ```powershell
-node scripts/build.cjs "$appDir"
-npm test
-node scripts/install.cjs "$appDir"
+./scripts/publish.ps1
 ```
 
-| 文件 | 用途 |
-| --- | --- |
-| `translations/zh-CN.json` | 已核对的固定界面文案 |
-| `translations/zh-CN.remote.json` | 已核对的服务端文案，仅在相应界面匹配 |
-| `translations/zh-CN.dynamic.json` | 有明确范围和完整句式的动态规则 |
-| `dist/manifest.json` | 补丁版本、原版与补丁指纹、成员修改记录 |
+默认输出到 `artifacts/app/AntigravityManager/`，包含自包含 .NET 桌面程序、汉化引擎及 Node.js。使用者无需另装 .NET 或 Node.js，打开目录中的 `AntigravityManager.exe` 即可。分发时需要保留整个目录。
 
-构建仅依赖目标应用的原始 ASAR，已安装受支持补丁时会从校验通过的原始备份构建。`dist/app.asar` 是本地构建产物，不纳入 Git。
-
-测试包含本机安装文件和已提取原始模块的集成检查，首次克隆需要准备相应资料；不会随仓库分发完整应用副本。基础测试、前端审查及独立 Electron 验证的环境配置见 [开发指南](docs/development.md)。
-
-当前通过 9 项基础测试，以及独立 Electron 中的代表性组件、动态更新、中英文恢复、名称和输入值保护、预设内部值保留、语言偏好跨进程恢复验证。独立测试页面不能替代已登录产品的完整布局和工作流检查。
+脚本默认发布 Windows x64，并复制本机 PATH 中的 `node.exe`；可以使用 `-NodeExecutable` 指定同架构的 Node.js。`-FrameworkDependent` 发布较小的依赖运行时版本，使用者需要对应的 .NET Desktop Runtime。首次构建和发布需要联网还原依赖。
 
 ## 项目结构
 
 ```text
 .
-├── src/                  # ASAR、原生文案和渲染器翻译实现
-├── translations/         # 固定、服务端及动态翻译规则
-├── scripts/              # 构建、安装、资源提取和验证工具
-├── tests/                # 基础测试与界面组件样本
-├── docs/                 # 架构说明、开发指南及版本审查报告
-├── analysis/             # 证据、覆盖记录、审查清单及归档脚本
-├── dist/                 # 补丁清单与本地构建产物
-└── output/               # 按需生成的测试数据和临时产物，Git 忽略
+├── AntigravityManager.slnx
+├── src/
+│   ├── AntigravityManager.Desktop/              # WPF 窗口、页面与视图模型
+│   ├── AntigravityManager.Core/                 # 模块接口与共享数据契约
+│   ├── AntigravityManager.Infrastructure/       # 路径、配置及后台引擎通信
+│   └── AntigravityManager.Modules.Localization/ # 汉化模块适配层
+├── engines/localization/
+│   ├── cli.cjs                                 # JSON 命令接口
+│   ├── src/                                    # ASAR 与翻译实现
+│   ├── scripts/                                # 补丁构建及兼容入口
+│   ├── profiles/                               # 已验证版本指纹和比较基线
+│   ├── translations/                           # 固定、服务端与动态词库
+│   └── tests/                                  # 引擎测试与界面样本
+├── tests/AntigravityManager.Checks/             # C# 与跨进程集成检查
+├── tools/                                      # 离线分析和开发验证工具
+├── scripts/                                    # 管理器运行与发布脚本
+├── docs/                                       # 架构、开发和历史报告
+├── analysis/                                   # 来源证据与本地提取资源
+├── runtime/                                    # 可选本地 Node.js，二进制忽略
+└── artifacts/                                  # 发布、补丁和测试产物，Git 忽略
 ```
 
-## 实现与已知限制
+## 数据与备份
 
-Electron 主进程启动本机语言服务，再从动态 HTTPS 端口加载 React 界面。补丁利用现有隔离 preload 加入 DOM 翻译层，并对已确认的原生显示文本提供中英文分支。窗口继续使用 `contextIsolation: true` 和 `nodeIntegration: false`。
+默认数据目录为 `%LOCALAPPDATA%/AntigravityManager/`，独立于应用安装目录和项目工作区。设置页可以选择新的或空目录，并点击“迁移并使用此目录”。迁移会复制设置、汉化操作记录、备份和缓存，逐文件校验后切换；原目录保留，不合并非空目标目录。
 
-翻译使用精确词库和限定范围的动态规则，不调用在线翻译服务。未知文案、第三方插件内容、系统控件及未经核对的动态模板可能保留英文。用户内容保护依赖已确认的界面结构，应用升级后需要重新核验。
+管理器使用默认目录内的 `location.json` 保存数据位置；更换数据目录后仍需保留这个定位文件。GUI 和未显式指定 `--data-dir` 的 CLI 共用此位置。配置的目录不可用时会报错，不会悄悄创建一套空数据。`--data-dir` 用于隔离测试，不改变正常配置。
 
-市场描述中的搜索高亮保留原有元素和事件，但中文高亮位置不保证与英文搜索词语义对应。真实会话页面的完整检查曾受本机服务连接重置影响，尚未完成全部页面与工作流验证；详细边界记录在审查报告中。
+```text
+AntigravityManager/
+├── settings.json
+├── localization/tasks.json
+├── localization/installed.json
+├── backups/localization/<应用版本>/<原始指纹>/app.asar
+└── cache/localization/<应用版本>/
+```
 
-## 项目文档
+现有且通过校验的 `app.asar.zh-CN-original` 可以作为旧版备份来源；新的备份保存在管理器数据目录。更新应用或重命名项目目录不会主动删除这些备份。更新后的未知版本不会误用旧备份进行恢复。
 
-- [架构与逆向分析](docs/architecture.md)
-- [开发与验证指南](docs/development.md)
-- [分析资料索引](analysis/README.md)
-- [0.4.0 汉化审查报告](docs/reports/full-audit-0.4.0.md)
-- [0.4.1 外观主题修复报告](docs/reports/appearance-0.4.1.md)
+## 验证与限制
+
+引擎测试覆盖 ASAR、原生菜单与语言设置、未知版本拒绝安装、文件变化保护，以及隔离副本的安装/重复安装/外部备份恢复。C# 检查覆盖模块注册、设置、根目录重命名和 JSON 子进程通信；独立数据目录的 GUI 检查渲染三个主页面、汉化模块的四个页签及明暗主题。数据目录检查覆盖完整复制、重启读取、冲突拒绝、并发保护、旧实例保护和目录链接拒绝。
+
+```powershell
+npm test
+npm run test:manager
+```
+
+完整引擎测试需要原始模块和构建后的补丁，准备方法见开发指南。界面差异报告目前只比较已记录的 Electron 模块及原生文案锚点；尚不自动分析语言服务内嵌前端，也不自动批准未知版本。历史组件测试不能替代新版本完整实机检查。
+
+## 文档
+
+- [项目架构与模块扩展](docs/architecture.md)
+- [开发、测试与发布](docs/development.md)
+- [汉化模块说明](docs/modules/localization.md)
+- [工作区迁移说明](docs/workspace-migration.md)
+- [历史逆向分析](docs/reports/reverse-engineering-2.23.0.md)
+- [0.4.0 审查报告](docs/reports/full-audit-0.4.0.md)
+- [0.4.1 外观修复报告](docs/reports/appearance-0.4.1.md)
+- [第三方组件说明](THIRD_PARTY_NOTICES.md)

@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('node:assert/strict');
-const dictionary = require('../translations/zh-CN.json');
-const remote = require('../translations/zh-CN.remote.json');
+const dictionary = require('../../engines/localization/translations/zh-CN.json');
+const remote = require('../../engines/localization/translations/zh-CN.remote.json');
 exports.verifyChinese = async page => {
   const fixed = {
     'audit-update':'Check for Updates','audit-palette':'Command Palette','audit-minimize':'Minimize','audit-maximize':'Maximize',

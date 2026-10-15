@@ -5,6 +5,13 @@ analysis/embedded/
 # Generated patches, test profiles and runtime copies
 dist/*.asar
 output/
+artifacts/
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+runtime/node.exe
 
 # Dependencies and language caches
 node_modules/
@@ -14,6 +21,7 @@ __pycache__/
 # Installer temporary files and backups
 *.zh-CN-new
 *.zh-CN-original
+*.zh-manager-new
 
 # Operating system metadata
 .DS_Store

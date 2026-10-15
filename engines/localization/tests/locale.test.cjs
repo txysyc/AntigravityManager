@@ -6,7 +6,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const { readAsar } = require('../src/asar.cjs');
 function fixture(saved) {
-  const directory = path.join(__dirname, '../output/tests'); fs.mkdirSync(directory, { recursive: true });
+  const directory = path.join(__dirname, '../../../artifacts/tests'); fs.mkdirSync(directory, { recursive: true });
   const profile = fs.mkdtempSync(path.join(directory, 'locale-'));
   if (saved) fs.writeFileSync(path.join(profile, 'ui-language.json'), JSON.stringify({ language: saved }));
   const handlers = new Map(), sent = [];
@@ -50,7 +50,7 @@ test('foreign origins, guest contents and child frames cannot change language', 
   assert.equal(f.locale.getLanguage(), 'en');
 });
 test('packaged native module selects exact original English behavior or Chinese branch', async () => {
-  const archive = readAsar(fs.readFileSync(path.join(__dirname, '../dist/app.asar')));
+  const archive = readAsar(fs.readFileSync(path.join(__dirname, '../../../artifacts/localization/app.asar')));
   const source = archive.files.get('dist/menu.js').data.toString();
   for (const language of ['en', 'zh-CN']) {
     const submenu = () => ({ items: [], insert(i, item) { this.items.splice(i, 0, item); } });

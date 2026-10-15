@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { patchNativeSource, nativeManifest } = require('../src/native-localize.cjs');
-const originals = path.join(__dirname, '..', 'analysis', 'original');
+const originals = path.join(__dirname, '..', '..', '..', 'analysis', 'original');
 
 test('verified native fixtures retain valid JavaScript and all display anchors match', () => {
   for (const [file, anchors] of Object.entries(nativeManifest)) {

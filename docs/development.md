@@ -1,70 +1,86 @@
-# 开发与验证
+# 开发、测试与发布
 
-从项目根目录运行脚本。构建和安装工具仅使用 Node.js 内置模块；Python、Babel 和 Playwright 只用于可选分析及集成验证。
+## 环境
 
-## 构建与安装
+Windows 上安装 .NET 10 SDK 和 Node.js。WPF UI 4.3.0 在项目中固定引用，由 NuGet 还原；无需手动安装 GUI 控件库。编译不要求安装 Visual Studio。
+
+`global.json` 选择 .NET 10，并允许同一主次版本内更新 SDK 功能带。管理器版本在 `Directory.Build.props` 和根 `package.json`，汉化引擎版本在 `engines/localization/package.json`。
+
+## 编译与运行
 
 ```powershell
-$appDir = Join-Path $env:LOCALAPPDATA 'Programs\antigravity'
-node scripts/build.cjs "$appDir"
-node scripts/install.cjs "$appDir"
+dotnet build AntigravityManager.slnx
+./scripts/run.ps1
 ```
 
-支持的原始指纹写在 `scripts/build.cjs`。构建会校验输入、补丁后的 JavaScript 语法、动态规则边界以及 ASAR 的逐成员字节；安装会核对清单与备份。新增兼容版本前需要重新验证原生替换锚点、前端结构与用户内容保护。
+开发脚本将 CLI 缓存与 NuGet 包放在 `artifacts/`。管理器会优先使用 `runtime/node.exe`，否则从 PATH 查找 Node.js；发布脚本会将 Node.js 一并复制。
 
-## 基础测试
+## 准备汉化测试资料
+
+完整引擎测试需要已验证的 2.23.0 原始资源和补丁产物。这些第三方程序文件不随 Git 分发。原始 ASAR 或本项目已知可逆补丁均可作为输入：
+
+```powershell
+node tools/verification/prepare-fixtures.cjs 'C:\path\to\supported\app.asar'
+```
+
+脚本严格校验已知指纹，仅在恢复出的原始文件也匹配原版指纹后写入 `artifacts/fixtures/app.asar` 和 `analysis/original/`。已知双语补丁中的英文分支可用于恢复原始模块；不会修改输入文件。
+
+然后在隔离目录准备补丁产物：
+
+```powershell
+New-Item -ItemType Directory -Path 'artifacts/test-app/resources' -Force | Out-Null
+Copy-Item -LiteralPath 'artifacts/fixtures/app.asar' -Destination 'artifacts/test-app/resources/app.asar'
+node engines/localization/scripts/build.cjs 'artifacts/test-app'
+```
+
+不要将目前不兼容的 2.23.1 当作 2.23.0 的测试原版。缺少测试资源时应先准备输入，不能用跳过兼容校验的方式让测试通过。
+
+## 自动检查
 
 ```powershell
 npm test
+npm run test:manager
+
+# 加上实际安装目录，额外验证只读的 C# → Node 应用检查
+ dotnet run --project tests/AntigravityManager.Checks -- 'C:\path\to\antigravity'
 ```
 
-当前 9 项测试包括 ASAR 完整性与元数据、语言保存和广播、IPC 来源限制、原生中英文分支、菜单插入和内部动作键保护。
+14 项 Node.js 检查包括 ASAR、原生菜单与语言设置、未知指纹拒绝、并发文件变化、损坏备份保护，以及完整隔离安装/重复安装/外部备份恢复。原生模块测试仍使用本地原始资源，语言分支测试使用已构建补丁。
 
-这些测试包含开发环境的集成输入：`tests/asar.test.cjs` 中的本机目标 ASAR 路径、构建后的 `dist/app.asar`，以及 `analysis/original/` 中的原始模块。后者是通过 `src/asar.cjs` 从校验过的原始 ASAR 提取的文件，按原始模块 basename 保存。首次克隆或更换机器时需要准备这些资料，先完成构建，并调整 ASAR 测试里的目标路径。缺少资料时不能将测试失败解释为补丁行为异常。
+C# 检查使用轻量控制台入口，无额外测试框架依赖。覆盖模块注册、重复 ID、路径与设置保存，以及真实子进程的 JSON 成功/失败链路。输入了不兼容应用时，验证安装能力保持关闭。数据目录测试使用独立引导目录，验证迁移字节一致、保留原始文件、重启解析、非空目标和嵌套目录拒绝、并发锁、旧实例及目录链接保护。
 
-## 离线前端审查
+## GUI 验证
 
-`scripts/extract-embedded.py` 从本机语言服务可执行文件恢复 gzip/ZIP 资源，输出到 `analysis/embedded/`。脚本中的目标路径需要与实际安装位置一致。
+桌面程序提供仅供开发的只读页面渲染入口。使用独立数据目录，自动遍历三个主页面及汉化模块四个页签、检查版本变化、生成明暗主题 PNG，完成后退出：
 
 ```powershell
-python scripts/extract-embedded.py
-node scripts/audit-ui.cjs "C:\path\to\@babel\parser\lib\index.js"
+./src/AntigravityManager.Desktop/bin/Debug/net10.0-windows/AntigravityManager.exe `
+  --data-dir "$PWD/artifacts/gui-smoke/profile" `
+  --app-dir 'C:\path\to\antigravity' `
+  --smoke-output "$PWD/artifacts/gui-smoke/screenshots"
 ```
 
-AST 审查需在外部准备 `@babel/parser` 并传入模块文件路径；省略参数时使用开发环境的缓存路径。结果写入 `output/ui-audit.json`。该脚本提取全包候选和动态模板，不会修改原始前端，也不能自动证明文案可见或翻译已生效。
+可选 `--smoke-migrate <新的隔离目录>` 在渲染后测试设置页的真实迁移命令及迁移后的备份读取（必须配合 `--data-dir`）。通过标记为截图目录中的 `result.json`，包含应用版本、补丁版本、安装状态、主页面和模块页签数量。异常时保存 `error.txt`。该入口不执行安装或恢复，不修改目标应用；截图属于真实管理器窗口，不是 Antigravity 产品页面截图。
 
-按功能整理的历史资料位于 `analysis/audits/`；历史辅助脚本位于 `analysis/archive/`。
-
-## 独立 Electron 验证
-
-`scripts/smoke-test.cjs` 运行完整应用副本，使用独立的 `output/smoke-profile/` 和本机验证页面。它不连接真实用户的会话目录。
-
-先构建补丁并准备应用副本：
+## 可选前端审查与旧组件验证
 
 ```powershell
-$appDir = Join-Path $env:LOCALAPPDATA 'Programs\antigravity'
-node scripts/build.cjs "$appDir"
-New-Item -ItemType Directory -Path 'output' -Force | Out-Null
-Copy-Item -LiteralPath "$appDir" -Destination 'output/portable' -Recurse
-Copy-Item -LiteralPath 'dist/app.asar' -Destination 'output/portable/resources/app.asar' -Force
+python tools/analysis/extract-embedded.py 'C:\path\to\language_server.exe'
+node tools/analysis/audit-ui.cjs 'C:\path\to\@babel\parser\lib\index.js'
 ```
 
-复制前确保 `output/portable/` 不存在，避免产生嵌套副本。验证还需要已恢复的 `analysis/embedded/` 资源，以及外部 Playwright 模块：
+AST 审查需外部 Babel parser；也可以通过 `BABEL_PARSER_MODULE` 指定。结果是候选，不是可见文案覆盖率。
+
+旧 preload 组件验证仍保留在 `tools/verification/smoke-test.cjs`，依赖完整独立应用副本 `output/portable/`、`analysis/embedded/` 中对应版本资源及外部 Playwright。使用 `PLAYWRIGHT_MODULE` 指定模块路径。该验证与新的 WPF GUI 检查互不替代。
+
+## 发布
 
 ```powershell
-$env:PLAYWRIGHT_MODULE = 'C:\path\to\node_modules\playwright'
-node scripts/smoke-test.cjs
-node scripts/smoke-test.cjs --check-english
+./scripts/publish.ps1
 ```
 
-第二条命令依赖第一条命令保留的英文偏好。应用副本、测试用户目录、截图和临时报告均位于 `output/`，可以在测试进程退出后清理；复测时按上述步骤重新生成。
+默认发布 Windows x64 自包含目录到 `artifacts/app/AntigravityManager/`。包含桌面程序、引擎、版本规则、词库和 Node.js，保留整个目录后即可移动或改名使用。
 
-验证覆盖代表性组件形状、动态更新、点击事件、原文恢复、用户内容保护、外观预设内部值和跨进程语言记忆。测试截图是验证页面，不能作为完整产品页面的效果证据。
+可通过 `-FrameworkDependent` 选择依赖运行时发布，通过 `-NodeExecutable` 指定同架构 Node.js，通过 `-OutputDirectory` 指定另一发布目录（例如旧版仍在使用时）。首版发布脚本没有自动更新或安装器逻辑，不修改现有代理启动器或桌面快捷方式。
 
-## 工作区约定
-
-- `src/` 和 `translations/` 保存运行时实现；`tests/fixtures/` 保存界面样本。
-- `scripts/` 只保留当前构建、安装和分析验证入口。
-- `docs/reports/` 保存版本报告，`analysis/audits/` 保存来源清单。
-- `analysis/original/`、`analysis/embedded/`、`dist/*.asar` 和 `output/` 不纳入 Git。
-- 原始安装备份保存在应用安装目录，清理项目工作区时不要删除该备份。
+新增模块的步骤见 [架构说明](architecture.md)，旧目录对应关系见 [迁移说明](workspace-migration.md)。
