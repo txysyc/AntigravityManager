@@ -58,12 +58,12 @@ public sealed class LocalizationViewModel : ObservableObject
     public ModuleTab SelectedTab { get => selectedTab; set { if (value is not null) { selectedTab = value; NotifyAll(); } } }
     public string AvailablePatch => "v" + module.Descriptor.Version;
     public bool HasSnapshot => snapshot is not null;
-    public string InstalledPatch => snapshot is null ? "待检查" : string.IsNullOrEmpty(snapshot.PatchVersion) ? "未安装" : "v" + snapshot.PatchVersion;
+    public string InstalledPatch => snapshot is null ? "待检查" : !string.IsNullOrEmpty(snapshot.PatchVersion) ? "v" + snapshot.PatchVersion : snapshot.Status == "patched" ? "历史版本（待识别）" : "未安装";
     public string VersionLabel => snapshot?.Version ?? "待检查";
-    public string SupportedVersion => string.IsNullOrWhiteSpace(snapshot?.BaselineVersion) ? "2.23.0" : snapshot.BaselineVersion;
+    public string SupportedVersion => string.IsNullOrWhiteSpace(snapshot?.BaselineVersion) ? "检查后显示" : snapshot.BaselineVersion;
     public string BackupCount => Backups.Count.ToString();
     public string StatusLabel => snapshot?.Status switch { "patched" => "已汉化", "unpatched" => "可以安装", "unsupported" => "等待适配", _ => "尚未检查" };
-    public string StatusDetail => snapshot?.Status switch
+    public string StatusDetail => !string.IsNullOrEmpty(snapshot?.CompatibilityIssue) ? snapshot.CompatibilityIssue : snapshot?.Status switch
     {
         "unsupported" => $"Antigravity {snapshot.Version} 尚未通过兼容性验证，安装暂不可用。可以在“版本检查”中查看变化。",
         "patched" => "已识别安装的汉化补丁。应用更新后请重新检查兼容性。",

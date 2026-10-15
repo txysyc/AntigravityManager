@@ -12,3 +12,6 @@
 *.asar binary
 *.exe binary
 *.png binary
+
+# 第三方许可快照保留上游字节，不做换行或空白规范化。
+licenses/** -text -whitespace

@@ -5,13 +5,17 @@ import re
 import zlib
 import struct
 import os
-import sys
+import argparse
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[2]
-binary = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(os.environ.get('ANTIGRAVITY_APP_DIR', str(Path(os.environ.get('LOCALAPPDATA', str(Path.home() / 'AppData/Local'))) / 'Programs/antigravity'))) / 'resources/bin/language_server.exe'
+parser = argparse.ArgumentParser(description='离线提取语言服务中的前端资源；版本比较时请指定独立输出目录。')
+parser.add_argument('binary', nargs='?', type=Path, help='language_server.exe 路径')
+parser.add_argument('--output', type=Path, default=root / 'analysis/embedded', help='提取结果目录')
+args = parser.parse_args()
+binary = args.binary or Path(os.environ.get('ANTIGRAVITY_APP_DIR', str(Path(os.environ.get('LOCALAPPDATA', str(Path.home() / 'AppData/Local'))) / 'Programs/antigravity'))) / 'resources/bin/language_server.exe'
 data = binary.read_bytes()
-out = root / 'analysis/embedded'
+out = args.output.resolve()
 out.mkdir(parents=True, exist_ok=True)
 records = []
 for match in re.finditer(b'\x1f\x8b\x08', data):

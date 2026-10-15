@@ -50,7 +50,7 @@ test('foreign origins, guest contents and child frames cannot change language', 
   assert.equal(f.locale.getLanguage(), 'en');
 });
 test('packaged native module selects exact original English behavior or Chinese branch', async () => {
-  const archive = readAsar(fs.readFileSync(path.join(__dirname, '../../../artifacts/localization/app.asar')));
+  const archive = readAsar(fs.readFileSync(path.join(__dirname, '../../../artifacts/fixtures/2.23.0/patched-0.4.1.asar')));
   const source = archive.files.get('dist/menu.js').data.toString();
   for (const language of ['en', 'zh-CN']) {
     const submenu = () => ({ items: [], insert(i, item) { this.items.splice(i, 0, item); } });

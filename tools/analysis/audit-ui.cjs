@@ -4,11 +4,18 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const root = path.resolve(__dirname, '../..');
-const parserPath = process.argv[2] || process.env.BABEL_PARSER_MODULE || '@babel/parser';
+const args = process.argv.slice(2);
+function option(name, fallback) {
+  const index = args.indexOf('--' + name);
+  return index < 0 ? fallback : args[index + 1];
+}
+const parserPath = (args[0] && !args[0].startsWith('--') ? args[0] : null) || process.env.BABEL_PARSER_MODULE || '@babel/parser';
 const parser = require(parserPath);
-const source = fs.readFileSync(path.join(root, 'analysis/embedded/142809195-main.js'), 'utf8');
+const sourcePath = path.resolve(root, option('source', 'analysis/embedded/142809195-main.js'));
+const outputPath = path.resolve(root, option('output', 'artifacts/analysis/ui-audit.json'));
+const source = fs.readFileSync(sourcePath, 'utf8');
 const ast = parser.parse(source, { sourceType: 'unambiguous' });
-const fields = new Set(['label', 'title', 'description', 'placeholder', 'tooltip', 'message', 'subtitle', 'emptyMessage', 'searchPlaceholder', 'aria-label', 'plainTextFallback', 'upgradeButtonText', 'header', 'sidebarLabel']);
+const fields = new Set(['label', 'title', 'description', 'displayName', 'shortDisplayName', 'shortDescription', 'longDescription', 'placeholder', 'tooltip', 'message', 'subtitle', 'emptyMessage', 'searchPlaceholder', 'aria-label', 'plainTextFallback', 'upgradeButtonText', 'header', 'sidebarLabel']);
 const entries = new Map(), templates = new Map();
 function add(text, offset, kind) {
   if (!/[A-Za-z]/.test(text) || text.length < 2 || text.length > 1500 || /^https?:|^[\w.-]+:\/\//.test(text)) return;
@@ -46,12 +53,13 @@ walk(ast.program);
 const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'engines/localization/translations/zh-CN.json'), 'utf8'));
 const list = [...entries.values()];
 const report = {
+  source: path.relative(root, sourcePath).split(path.sep).join('/'),
   sourceSha256: crypto.createHash('sha256').update(source).digest('hex'),
   candidateCount: list.length, knownDictionaryCandidates: list.filter(e => dictionary[e.text]).length,
   dynamicTemplateCount: templates.size,
   limitations: ['AST candidates include configuration metadata and third-party text; candidate presence is not proof of visible UI.', 'Service-returned catalog and quota descriptions are absent from this static inventory.', 'Dictionary presence does not prove DOM scope or runtime translation.'],
   entries: list, templates: [...templates.values()]
 };
-fs.mkdirSync(path.join(root, 'output'), { recursive: true });
-fs.writeFileSync(path.join(root, 'output/ui-audit.json'), JSON.stringify(report, null, 2));
-console.log(JSON.stringify({ candidateCount: report.candidateCount, knownDictionaryCandidates: report.knownDictionaryCandidates, dynamicTemplateCount: report.dynamicTemplateCount, output: path.join(root, 'output/ui-audit.json') }));
+fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+fs.writeFileSync(outputPath, JSON.stringify(report, null, 2));
+console.log(JSON.stringify({ candidateCount: report.candidateCount, knownDictionaryCandidates: report.knownDictionaryCandidates, dynamicTemplateCount: report.dynamicTemplateCount, output: outputPath }));

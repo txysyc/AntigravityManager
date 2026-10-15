@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">Antigravity Manager</title>
+  <desc id="description">靛蓝圆角底板上的白色字母 A，以三个薄荷色块组成横杠，代表独立功能模块。</desc>
+  <defs>
+    <linearGradient id="tile" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7184FA" />
+      <stop offset="55%" stop-color="#5369D8" />
+      <stop offset="100%" stop-color="#3547A6" />
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#tile)" />
+  <path d="M 120 365 L 222 147 Q 230 130 249 130 L 263 130 Q 282 130 290 147 L 392 365 Q 400 382 381 382 L 351 382 Q 341 382 337 372 L 256 194 L 175 372 Q 171 382 161 382 L 131 382 Q 112 382 120 365 Z" fill="#FFFFFF" />
+  <rect x="195" y="284" width="34" height="36" rx="9" fill="#A5F0E0" />
+  <rect x="239" y="284" width="34" height="36" rx="9" fill="#A5F0E0" />
+  <rect x="283" y="284" width="34" height="36" rx="9" fill="#A5F0E0" />
+</svg>

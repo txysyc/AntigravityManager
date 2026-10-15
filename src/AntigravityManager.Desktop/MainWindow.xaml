@@ -3,20 +3,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:views="clr-namespace:AntigravityManager.Desktop.Views" xmlns:localization="clr-namespace:AntigravityManager.Desktop.Modules.Localization.Views"
-    Title="Antigravity Manager" Width="1160" Height="800" MinWidth="960" MinHeight="650"
+    Title="Antigravity Manager" Icon="Assets/Branding/app-icon.ico" Width="1160" Height="800" MinWidth="960" MinHeight="650"
     WindowStartupLocation="CenterScreen" ExtendsContentIntoTitleBar="True"
     Background="{DynamicResource CanvasBrush}" Foreground="{DynamicResource TextBrush}" FontFamily="Segoe UI, Microsoft YaHei UI"
     Closing="OnClosing">
   <ui:FluentWindow.Resources><CollectionViewSource x:Key="NavigationSource" Source="{Binding Navigation}"><CollectionViewSource.GroupDescriptions><PropertyGroupDescription PropertyName="Group"/></CollectionViewSource.GroupDescriptions></CollectionViewSource></ui:FluentWindow.Resources>
   <Grid Background="{DynamicResource CanvasBrush}">
     <Grid.RowDefinitions><RowDefinition Height="44" /><RowDefinition /><RowDefinition Height="36" /></Grid.RowDefinitions>
-    <ui:TitleBar Title="Antigravity Manager" Padding="14,0,0,0" />
+    <ui:TitleBar Title="Antigravity Manager" Padding="14,0,0,0">
+      <ui:TitleBar.Icon><ui:ImageIcon Source="Assets/Branding/app-icon.png" /></ui:TitleBar.Icon>
+    </ui:TitleBar>
     <Grid Grid.Row="1">
       <Grid.ColumnDefinitions><ColumnDefinition Width="224" /><ColumnDefinition /></Grid.ColumnDefinitions>
       <Border Background="{DynamicResource CardBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,1,0">
         <DockPanel Margin="16,20,16,16">
           <StackPanel DockPanel.Dock="Top" Margin="10,0,0,28">
-            <Border Background="{DynamicResource AccentBrush}" CornerRadius="10" Width="42" Height="42" HorizontalAlignment="Left" Margin="0,0,0,14"><TextBlock Text="A" Foreground="White" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
+            <Image Source="Assets/Branding/app-icon.png" Width="48" Height="48" HorizontalAlignment="Left" Margin="-3,-3,0,11" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="应用图标" />
             <TextBlock Text="Antigravity" FontSize="20" FontWeight="SemiBold" /><TextBlock Text="MANAGER" Foreground="{DynamicResource MutedBrush}" FontSize="11" Margin="0,5,0,0" />
           </StackPanel>
           <StackPanel DockPanel.Dock="Bottom" Margin="10,18,0,0"><TextBlock Text="桌面管理工作台" Foreground="{DynamicResource MutedBrush}" FontSize="12" /><TextBlock Text="{Binding ManagerVersion}" Foreground="{DynamicResource MutedBrush}" FontSize="11" Margin="0,5,0,0" /></StackPanel>

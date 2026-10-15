@@ -1,89 +1,61 @@
-# 开发、测试与发布
+# 开发指南
 
-## 环境
+[文档中心](README.md) / 开发
 
-Windows 上安装 .NET 10 SDK 和 Node.js。WPF UI 4.3.0 在项目中固定引用，由 NuGet 还原；无需手动安装 GUI 控件库。编译不要求安装 Visual Studio。
+从源码运行管理器只需要准备环境并启动程序。测试资源、分发打包和资源维护各自有独立指南。
 
-`global.json` 选择 .NET 10，并允许同一主次版本内更新 SDK 功能带。管理器版本在 `Directory.Build.props` 和根 `package.json`，汉化引擎版本在 `engines/localization/package.json`。
+## 环境要求
 
-## 编译与运行
+| 依赖 | 用途 |
+| --- | --- |
+| Windows | 运行 WPF 桌面程序 |
+| .NET 10 SDK | 编译 C# 主程序；SDK 选择见 `global.json` |
+| Node.js（含 npm） | 运行汉化引擎及其检查 |
+
+WPF UI 4.3.0 通过 NuGet 自动还原，无需单独安装控件库。Visual Studio 可选；首次还原依赖需要联网。
+
+## 启动开发程序
+
+在仓库根目录执行：
 
 ```powershell
-dotnet build AntigravityManager.slnx
 ./scripts/run.ps1
 ```
 
-开发脚本将 CLI 缓存与 NuGet 包放在 `artifacts/`。管理器会优先使用 `runtime/node.exe`，否则从 PATH 查找 Node.js；发布脚本会将 Node.js 一并复制。
+脚本调用 `dotnet run --project src/AntigravityManager.Desktop`，按需编译并启动窗口，同时将 .NET CLI 缓存和 NuGet 包放在 `artifacts/`。
 
-## 准备汉化测试资料
+管理器优先使用 `runtime/node.exe`，不存在时从 PATH 查找 Node.js。资源按工作区或发布目录发现，不依赖仓库根目录的名称。
 
-完整引擎测试需要已验证的 2.23.0 原始资源和补丁产物。这些第三方程序文件不随 Git 分发。原始 ASAR 或本项目已知可逆补丁均可作为输入：
+## 编译、运行与发布的区别
 
-```powershell
-node tools/verification/prepare-fixtures.cjs 'C:\path\to\supported\app.asar'
-```
+这三个操作可以单独执行，无需依次运行。
 
-脚本严格校验已知指纹，仅在恢复出的原始文件也匹配原版指纹后写入 `artifacts/fixtures/app.asar` 和 `analysis/original/`。已知双语补丁中的英文分支可用于恢复原始模块；不会修改输入文件。
+| 目标 | 命令 | 结果 |
+| --- | --- | --- |
+| 只编译 | `dotnet build AntigravityManager.slnx` | 各 C# 项目的开发产物，不打开窗口 |
+| 边开发边运行 | `./scripts/run.ps1` | 按需编译桌面程序并启动窗口 |
+| 给其他人使用 | `./scripts/publish.ps1` | 完整自包含程序目录，不启动窗口 |
 
-然后在隔离目录准备补丁产物：
+`npm run build` 是第一条命令的别名：根 `package.json` 将 `build` 映射为 `dotnet build AntigravityManager.slnx`，实际编译仍由 .NET 执行。
 
-```powershell
-New-Item -ItemType Directory -Path 'artifacts/test-app/resources' -Force | Out-Null
-Copy-Item -LiteralPath 'artifacts/fixtures/app.asar' -Destination 'artifacts/test-app/resources/app.asar'
-node engines/localization/scripts/build.cjs 'artifacts/test-app'
-```
+桌面开发产物在 `src/AntigravityManager.Desktop/bin/Debug/net10.0-windows/`，其他 C# 项目有各自的 `bin/` 与 `obj/`。它们用于本地开发；完整运行时与汉化资源的分发方式见 [打包与分发](packaging.md)。
 
-不要将目前不兼容的 2.23.1 当作 2.23.0 的测试原版。缺少测试资源时应先准备输入，不能用跳过兼容校验的方式让测试通过。
-
-## 自动检查
+## 开发检查
 
 ```powershell
+npm run check:guidelines
 npm test
 npm run test:manager
-npm run check:guidelines
-
-# 加上实际安装目录，额外验证只读的 C# → Node 应用检查
- dotnet run --project tests/AntigravityManager.Checks -- 'C:\path\to\antigravity'
 ```
 
-Node.js 检查包括 ASAR、原生菜单与语言设置、未知指纹拒绝、并发文件变化、损坏备份保护、中文错误反馈，以及完整隔离安装/重复安装/外部备份恢复。原生模块测试仍使用本地原始资源，语言分支测试使用已构建补丁。
+规范检查不需要原始程序资源。完整引擎测试需要本地已验证的原始文件和历史补丁，先按 [测试与验证](testing.md) 准备，不能跳过指纹校验或用其他版本冒充测试样本。
 
-C# 检查使用轻量控制台入口，无额外测试框架依赖。覆盖模块注册、重复 ID、路径与设置保存，以及真实子进程的 JSON 成功/失败链路。输入了不兼容应用时，验证安装能力保持关闭。数据目录测试使用独立引导目录，验证迁移字节一致、保留原始文件、重启解析、非空目标和嵌套目录拒绝、并发锁、旧实例及目录链接保护。
+## 下一步
 
-`check:guidelines` 不需要原始程序资源，只读检查规范链接、文档换行、管理器版本同步、部分英文界面提示及直接展示异常的代码路径。它不会自动改写规范；长期约定是否需要更新，仍须按 [AGENTS.md](../AGENTS.md) 和 [规范索引](../spec/README.md) 随开发任务审查。品牌、协议键、翻译原文和第三方工具诊断不应机械翻译。
+- [测试与验证](testing.md)：资源准备、引擎检查、GUI 与前端验证。
+- [打包与分发](packaging.md)：发布参数、目录产物、ZIP 和发行标签。
+- [项目架构](architecture.md)：源码导航、C# → Node.js 执行链路与模块接入。
+- [资源与工作区维护](maintenance.md)：图标生成、缓存与验证记录归档。
+- [协作规范](../AGENTS.md)：中文沟通、编码风格与提交要求。
 
-## GUI 验证
-
-桌面程序提供仅供开发的只读页面渲染入口。使用独立数据目录，自动遍历三个主页面及汉化模块四个页签、检查版本变化、生成明暗主题 PNG，完成后退出：
-
-```powershell
-./src/AntigravityManager.Desktop/bin/Debug/net10.0-windows/AntigravityManager.exe `
-  --data-dir "$PWD/artifacts/gui-smoke/profile" `
-  --app-dir 'C:\path\to\antigravity' `
-  --smoke-output "$PWD/artifacts/gui-smoke/screenshots"
-```
-
-可选 `--smoke-migrate <新的隔离目录>` 在渲染后测试设置页的真实迁移命令及迁移后的备份读取（必须配合 `--data-dir`）。通过标记为截图目录中的 `result.json`，包含应用版本、补丁版本、安装状态、主页面和模块页签数量。异常时保存 `error.txt`。该入口不执行安装或恢复，不修改目标应用；截图属于真实管理器窗口，不是 Antigravity 产品页面截图。
-
-## 可选前端审查与旧组件验证
-
-```powershell
-python tools/analysis/extract-embedded.py 'C:\path\to\language_server.exe'
-node tools/analysis/audit-ui.cjs 'C:\path\to\@babel\parser\lib\index.js'
-```
-
-AST 审查需外部 Babel parser；也可以通过 `BABEL_PARSER_MODULE` 指定。结果是候选，不是可见文案覆盖率。
-
-旧 preload 组件验证仍保留在 `tools/verification/smoke-test.cjs`，依赖完整独立应用副本 `output/portable/`、`analysis/embedded/` 中对应版本资源及外部 Playwright。使用 `PLAYWRIGHT_MODULE` 指定模块路径。该验证与新的 WPF GUI 检查互不替代。
-
-## 发布
-
-```powershell
-./scripts/publish.ps1
-```
-
-默认发布 Windows x64 自包含目录到 `artifacts/app/AntigravityManager/`。包含桌面程序、引擎、版本规则、词库和 Node.js，保留整个目录后即可移动或改名使用。
-
-可通过 `-FrameworkDependent` 选择依赖运行时发布，通过 `-NodeExecutable` 指定同架构 Node.js，通过 `-OutputDirectory` 指定另一发布目录（例如旧版仍在使用时）。首版发布脚本没有自动更新或安装器逻辑，不修改现有代理启动器或桌面快捷方式。
-
-新增模块的步骤见 [架构说明](architecture.md)，旧目录对应关系见 [迁移说明](workspace-migration.md)。
+管理器版本同步维护于 `Directory.Build.props` 和根 `package.json`；补丁版本独立维护于 `engines/localization/package.json`。

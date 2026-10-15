@@ -39,7 +39,36 @@
   <pre id="audit-theme-code">const greet = (name) => `Hello, ${name}!`;</pre>
 </div>
 <div role="tooltip" id="audit-theme-warning">Low contrast ratio (2.3:1). Text may be hard to read.</div>
+<ul><li data-testid="onboarding-capability-build"><span id="audit-onboarding-title">Build new features</span><span id="audit-onboarding-description">Hand off a feature and come back to working code.</span></li></ul>
+<div data-testid="planner-response-text"><span id="audit-onboarding-user-content">Build new features</span></div>
+<div id="audit-onboarding-unrelated">Build new features</div>
+<!-- 实机确认的 portal 下拉结构；功能值与显示文本保持独立。 -->
+<div id="dropdown-fixture-host"></div>
+<div data-testid="project-selector-item"><span class="truncate" id="audit-dropdown-project">Machine</span></div>
+<div data-testid="planner-response-text"><span id="audit-dropdown-response">Full machine</span></div>
+<code id="audit-dropdown-code">Solarized Light</code>
 <script>
+window.auditMountDropdowns=()=>{
+  const host=document.querySelector('#dropdown-fixture-host');
+  host.innerHTML='';
+  const menus={security:[['default','Default'],['machine','Full machine'],['turbo','Turbo mode'],['custom','Custom']],theme:[['Catppuccin','Catppuccin'],['Gruvbox Material','Gruvbox Material'],['One Light','One Light'],['Solarized Light','Solarized Light'],['One Dark Pro','One Dark Pro'],['Solarized Dark','Solarized Dark']]};
+  const descriptions={
+    default:'Requires manual review for all terminal commands and file accesses outside of the working folders.',
+    machine:'All terminal commands require review. The agent can read or write to any file in the machine.',
+    turbo:'Disables all safety barriers for maximal iteration velocity.'
+  };
+  for(const [name,items] of Object.entries(menus)){
+    const list=document.createElement('div');list.setAttribute('role','listbox');list.dataset.menu=name;
+    for(const [value,label] of items){
+      const option=document.createElement('div');option.setAttribute('role','option');option.setAttribute('aria-selected','false');option.dataset.value=value;
+      const body=document.createElement('div');body.className='flex-grow flex flex-col min-w-0 text-left';
+      const title=document.createElement('div');title.className='truncate';title.dataset.dropdownLabel='';title.textContent=label;body.append(title);
+      if(descriptions[value]){const description=document.createElement('span');description.className='text-xs text-muted-foreground whitespace-normal break-words leading-tight py-0.5';description.textContent=descriptions[value];body.append(description);}
+      option.append(body);option.onclick=()=>{window.auditDropdownSelected={menu:name,value};};list.append(option);
+    }
+    host.append(list);
+  }
+};
 window.auditOriginals=Object.fromEntries([...document.querySelectorAll('[id^="audit-"]')].map(el=>[el.id,el.textContent]));
 window.auditHighlightClicks=0;document.querySelector('#audit-docs-description span').onclick=()=>window.auditHighlightClicks++;
 document.querySelector('#audit-theme-preset').onclick=event=>window.auditSelectedPreset=event.currentTarget.dataset.preset;

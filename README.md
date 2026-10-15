@@ -1,120 +1,82 @@
+<div align="center">
+
+<img src="src/AntigravityManager.Desktop/Assets/Branding/app-icon.svg" width="96" height="96" alt="Antigravity Manager">
+
 # Antigravity Manager
 
-面向 Windows 的模块化 Antigravity 管理工具。首个功能模块提供简体中文补丁管理，后续功能通过统一模块接口扩展。
+**让 Antigravity 的日常维护更简单。**
 
-管理器按需打开，不驻留后台，不接管 Antigravity 的日常启动，也不会修改现有代理启动器。
+Windows 桌面管理器 · 模块化功能 · 简体中文汉化
 
-## 当前状态
+<img src="https://img.shields.io/badge/Windows-x64-0078D4?style=flat-square" alt="Windows x64">
+<img src="https://img.shields.io/badge/.NET-10-512BD4?style=flat-square" alt=".NET 10">
+<img src="https://img.shields.io/badge/UI-WPF-5369D8?style=flat-square" alt="WPF">
+<a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License"></a>
 
-- 管理器预览版：**0.1.1**。
-- 技术栈：**C# / .NET 10 / WPF / WPF UI 4.3.0**。
-- 汉化引擎：**JavaScript / Node.js，补丁版本 0.4.1**。
-- 已验证汉化目标：**Windows Antigravity 2.23.0 的指定原始文件指纹**。
-- **2.23.1 尚未完成汉化兼容性验证**。可以检查版本和 Electron 模块变化，安装按钮保持禁用。
+[快速开始](#快速开始) · [使用指南](docs/user-guide.md) · [开发文档](docs/development.md) · [文档中心](docs/README.md)
 
-这是独立的非官方工具。界面中的版本检查来自本地安装文件，不代表对未来版本的兼容承诺。
+</div>
 
-## 功能
+<br>
 
-| 页面 | 功能 |
-| --- | --- |
-| 概览 | 当前应用信息与功能模块入口 |
-| 界面汉化 | 内含汉化概况、版本检查、备份与恢复、操作记录四个页签 |
-| 设置 | 安装目录、明暗主题、数据目录选择与校验迁移 |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/overview-dark.png">
+  <img src="docs/assets/screenshots/overview-light.png" alt="Antigravity Manager 工作台，支持明暗主题" width="1120">
+</picture>
 
-安装和恢复前需要完全退出 Antigravity。未知指纹、损坏备份或操作期间发生的文件变化会阻止替换。
+<p align="center"><sub>独立的维护工作台，支持明暗主题；截图使用隔离数据目录。</sub></p>
 
-## 开发运行
+## 功能一览
 
-要求 Windows、.NET 10 SDK 和 Node.js。无需单独安装 WPF UI；NuGet 会还原项目依赖。Visual Studio 是可选的，也可以使用命令行。
+Antigravity Manager 将维护操作集中在独立模块中。当前提供简体中文汉化模块，后续功能可通过统一接口接入。
+
+| 界面汉化 | 版本检查 | 备份与恢复 |
+| --- | --- | --- |
+| 安装、修复汉化补丁，支持中英文切换 | 识别应用版本与文件指纹，区分可用和已安装补丁 | 按应用版本保存原始备份，校验后恢复 |
+
+管理器提供操作记录、明暗主题和数据目录迁移。按需打开，维护完成即可关闭，日常启动继续使用原有快捷方式或代理启动器。
+
+## 快速开始
+
+**Windows x64 · ZIP 解压即用 · 无需另装 .NET 或 Node.js**
+
+1. 获取 `AntigravityManager-<版本>-win-x64.zip`，完整解压。
+2. 运行 `AntigravityManager.exe`，在“设置”中确认 Antigravity 安装目录。
+3. 打开“界面汉化”检查兼容性，完全退出 Antigravity 后执行“安装／修复汉化”。
+4. 按原有方式启动 Antigravity。需要撤销时，在“备份与恢复”中恢复原版。
+
+源码下载不包含已编译程序。自行构建 ZIP 见 [打包与分发](docs/packaging.md)；首次配置和数据迁移见 [使用指南](docs/user-guide.md)。
+
+### 当前支持
+
+| 管理器 | 汉化补丁 | 已适配的 Antigravity |
+| --- | --- | --- |
+| **0.1.3** 预览版 | **0.5.1** | Windows **2.23.0 / 2.23.1** |
+
+安装资格以已验证的文件指纹为准。应用更新后重新检查支持状态，具体范围见 [汉化模块指南](docs/modules/localization.md)。
+
+## 开发
+
+准备 Windows、.NET 10 SDK 和 Node.js，进入仓库根目录运行：
 
 ```powershell
-# 编译整个解决方案
-npm run build
-
-# 启动桌面管理器
 ./scripts/run.ps1
 ```
 
-构建命令也可直接使用 `dotnet build AntigravityManager.slnx`。管理器会查找可执行文件上级目录中的引擎入口，项目根目录可以重命名。
+脚本会按需编译并启动桌面程序。只编译使用 `dotnet build AntigravityManager.slnx`，生成完整分发目录使用 `./scripts/publish.ps1`。环境、产物区别和测试步骤见 [开发指南](docs/development.md)。
 
-## 发布可运行版本
+## 文档与反馈
 
-```powershell
-./scripts/publish.ps1
-```
+- **使用管理器**：[使用指南](docs/user-guide.md) · [汉化模块](docs/modules/localization.md)
+- **参与开发**：[开发指南](docs/development.md) · [测试与验证](docs/testing.md) · [打包与分发](docs/packaging.md)
+- **了解项目**：[项目架构](docs/architecture.md) · [更新记录](CHANGELOG.md) · [完整文档](docs/README.md)
 
-默认输出到 `artifacts/app/AntigravityManager/`，包含自包含 .NET 桌面程序、汉化引擎及 Node.js。使用者无需另装 .NET 或 Node.js，打开目录中的 `AntigravityManager.exe` 即可。分发时需要保留整个目录。
+反馈问题时请提供复现步骤、相关截图，以及管理器、补丁和 Antigravity 的版本。参与贡献前请阅读 [协作规范](AGENTS.md)。
 
-脚本默认发布 Windows x64，并复制本机 PATH 中的 `node.exe`；可以使用 `-NodeExecutable` 指定同架构的 Node.js。`-FrameworkDependent` 发布较小的依赖运行时版本，使用者需要对应的 .NET Desktop Runtime。首次构建和发布需要联网还原依赖。
+## 许可证
 
-## 项目结构
+本项目原创代码采用 [MIT 许可证](LICENSE)，允许商用、修改、分发及闭源使用，需保留版权和许可声明。第三方组件适用各自的许可证，清单与本地许可原文见 [第三方声明](THIRD_PARTY_NOTICES.md)。
 
-```text
-.
-├── AntigravityManager.slnx
-├── src/
-│   ├── AntigravityManager.Desktop/              # WPF 窗口、页面与视图模型
-│   ├── AntigravityManager.Core/                 # 模块接口与共享数据契约
-│   ├── AntigravityManager.Infrastructure/       # 路径、配置及后台引擎通信
-│   └── AntigravityManager.Modules.Localization/ # 汉化模块适配层
-├── engines/localization/
-│   ├── cli.cjs                                 # JSON 命令接口
-│   ├── src/                                    # ASAR 与翻译实现
-│   ├── scripts/                                # 补丁构建及兼容入口
-│   ├── profiles/                               # 已验证版本指纹和比较基线
-│   ├── translations/                           # 固定、服务端与动态词库
-│   └── tests/                                  # 引擎测试与界面样本
-├── tests/AntigravityManager.Checks/             # C# 与跨进程集成检查
-├── tools/                                      # 离线分析和开发验证工具
-├── scripts/                                    # 管理器运行与发布脚本
-├── AGENTS.md                                   # 中文协作与规范阅读入口
-├── spec/                                       # 长期规范与按需创建的变更规格
-├── docs/                                       # 操作、开发和历史报告
-├── analysis/                                   # 来源证据与本地提取资源
-├── runtime/                                    # 可选本地 Node.js，二进制忽略
-└── artifacts/                                  # 发布、补丁和测试产物，Git 忽略
-```
+---
 
-## 数据与备份
-
-默认数据目录为 `%LOCALAPPDATA%/AntigravityManager/`，独立于应用安装目录和项目工作区。设置页可以选择新的或空目录，并点击“迁移并使用此目录”。迁移会复制设置、汉化操作记录、备份和缓存，逐文件校验后切换；原目录保留，不合并非空目标目录。
-
-管理器使用默认目录内的 `location.json` 保存数据位置；更换数据目录后仍需保留这个定位文件。GUI 和未显式指定 `--data-dir` 的 CLI 共用此位置。配置的目录不可用时会报错，不会悄悄创建一套空数据。`--data-dir` 用于隔离测试，不改变正常配置。
-
-```text
-AntigravityManager/
-├── settings.json
-├── localization/tasks.json
-├── localization/installed.json
-├── backups/localization/<应用版本>/<原始指纹>/app.asar
-└── cache/localization/<应用版本>/
-```
-
-现有且通过校验的 `app.asar.zh-CN-original` 可以作为旧版备份来源；新的备份保存在管理器数据目录。更新应用或重命名项目目录不会主动删除这些备份。更新后的未知版本不会误用旧备份进行恢复。
-
-## 验证与限制
-
-引擎测试覆盖 ASAR、原生菜单与语言设置、未知版本拒绝安装、文件变化保护，以及隔离副本的安装/重复安装/外部备份恢复。C# 检查覆盖模块注册、设置、根目录重命名和 JSON 子进程通信；独立数据目录的 GUI 检查渲染三个主页面、汉化模块的四个页签及明暗主题。数据目录检查覆盖完整复制、重启读取、冲突拒绝、并发保护、旧实例保护和目录链接拒绝。
-
-```powershell
-npm test
-npm run test:manager
-```
-
-完整引擎测试需要原始模块和构建后的补丁，准备方法见开发指南。界面差异报告目前只比较已记录的 Electron 模块及原生文案锚点；尚不自动分析语言服务内嵌前端，也不自动批准未知版本。历史组件测试不能替代新版本完整实机检查。
-
-## 文档
-
-- [协作与 Git 规范](AGENTS.md)
-- [项目规范索引](spec/README.md)
-- [架构与模块规范](spec/architecture.md)
-- [汉化模块规范](spec/modules/localization.md)
-- [项目架构与模块扩展](docs/architecture.md)
-- [开发、测试与发布](docs/development.md)
-- [汉化模块说明](docs/modules/localization.md)
-- [工作区迁移说明](docs/workspace-migration.md)
-- [历史逆向分析](docs/reports/reverse-engineering-2.23.0.md)
-- [0.4.0 审查报告](docs/reports/full-audit-0.4.0.md)
-- [0.4.1 外观修复报告](docs/reports/appearance-0.4.1.md)
-- [第三方组件说明](THIRD_PARTY_NOTICES.md)
+<sub>本项目为独立的非官方工具，与 Antigravity 官方无隶属关系。第三方组件说明见 <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>。</sub>

@@ -5,8 +5,8 @@ function installChineseUI(dictionary, bridge, config) {
   // Restrict to the application document, never webview guests or external pages.
   const host = location.hostname;
   if (!['127.0.0.1', 'localhost', '[::1]'].includes(host)) return;
-  window.__antigravityChineseUI = { version: '0.4.1' };
   config = config || {};
+  window.__antigravityChineseUI = { version: config.patchVersion || 'unknown' };
   const remoteDictionary = config.remote || {};
   const dynamicRules = (config.rules || []).map(rule => ({ ...rule, regex: new RegExp(rule.pattern) }));
   let language = 'en';
@@ -63,6 +63,7 @@ function installChineseUI(dictionary, bridge, config) {
     '[data-testid="sidecar-list-empty"]', '[data-testid="cloud-trigger-list-empty"]',
     '[data-testid="cloud-trigger-editor-panel"]',
     '[data-testid="side-question-history-counter"]',
+    '[data-testid^="onboarding-capability-"]',
     '.max-w-2xl.mx-auto',
     '.max-w-2xl.mx-auto div.text-sm.text-muted-foreground.bg-transparent',
     '.max-w-2xl.mx-auto .flex.items-center.gap-1.text-xs.text-muted-foreground',

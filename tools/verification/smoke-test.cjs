@@ -2,18 +2,34 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
+const net = require('node:net');
 const { spawn } = require('node:child_process');
 const assert = require('node:assert/strict');
 const { readAsar } = require('../../engines/localization/src/asar.cjs');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const root = path.resolve(__dirname, '../..');
 const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'engines/localization/translations/zh-CN.json'), 'utf8'));
-const portable = path.join(root, 'output/portable');
-const profile = path.join(root, 'output/smoke-profile');
+function option(name, fallback) {
+  const index = process.argv.indexOf('--' + name);
+  return index < 0 ? fallback : process.argv[index + 1];
+}
+function isolatedDirectory(value) {
+  const resolved = path.resolve(root, value);
+  const relative = path.relative(root, resolved);
+  if (relative.startsWith('..') || path.isAbsolute(relative) || !/^(artifacts|output)[\\/]/.test(relative)) {
+    throw Error('验证目录必须位于工作区 artifacts/ 或 output/ 中：' + resolved);
+  }
+  return resolved;
+}
+const portable = isolatedDirectory(option('portable', process.env.SMOKE_PORTABLE || 'output/portable'));
+const profile = isolatedDirectory(option('profile', process.env.SMOKE_PROFILE || 'output/smoke-profile'));
+const output = isolatedDirectory(option('output', process.env.SMOKE_OUTPUT || 'output/playwright'));
+const embedded = path.resolve(root, option('embedded', process.env.SMOKE_EMBEDDED || 'analysis/embedded'));
 const checkEnglish = process.argv.includes('--check-english');
 fs.mkdirSync(profile, { recursive: true });
 if (!checkEnglish) fs.writeFileSync(path.join(profile, 'ui-language.json'), JSON.stringify({ language: 'zh-CN' }));
 const archive = readAsar(fs.readFileSync(path.join(portable, 'resources/app.asar')));
+const applicationVersion = JSON.parse(archive.files.get('package.json').data.toString()).version;
 const constants = archive.files.get('dist/ideInstall/constants.js').data.toString();
 const wizardKey = constants.match(/exports\.WIZARD_SHOWN_KEY = '([^']+)'/)[1];
 fs.writeFileSync(path.join(profile, 'app_storage.json'), JSON.stringify({ [wizardKey]: 'true' }));
@@ -29,22 +45,31 @@ const fixture = `<!doctype html><html><head><meta charset="utf-8"><title>Antigra
 ${fs.readFileSync(path.join(root, 'engines/localization/tests/fixtures/ui-coverage.html'), 'utf8')}
 ${fs.readFileSync(path.join(root, 'engines/localization/tests/fixtures/full-audit.html'), 'utf8')}
 </body></html>`;
-const assetMap = { '/main.js': '142809195-main.js', '/prism_bundle.js': '145690865-prism_bundle.js', '/jetbox.css': '142785440-jetbox.css', '/compiled_tailwind.css': '142736347-compiled_tailwind.css', '/diff_worker.js': '142773510-diff_worker.js', '/audio_processor.js': '142735456-audio_processor.js' };
+function embeddedFile(name) {
+  const matches = fs.readdirSync(embedded).filter(file => file.endsWith('-' + name));
+  assert.equal(matches.length, 1, '嵌入资源须唯一匹配：' + name);
+  return path.join(embedded, matches[0]);
+}
+const assetMap = Object.fromEntries(['main.js', 'prism_bundle.js', 'jetbox.css', 'compiled_tailwind.css', 'diff_worker.js', 'audio_processor.js'].map(name => ['/' + name, embeddedFile(name)]));
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://127.0.0.1');
   if (url.pathname === '/actual') {
-    const html = fs.readFileSync(path.join(root, 'analysis/embedded/142783784-index.html'), 'utf8').replace('<head>', '<head><script>window.__APP_CONFIG__={productName:"Antigravity",appVersion:"2.23.0",csrfToken:"local-fixture-only",devMode:false};</script>');
+    const html = fs.readFileSync(embeddedFile('index.html'), 'utf8').replace('<head>', '<head><script>window.__APP_CONFIG__=' + JSON.stringify({productName:'Antigravity',appVersion:applicationVersion,csrfToken:'local-fixture-only',devMode:false}) + ';</script>');
     res.setHeader('Content-Type', 'text/html'); res.end(html);
   } else if (assetMap[url.pathname]) {
     res.setHeader('Content-Type', url.pathname.endsWith('.js') ? 'application/javascript' : 'text/css');
-    res.end(fs.readFileSync(path.join(root, 'analysis/embedded', assetMap[url.pathname])));
+    res.end(fs.readFileSync(assetMap[url.pathname]));
   } else if (url.pathname === '/') { res.setHeader('Content-Type', 'text/html'); res.end(fixture); }
   else { res.writeHead(503, { 'Content-Type': 'application/json' }); res.end('{"error":"offline verification fixture"}'); }
 });
 async function main() {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const url = 'http://127.0.0.1:' + server.address().port;
-  const child = spawn(path.join(portable, 'Antigravity.exe'), ['--remote-debugging-port=9231', '--user-data-dir=' + profile], {
+  const reservation = net.createServer();
+  await new Promise(resolve => reservation.listen(0, '127.0.0.1', resolve));
+  const debuggingPort = reservation.address().port;
+  await new Promise(resolve => reservation.close(resolve));
+  const child = spawn(path.join(portable, 'Antigravity.exe'), ['--remote-debugging-address=127.0.0.1', '--remote-debugging-port=' + debuggingPort, '--user-data-dir=' + profile], {
     env: { ...process.env, DEV_URL: url }, windowsHide: true, stdio: 'ignore'
   });
   let browser;
@@ -53,7 +78,7 @@ async function main() {
   child.on('exit', (code, signal) => { childExit = { code, signal }; });
   try {
     for (let attempt = 0; attempt < 35; attempt++) {
-      try { browser = await chromium.connectOverCDP('http://127.0.0.1:9231'); break; }
+      try { browser = await chromium.connectOverCDP('http://127.0.0.1:' + debuggingPort); break; }
       catch (error) { connectionError = error.message.split('\n')[0]; await new Promise(resolve => setTimeout(resolve, 500)); }
     }
     if (!browser) throw Error('Packaged Electron did not start: ' + JSON.stringify({ childError, childExit, connectionError }));
@@ -144,8 +169,8 @@ async function main() {
     await page.evaluate(() => document.querySelector('#user-project-models').parentElement.append(document.querySelector('#moving-name')));
     await page.waitForFunction(() => document.querySelector('#moving-name')?.textContent === 'Models');
     assert.equal(await page.locator('#moving-name').getAttribute('title'), 'Models');
-    fs.mkdirSync(path.join(root, 'output/playwright'), { recursive: true });
-    await page.screenshot({ path: path.join(root, 'output/playwright/preload-smoke.png') });
+    fs.mkdirSync(output, { recursive: true });
+    await page.screenshot({ path: path.join(output, 'preload-smoke.png') });
     console.log('PASS: packaged preload, context isolation, dynamic changes, control events, protected chat/code/input.');
     await page.locator('#antigravity-language-switcher summary').click();
     const languageSelect = page.locator('#antigravity-language-switcher select');
@@ -180,7 +205,7 @@ async function main() {
     await page.waitForSelector('#antigravity-language-switcher');
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
     assert.equal(await page.locator('#settings').textContent(), 'Settings');
-    await page.screenshot({ path: path.join(root, 'output/playwright/language-switch-en.png') });
+    await page.screenshot({ path: path.join(output, 'language-switch-en.png') });
     console.log('PASS: Chinese ↔ English, original text/attributes, application updates, persisted setting and reload.');
     console.log('PASS: screenshot component coverage, composite fragments, dynamic options, project-name collisions and exact English restoration.');
   } finally {

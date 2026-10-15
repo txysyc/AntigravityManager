@@ -6,9 +6,8 @@ const { execFileSync } = require('node:child_process');
 const { readAsar, sha } = require('./asar.cjs');
 const { nativeManifest, patchNativeSource } = require('./native-localize.cjs');
 const { buildPatch } = require('../scripts/build.cjs');
-const { engineRoot } = require('./paths.cjs');
-const profiles = fs.readdirSync(path.join(engineRoot, 'profiles')).filter(n => n.endsWith('.json')).map(n => JSON.parse(fs.readFileSync(path.join(engineRoot, 'profiles', n))));
-const hashes = profile => [profile.patchedSha256, ...(profile.acceptedPatchedSha256 || [])];
+const { loadProfiles, patchHashes: hashes } = require('./profiles.cjs');
+const profiles = loadProfiles();
 const targetPath = appDir => path.join(path.resolve(appDir), 'resources/app.asar');
 const backupPath = (dataDir, profile) => path.join(dataDir, 'backups/localization', profile.version, profile.originalSha256, 'app.asar');
 const recordPath = dataDir => path.join(dataDir, 'localization/installed.json');
@@ -21,11 +20,17 @@ function inspect(appDir, dataDir) {
   const generated = saved?.patchedSha256 === fingerprint && saved.appDirectory === path.resolve(appDir);
   const profile = profiles.find(p => p.version === pkg.version && (p.originalSha256 === fingerprint || hashes(p).includes(fingerprint) || (generated && saved.originalSha256 === p.originalSha256)));
   const patched = !!profile && fingerprint !== profile.originalSha256;
+  const serverPath = path.join(path.resolve(appDir), 'resources/bin/language_server.exe');
+  const languageServerFingerprint = profile?.languageServerSha256 && fs.existsSync(serverPath) ? sha(fs.readFileSync(serverPath)) : '';
+  const serverMatches = !profile?.languageServerSha256 || languageServerFingerprint === profile.languageServerSha256;
   const canRestore = patched && [backupPath(dataDir, profile), file + '.zh-CN-original'].some(p => fs.existsSync(p) && sha(fs.readFileSync(p)) === profile.originalSha256);
-  return { appDirectory: path.resolve(appDir), version: pkg.version, fingerprint, status: !profile ? 'unsupported' : patched ? 'patched' : 'unpatched', patchVersion: patched ? saved?.patchVersion || profile.patchVersion : '', baselineVersion: profiles.at(-1).version, canInstall: !!profile && (!patched || canRestore), canRestore };
+  const knownVersion = patched ? profile.patchedVersions?.[fingerprint] || (fingerprint === profile.patchedSha256 ? profile.patchVersion : '') : '';
+  const patchVersion = knownVersion || (patched && generated && saved.originalSha256 === profile.originalSha256 ? saved.patchVersion : '');
+  const compatibilityIssue = serverMatches ? '' : '语言服务文件与已验证版本不匹配，安装已禁用。已知汉化文件仍可使用匹配的原始备份恢复。';
+  return { appDirectory: path.resolve(appDir), version: pkg.version, fingerprint, languageServerFingerprint, compatibilityIssue, status: !profile || (!serverMatches && !patched) ? 'unsupported' : patched ? 'patched' : 'unpatched', patchVersion, baselineVersion: (profile || profiles.at(-1)).version, canInstall: !!profile && serverMatches && (!patched || canRestore), canRestore };
 }
 function compare(appDir, dataDir) {
-  const snapshot = inspect(appDir, dataDir), baseline = profiles.at(-1);
+  const snapshot = inspect(appDir, dataDir), baseline = profiles.find(p => p.version === snapshot.version) || profiles.at(-1);
   const archive = readAsar(fs.readFileSync(targetPath(appDir)));
   const modules = Object.keys(baseline.baselineModules || {}).map(file => {
     const member = archive.files.get(file), expected = nativeManifest[file]?.length || 0;
@@ -83,6 +88,7 @@ function mutate(operation, appDir, dataDir, checkStopped = assertStopped) {
       atomicReplace(target, fs.readFileSync(original), snapshot.fingerprint);
       return inspect(appDir, dataDir);
     }
+    if (!snapshot.canInstall) throw Error('当前安装未满足补丁条件，请检查语言服务版本和原始备份。');
     if (snapshot.status === 'patched' && saved?.patchedSha256 === snapshot.fingerprint && saved.patchVersion === require('../package.json').version) return snapshot;
     if (fs.existsSync(backup) && sha(fs.readFileSync(backup)) !== profile.originalSha256) throw Error('原始备份校验失败，拒绝覆盖。');
     if (!fs.existsSync(backup)) {
@@ -91,10 +97,11 @@ function mutate(operation, appDir, dataDir, checkStopped = assertStopped) {
       fs.mkdirSync(path.dirname(backup), { recursive: true });
       fs.writeFileSync(backup, original, { flag: 'wx' });
     }
-    const outputDirectory = path.join(dataDir, 'cache/localization', profile.version);
+    const outputDirectory = path.join(dataDir, 'cache/localization', profile.version, require('../package.json').version);
     const manifest = buildPatch({ appDir, outputDirectory, backupPath: backup, profile });
     const patch = fs.readFileSync(path.join(outputDirectory, 'app.asar'));
     if (sha(patch) !== manifest.patchedSha256) throw Error('补丁校验失败。');
+    if (profile.languageServerSha256 && sha(fs.readFileSync(path.join(appDir, 'resources/bin/language_server.exe'))) !== profile.languageServerSha256) throw Error('语言服务文件在操作期间发生变化，已停止替换。');
     const state = { appDirectory: path.resolve(appDir), originalSha256: profile.originalSha256, patchedSha256: manifest.patchedSha256, patchVersion: manifest.patchVersion };
     fs.mkdirSync(path.dirname(recordPath(dataDir)), { recursive: true });
     fs.writeFileSync(recordPath(dataDir), JSON.stringify(state, null, 2));

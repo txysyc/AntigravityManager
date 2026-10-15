@@ -38,6 +38,7 @@ public sealed class ApplicationSnapshot
     public string Status { get; set; } = "unknown";
     public string PatchVersion { get; set; } = "";
     public string BaselineVersion { get; set; } = "";
+    public string CompatibilityIssue { get; set; } = "";
     public bool CanInstall { get; set; }
     public bool CanRestore { get; set; }
 }

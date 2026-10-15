@@ -31,7 +31,7 @@ npm run check:guidelines # 检查规范链接、版本与部分中文提示
 ./scripts/publish.ps1   # 发布 Windows x64 自包含程序目录
 ```
 
-完整引擎测试依赖已验证的原始资源及已构建补丁，准备步骤见 `docs/development.md`。
+完整引擎测试依赖已验证的原始资源及已构建补丁，准备步骤见 `docs/testing.md`；构建入口见 `docs/development.md`，发行与 ZIP 分发见 `docs/packaging.md`。
 
 ## 编码风格与命名
 
@@ -48,6 +48,7 @@ npm run check:guidelines # 检查规范链接、版本与部分中文提示
 - 标题简洁说明具体变更，不使用“更新代码”等模糊描述；必要时在正文说明原因、影响与验证结果。
 - 每次提交聚焦一个完整改动，避免混入无关文件。提交前审查 `git diff --cached`，执行格式检查和相关测试。
 - 分支使用 `feature/<topic>`、`fix/<topic>` 或 `docs/<topic>`。仅在明确要求时提交、合并、推送或打标签，不擅自改写历史。
+- 发行标签区分组件：管理器使用 `manager-v<版本>`，汉化补丁使用 `localization-v<版本>`，使用带中文说明的附注标签。两者可指向同一提交；历史 `v0.4.1` 保持原名。
 - PR 使用中文说明问题、改动、验证与限制，关联相关议题；UI 变更附截图。合并前确认目标分支及工作区状态。
 
 示例：`feat(localization): 增加补丁版本展示`、`fix(storage): 修复迁移后数据目录未持久化`、`docs: 完善中文协作规范`。

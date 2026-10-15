@@ -30,21 +30,54 @@ foreach ($file in @('cli.cjs','package.json')) { Copy-Item -LiteralPath (Join-Pa
 $runtimeDirectory = Join-Path $publishDirectory 'runtime'
 New-Item -ItemType Directory -Path $runtimeDirectory -Force | Out-Null
 Copy-Item -LiteralPath $NodeExecutable -Destination (Join-Path $runtimeDirectory 'node.exe') -Force
-Copy-Item -LiteralPath (Join-Path $projectRoot 'THIRD_PARTY_NOTICES.md') -Destination $publishDirectory -Force
-foreach ($licenseName in @('LICENSE','LICENSE.txt')) {
-    $licensePath = Join-Path (Split-Path -Parent $NodeExecutable) $licenseName
-    if (Test-Path -LiteralPath $licensePath) { Copy-Item -LiteralPath $licensePath -Destination (Join-Path $runtimeDirectory $licenseName) -Force }
+foreach ($projectNotice in @('LICENSE', 'THIRD_PARTY_NOTICES.md')) {
+    Copy-Item -LiteralPath (Join-Path $projectRoot $projectNotice) -Destination $publishDirectory -Force
 }
-if (!(Test-Path -LiteralPath (Join-Path $runtimeDirectory 'LICENSE')) -and !(Test-Path -LiteralPath (Join-Path $runtimeDirectory 'LICENSE.txt'))) {
-    $nodeVersion = & $NodeExecutable --version
-    if ($nodeVersion -notmatch '^v\d+\.\d+\.\d+$') { throw '无法确定 Node.js 版本，不能获取对应许可证。' }
+$licenseDirectory = Join-Path $publishDirectory 'licenses'
+New-Item -ItemType Directory -Path $licenseDirectory -Force | Out-Null
+Copy-Item -Path (Join-Path $projectRoot 'licenses/*') -Destination $licenseDirectory -Recurse -Force
+$nodeVersion = & $NodeExecutable --version
+if ($nodeVersion -notmatch '^v\d+\.\d+\.\d+$') { throw '无法确定 Node.js 版本，不能获取对应许可证。' }
+$nodeNotice = @(
+    (Join-Path (Split-Path -Parent $NodeExecutable) 'LICENSE'),
+    (Join-Path (Split-Path -Parent $NodeExecutable) 'LICENSE.txt'),
+    (Join-Path $projectRoot ('licenses/Node.js/' + $nodeVersion.Substring(1) + '/LICENSE'))
+) | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+if ($nodeNotice) {
+    Copy-Item -LiteralPath $nodeNotice -Destination (Join-Path $runtimeDirectory 'LICENSE') -Force
+} else {
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/nodejs/node/$nodeVersion/LICENSE" -OutFile (Join-Path $runtimeDirectory 'LICENSE')
 }
-Copy-Item -LiteralPath (Join-Path $projectRoot 'artifacts/nuget/packages/wpf-ui/4.3.0/LICENSE.md') -Destination (Join-Path $publishDirectory 'WPF-UI-LICENSE.md') -Force
-Copy-Item -LiteralPath (Join-Path $projectRoot 'artifacts/nuget/packages/wpf-ui/4.3.0/ThirdPartyNotices.txt') -Destination (Join-Path $publishDirectory 'WPF-UI-ThirdPartyNotices.txt') -Force
-$dotnetDirectory = Split-Path -Parent (Get-Command dotnet.exe -ErrorAction Stop).Source
-foreach ($noticeName in @('LICENSE.txt','ThirdPartyNotices.txt')) {
-    $noticePath = Join-Path $dotnetDirectory $noticeName
-    if (Test-Path -LiteralPath $noticePath) { Copy-Item -LiteralPath $noticePath -Destination (Join-Path $publishDirectory "DOTNET-$noticeName") -Force }
+function Copy-PackageNotices {
+    param([string]$PackageId, [string]$Version, [string]$DirectoryName, [string]$LicenseName, [string]$NoticeName)
+    $packageDirectory = Join-Path $env:NUGET_PACKAGES ($PackageId.ToLowerInvariant() + '/' + $Version)
+    $destination = Join-Path $licenseDirectory ($DirectoryName + '/' + $Version)
+    New-Item -ItemType Directory -Path $destination -Force | Out-Null
+    foreach ($name in @($LicenseName, $NoticeName) | Where-Object { $_ }) {
+        $source = Join-Path $packageDirectory $name
+        if (!(Test-Path -LiteralPath $source -PathType Leaf)) { throw "缺少依赖许可文件：$PackageId/$Version/$name，发布未完成。" }
+        Copy-Item -LiteralPath $source -Destination $destination -Force
+    }
+}
+# 使用发布后的依赖与运行时版本，避免把 SDK 许可当成程序运行时许可。
+$dependencies = Get-Content -LiteralPath (Join-Path $publishDirectory 'AntigravityManager.deps.json') -Raw | ConvertFrom-Json
+foreach ($package in $dependencies.libraries.PSObject.Properties) {
+    $identity = $package.Name.Split('/')
+    if ($identity[0] -in @('WPF-UI', 'WPF-UI.Abstractions')) {
+        Copy-PackageNotices -PackageId $identity[0] -Version $identity[1] -DirectoryName $identity[0] -LicenseName 'LICENSE.md' -NoticeName 'ThirdPartyNotices.txt'
+    }
+}
+if (!$FrameworkDependent) {
+    $runtimeConfig = Get-Content -LiteralPath (Join-Path $publishDirectory 'AntigravityManager.runtimeconfig.json') -Raw | ConvertFrom-Json
+    foreach ($framework in $runtimeConfig.runtimeOptions.includedFrameworks) {
+        switch ($framework.name) {
+            'Microsoft.NETCore.App' {
+                Copy-PackageNotices -PackageId "Microsoft.NETCore.App.Runtime.$RuntimeIdentifier" -Version $framework.version -DirectoryName 'dotnet-runtime' -LicenseName 'LICENSE.TXT' -NoticeName 'THIRD-PARTY-NOTICES.TXT'
+            }
+            'Microsoft.WindowsDesktop.App' {
+                Copy-PackageNotices -PackageId "Microsoft.WindowsDesktop.App.Runtime.$RuntimeIdentifier" -Version $framework.version -DirectoryName 'windowsdesktop' -LicenseName 'LICENSE'
+            }
+        }
+    }
 }
 Write-Output "发布完成：$publishDirectory"

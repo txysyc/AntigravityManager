@@ -15,3 +15,10 @@ indent_size = 2
 
 [*.md]
 trim_trailing_whitespace = false
+
+# 上游许可原文保持原始编码、换行与空白。
+[licenses/**/{LICENSE*,*Notices*,*NOTICES*}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = false

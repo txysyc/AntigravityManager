@@ -17,19 +17,24 @@ function files(directory, extension) {
     return file.endsWith(extension) ? [file] : [];
   });
 }
-const documents = ['AGENTS.md', 'README.md', 'docs/architecture.md', 'docs/development.md', 'docs/modules/localization.md', ...files('spec', '.md')];
+const documents = ['AGENTS.md', 'README.md', 'CHANGELOG.md', 'THIRD_PARTY_NOTICES.md', 'licenses/README.md', ...files('docs', '.md'), ...files('spec', '.md')];
 for (const file of documents) {
   const source = read(file);
   check(source.endsWith('\n') && !source.includes('\r'), `${file} 应使用 LF 并保留末尾换行`);
   const prose = source.replace(/```[\s\S]*?```/g, '');
-  for (const match of prose.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
-    const href = match[1].replace(/^<|>$/g, '');
+  const references = [...prose.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)].map(match => match[1]);
+  references.push(...[...prose.matchAll(/\b(?:href|src|srcset)="([^"]+)"/g)].map(match => match[1]));
+  for (const reference of references) {
+    const href = reference.replace(/^<|>$/g, '');
     if (/^(?:[a-z][\w+.-]*:|#)/i.test(href)) continue;
     const target = path.resolve(root, path.dirname(file), decodeURIComponent(href.split('#')[0]));
     check(fs.existsSync(target), `${file} 的链接不存在：${href}`);
   }
 }
 const manager = JSON.parse(read('package.json'));
+check(manager.license === 'MIT' && JSON.parse(read('engines/localization/package.json')).license === 'MIT', '项目与引擎应同步声明 MIT 许可');
+check(read('LICENSE').startsWith('MIT License\n') && /Copyright \(c\) \d{4} \S/.test(read('LICENSE')), '项目缺少 MIT 许可原文或版权声明');
+check(read('Directory.Build.props').includes('<PackageLicenseExpression>MIT</PackageLicenseExpression>'), 'C# 项目应同步声明 MIT 许可');
 const configured = read('Directory.Build.props').match(/<Version>([^<]+)<\/Version>/)?.[1];
 check(manager.version === configured, '管理器的 package.json 与 Directory.Build.props 版本不一致');
 for (const file of files('src/AntigravityManager.Desktop', '.xaml')) {

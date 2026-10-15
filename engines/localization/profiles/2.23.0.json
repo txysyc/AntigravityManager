@@ -315,5 +315,9 @@
     "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35",
     "dist/ideInstall/wizardHtml.js": "5eff5a777d5cfc26877ee1ea7889310c2afe0aa66d596f87f9bdc57ed41264b9",
     "dist/preload.js": "81d220de63447d27db95adf67d9711b59ee317b2338ba538f419b354a54b1f60"
+  },
+  "patchedVersions": {
+    "3ce4eb2d2a6a4f784139e427d764458ef56be01c7d26afac6891e1131aa3c734": "0.5.0",
+    "5177c602efec29ac1eb8e5ffab52930c23aefc7871c67f2c6a9839fe0b7dcdd0": "0.5.1"
   }
 }

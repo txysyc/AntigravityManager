@@ -34,6 +34,7 @@ if (args.Length > 0)
     var inspect = await module.ExecuteAsync("inspect", args[0]);
     Check(inspect.Success && inspect.Snapshot is not null, "C# module can read real application metadata");
     if (inspect.Snapshot!.Status == "unsupported") Check(!inspect.Snapshot.CanInstall, "unverified version keeps installation disabled");
+    if (inspect.Snapshot.Status == "unpatched") Check(inspect.Snapshot.CanInstall && string.IsNullOrEmpty(inspect.Snapshot.CompatibilityIssue), "verified original and language server enable installation through the JSON protocol");
 }
 
 var migrationRoot = Path.Combine(temporary, "migration");

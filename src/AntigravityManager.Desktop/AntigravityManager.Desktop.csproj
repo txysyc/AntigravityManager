@@ -5,7 +5,12 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>AntigravityManager</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets/Branding/app-icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="Assets/Branding/app-icon.ico" />
+    <Resource Include="Assets/Branding/app-icon.png" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="WPF-UI" Version="4.3.0" />
     <ProjectReference Include="../AntigravityManager.Core/AntigravityManager.Core.csproj" />
