@@ -1,0 +1,104 @@
+{
+  "source": "analysis/embedded/142809195-main.js",
+  "sourceSha256": "867d1990b61d87f4b9ff8c5ecb1551c8688135267f32e56e02563f2d3e78fd68",
+  "offsetUnits": "JavaScript UTF-16 code units",
+  "rules": [
+    {
+      "name": "quota-service-labels",
+      "offsets": [5897839, 1777333, 5901039],
+      "source": "ELb title=a.displayName; DLb label=f.displayName; hla.refreshText=a.description; FLb plan=n=c.userTier.description, q=c.userTier.upgradeSubscriptionText",
+      "knownFixedLabelsFromScreenshots": ["Weekly Limit Remaining", "Five Hour Limit Remaining", "Gemini Models", "Claude and GPT models", "You can upgrade to a Google AI Ultra plan to receive higher rate limits."],
+      "handling": "Only fixed known UI phrases; preserve literal model names, Google AI Pro/Ultra product names, percentages and all unknown server text. Do not assume the bundle contains all user-facing server labels."
+    },
+    {
+      "name": "quota-refresh-message",
+      "offsets": [1777333, 5897839],
+      "observedText": "You have used some of your weekly limit, it will fully refresh in 4 days, 19 hours.",
+      "secondObservedText": "You have used some of your 5-hour limit, it will fully refresh in 1 hour, 56 minutes.",
+      "strictPattern": "^You have used some of your (weekly|5-hour) limit, it will fully refresh in ((?:[0-9]+ (?:days?|hours?|minutes?)(?:, )?)+)\\.$",
+      "output": "你已使用部分{每周|五小时}额度，将在{duration}后完全恢复。",
+      "durationPattern": "^([0-9]+ (?:days?|hours?|minutes?))(, [0-9]+ (?:days?|hours?|minutes?))*$",
+      "durationUnits": {"day": "天", "days": "天", "hour": "小时", "hours": "小时", "minute": "分钟", "minutes": "分钟"},
+      "handling": "Only use inside settings quota row descriptions or known quota popover. Translate a complete text node, retaining original and applied strings for toggle restoration. Preserve numbers exactly; fail closed on unmatched wording."
+    },
+    {
+      "name": "credit-count",
+      "offsets": [5901837],
+      "source": "`Available AI Credits: ${F??\"0\"}`",
+      "strictPattern": "^Available AI Credits: ([0-9]+(?:[.,][0-9]+)*)$",
+      "output": "可用 AI 点数：{1}",
+      "scope": ".max-w-2xl.mx-auto settings row label"
+    },
+    {
+      "name": "plan-and-project-id-prefix",
+      "offsets": [5837330, 5837491, 5901039],
+      "source": "A.createElement('div',{className:'text-sm font-medium'},'Your Plan: ',n); A.createElement('span',...,'Project ID: ',k)",
+      "handling": "Translate only prefix text nodes; preserve sibling server tier label and GCP project ID. Your Plan and Project ID dictionary keys trimmed match these prefixes."
+    },
+    {
+      "name": "settings-static-brand-template",
+      "offsets": [5836806, 5837007, 5839084, 5879818, 5901604],
+      "source": "Manage ${c} app settings.; When toggled on, ${h} will use ... ${h} will always ...; telemetry and marketing brand templates",
+      "handling": "Current shipped product.nameShort=Antigravity. Exact composed strings added to settings-candidates. Alternative unknown brand values need bounded repeated capture, never global partial-word replacement."
+    },
+    {
+      "name": "settings-command-keybinding-hints",
+      "offsets": [5876555, 5876580, 5876658, 5876687, 5876714, 5904746, 5904761],
+      "source": "`${e} Sends immediately`; `${e} Queues after the turn`; `${a} On empty prompt, sends next in queue`; `${g} Release`; `${g} Hold`",
+      "handling": "Preserve keyboard shortcut prefix capture exactly, translate suffix only in keyboard shortcuts/hint scope. Avoid modifying user command strings or input values."
+    },
+    {
+      "name": "admin-disabled-option",
+      "offsets": [5864640],
+      "source": "`${x} (disabled by admin)`",
+      "handling": "Known settings dropdown option: translate known x through dictionary; translate suffix to（管理员已禁用）. Preserve unknown x. Not a global text replacement."
+    },
+    {
+      "name": "project-workspace-kind",
+      "offsets": [6060686, 6069701, 6069777, 6069965, 6072085, 6072386],
+      "source": "aW() C.lowercase='project'|'workspace', C.lowercasePlural='projects'|'workspaces', C.capitalized='Project'|'Workspace'",
+      "handling": "All finite project/workspace compositions added as exact dictionary keys. Preserve editable heading project name (W_ span.text-lg.font-medium.truncate), name inputs and user URI suggestions."
+    },
+    {
+      "name": "project-deletion-composite",
+      "offsets": [6060863, 6061049, 6061118, 6072153, 6072173, 6072231, 6072444],
+      "source": "PNb paragraph: 'Are you sure you want to delete the ',h.lowercase,' ',strong(projectName), '?'; second paragraph:'This will permanently delete ',strong(NNb(counts)),' ','within it.'",
+      "handling": "Dedicated dialog paragraph fragment adapter. Preserve strong(projectName), translate enum type only in confirmed composite layout; NNb count description can use strict numeric template. Do not flatten paragraph.textContent (would destroy strong node and user name).",
+      "countPattern": "^([0-9]+) active conversations?(?: and ([0-9]+) archived conversations?)?$|^([0-9]+) archived conversations?$",
+      "countOutput": "{1} 个活跃对话和 {2} 个已归档对话（only present parts）",
+      "fragmentTranslations": {"Are you sure you want to delete the": "确定删除", "This will permanently delete": "此操作将永久删除其中的", "within it.": "。", "This": "此", "A": "一个", "with this name already exists.": "已存在同名项目。"}
+    },
+    {
+      "name": "mcp-tool-count-and-arialabel",
+      "offsets": [5978171, 5979181, 5979216, 5980016],
+      "source": "`${E} tool${E!==1?'s':''} enabled`; `${v.tools.length} tool${v.tools.length!==1?'s':''} disabled`; `Auth code for ${x}`; `${G?'Disable':'Enable'} ${F.name} tool for ${x}`",
+      "handling": "Count templates can be strict numeric. Attribute templates can preserve complete tool name/server parameter captures, scoped to MCP settings controls. Do not translate dynamic MCP server names/tool identifiers."
+    },
+    {
+      "name": "feedback-email-prefix",
+      "offsets": [5604403],
+      "source": "'Send feedback as ', email",
+      "handling": "Translate only literal prefix. Email sibling remains unchanged."
+    },
+    {
+      "name": "customization-row-user-name-protection",
+      "offsets": [5921269, 5923469, 5923119, 5924368],
+      "source": "rule/skill/plugin name label inside span.text-sm.font-medium.truncate; Plugin: dynamic name; title=`Toggle ${a}`; title=`Edit ${a.name}`",
+      "handling": "Adding settings-wide div/span scopes requires protecting customization user name rows even when their names match dictionary entries like Default or Models. Do not translate plugin/rule/skill supplied descriptions arbitrarily."
+    },
+    {
+      "name": "unknown-service-and-log-text",
+      "handling": "Static UI dictionaries do not cover arbitrary gRPC error messages, server descriptions, external MCP metadata, model-generated content or shell output. Leave unknown texts unchanged; report the boundary rather than claiming universal translation."
+    }
+  ],
+  "safetyScopes": {
+    "settingsOuter": ".max-w-2xl.mx-auto",
+    "settingsNotificationLabel": ".flex.items-center.justify-between.gap-8 .text-sm.font-medium",
+    "settingsRowLabel": ".py-2.px-3 .flex-1.flex.flex-col.gap-0\\.5 label-like children; include div.text-sm.font-medium and span.text-sm",
+    "settingsSectionSubtitle": ".text-xs.text-muted-foreground.leading-relaxed",
+    "settingsGenericHelp": ".max-w-2xl.mx-auto .text-xs.text-muted-foreground (exclude user names/code/log output)",
+    "portaledHints": "role=tooltip and known tooltip IDs only; React tooltip ty has .react-tooltip class/provider",
+    "projectHeadingProtection": "W_ span.text-lg.font-medium.truncate, project/global settings breadcrumb dynamic final name, settings-nav project/workspace rows, WSL distro names"
+  },
+  "brandsAndIdentifiersToPreserve": ["Antigravity", "Google Antigravity", "Google AI Pro", "Google AI Ultra", "Gemini", "Claude", "GPT", "Google Drive", "Google Docs", "Google Sheets", "Google Slides", "Google Chrome", "Jetski Chat", "Cider", "Piper", "Fig", "Project 4K", "WSL distro names", "user project names", "user workspace URIs", "MCP server/tool IDs", "rule/skill/plugin names", "shell commands"]
+}

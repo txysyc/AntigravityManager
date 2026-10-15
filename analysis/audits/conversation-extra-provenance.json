@@ -1,0 +1,2693 @@
+{
+  "source": "analysis/embedded/142809195-main.js",
+  "offsetUnit": "UTF-16 code unit",
+  "candidateCount": 369,
+  "scopeRestrictedFragments": ["Hold", "file", "files", "line", "lines", "more", "or", "around", "on", "insertion", "deletion", "lint error", "tokens", "result", "results", "of", "updated", "...and", "finding", "Go to", "above hidden)", "above hidden", "image", "images", "for", "terminal", "in Browser", "web", "docs", "question", "attempt", "For", "and", "need", "input", "project", "an", "the", "two", "three", "resources", "A", "This", "subagent", "comment", "Start Best-of-", "See our", "Select Environment (", "No matching", "found", "available", "already exists for this", "combination of folders", "folder", "Automation \"", "\" not found.", "with ID", "already exists.", "Task \"", "Back to"],
+  "protectionNote": "These are literal first-party UI fragments/count suffixes, not global natural-language replacements. Use verified component scope, preserve neighboring user/model names and numbers. Untitled project is only first-party fallback; actual project names remain unchanged.",
+  "selection": "AST react-child offsets 4,630,000 <= start < 7,100,000; existing dictionary excluded",
+  "entries": [
+    {
+      "text": "Hold",
+      "chinese": "按住",
+      "offsets": [
+        6543615
+      ]
+    },
+    {
+      "text": "file",
+      "chinese": "个文件",
+      "offsets": [
+        5256752
+      ]
+    },
+    {
+      "text": "Save Video",
+      "chinese": "保存视频",
+      "offsets": [
+        4807017
+      ]
+    },
+    {
+      "text": "Save Image",
+      "chinese": "保存图片",
+      "offsets": [
+        4807030
+      ]
+    },
+    {
+      "text": "more",
+      "chinese": "更多",
+      "offsets": [
+        5259047,
+        5260775,
+        5262320,
+        5263776,
+        5313683,
+        5349965,
+        5351779
+      ]
+    },
+    {
+      "text": "line",
+      "chinese": "行",
+      "offsets": [
+        5290070,
+        5306919
+      ]
+    },
+    {
+      "text": "lines",
+      "chinese": "行",
+      "offsets": [
+        5290077,
+        5306926
+      ]
+    },
+    {
+      "text": "or",
+      "chinese": "或",
+      "offsets": [
+        5666162
+      ]
+    },
+    {
+      "text": "Previous",
+      "chinese": "上一项",
+      "offsets": [
+        4785854
+      ]
+    },
+    {
+      "text": "Saving...",
+      "chinese": "正在保存…",
+      "offsets": [
+        4677841,
+        6008247
+      ]
+    },
+    {
+      "text": "Loading...",
+      "chinese": "正在加载…",
+      "offsets": [
+        6024426,
+        6202478,
+        6209500,
+        6467853,
+        6977000
+      ]
+    },
+    {
+      "text": "? This action cannot be undone.",
+      "chinese": "吗？此操作无法撤销。",
+      "offsets": [
+        6633631
+      ]
+    },
+    {
+      "text": "around",
+      "chinese": "约",
+      "offsets": [
+        6954451
+      ]
+    },
+    {
+      "text": "on",
+      "chinese": "在",
+      "offsets": [
+        6953545,
+        6955323
+      ]
+    },
+    {
+      "text": "Deleting...",
+      "chinese": "正在删除…",
+      "offsets": [
+        5975685
+      ]
+    },
+    {
+      "text": "Command:",
+      "chinese": "命令：",
+      "offsets": [
+        5997580,
+        6003364
+      ]
+    },
+    {
+      "text": "Timeout:",
+      "chinese": "超时时间：",
+      "offsets": [
+        5997074,
+        5998826,
+        6003802
+      ]
+    },
+    {
+      "text": "Creating projects for your conversations",
+      "chinese": "正在为你的对话创建项目",
+      "offsets": [
+        4648847
+      ]
+    },
+    {
+      "text": "This may take a few minutes",
+      "chinese": "这可能需要几分钟",
+      "offsets": [
+        4648960
+      ]
+    },
+    {
+      "text": "Successfully imported project:",
+      "chinese": "已成功导入项目：",
+      "offsets": [
+        4670324
+      ]
+    },
+    {
+      "text": "from AI Studio",
+      "chinese": "来自 AI Studio",
+      "offsets": [
+        4670414
+      ]
+    },
+    {
+      "text": "This project uses Firebase. Do you want to download the Firebase skill?",
+      "chinese": "此项目使用 Firebase。要下载 Firebase 技能吗？",
+      "offsets": [
+        4670548
+      ]
+    },
+    {
+      "text": "Failed to download Firebase skill.",
+      "chinese": "下载 Firebase 技能失败。",
+      "offsets": [
+        4671267
+      ]
+    },
+    {
+      "text": "Error occurred during import.",
+      "chinese": "导入时出错。",
+      "offsets": [
+        4671304
+      ]
+    },
+    {
+      "text": "File location",
+      "chinese": "文件位置",
+      "offsets": [
+        4674916
+      ]
+    },
+    {
+      "text": "Saves to your global ~/.gemini/antigravity/agents/ directory. This script will be available across all your workspaces.",
+      "chinese": "保存到全局 ~/.gemini/antigravity/agents/ 目录。此脚本可在所有工作区中使用。",
+      "offsets": [
+        4675520
+      ]
+    },
+    {
+      "text": "Saves to the .agent/agents/ directory in your current workspace. This script can be version controlled and shared with your team.",
+      "chinese": "保存到当前工作区的 .agent/agents/ 目录。此脚本可纳入版本控制并与团队共享。",
+      "offsets": [
+        4676182
+      ]
+    },
+    {
+      "text": "Select a workspace to save agent scripts to your workspace.",
+      "chinese": "选择工作区以将代理脚本保存到其中。",
+      "offsets": [
+        4676314
+      ]
+    },
+    {
+      "text": "Command Spec (JSON)",
+      "chinese": "命令规范（JSON）",
+      "offsets": [
+        4676506
+      ]
+    },
+    {
+      "text": "Overwrite if exists",
+      "chinese": "已存在时覆盖",
+      "offsets": [
+        4677342
+      ]
+    },
+    {
+      "text": "Agent Script Command Configuration",
+      "chinese": "代理脚本命令配置",
+      "offsets": [
+        4678861
+      ]
+    },
+    {
+      "text": "View documentation",
+      "chinese": "查看文档",
+      "offsets": [
+        4679150
+      ]
+    },
+    {
+      "text": "Create a new agent script command or update an existing one. Upon creation, you may select this agent script using the \"+\" button. When selected, agent messages are routed to the SDK executable.",
+      "chinese": "创建新的代理脚本命令或更新现有命令。创建后，可以通过“+”按钮选择此脚本。选中后，代理消息会发送给 SDK 可执行程序。",
+      "offsets": [
+        4679237
+      ]
+    },
+    {
+      "text": "Python Script",
+      "chinese": "Python 脚本",
+      "offsets": [
+        4680010
+      ]
+    },
+    {
+      "text": "Python Coming Soon",
+      "chinese": "即将支持 Python",
+      "offsets": [
+        4680709
+      ]
+    },
+    {
+      "text": "Non-google3 python agent scripts are a work in progress. Eventually you can expect to use the SDK pip package in a main.py to run your agent. Please reach out if you have a specific need to run your agent script outside of Cloudtop & Google3.",
+      "chinese": "非 google3 环境的 Python 代理脚本仍在开发中。未来可以在 main.py 中使用 SDK pip 包运行代理。如果你需要在 Cloudtop 和 Google3 之外运行代理脚本，请联系我们。",
+      "offsets": [
+        4680776
+      ]
+    },
+    {
+      "text": "Creating…",
+      "chinese": "正在创建…",
+      "offsets": [
+        4687696,
+        6970137,
+        7004271
+      ]
+    },
+    {
+      "text": "OK",
+      "chinese": "确定",
+      "offsets": [
+        4687713
+      ]
+    },
+    {
+      "text": "Got it",
+      "chinese": "知道了",
+      "offsets": [
+        4763088
+      ]
+    },
+    {
+      "text": "Image rendering blocked (strict mode enabled)",
+      "chinese": "图片显示已被阻止（严格模式已开启）",
+      "offsets": [
+        4775071
+      ]
+    },
+    {
+      "text": "Alt text:",
+      "chinese": "替代文本：",
+      "offsets": [
+        4775235
+      ]
+    },
+    {
+      "text": "Image URL:",
+      "chinese": "图片网址：",
+      "offsets": [
+        4775449
+      ]
+    },
+    {
+      "text": "Insert in Terminal",
+      "chinese": "插入终端",
+      "offsets": [
+        4776877
+      ]
+    },
+    {
+      "text": "At Mention Code Block",
+      "chinese": "使用 @ 引用代码块",
+      "offsets": [
+        4777274
+      ]
+    },
+    {
+      "text": "Copy code",
+      "chinese": "复制代码",
+      "offsets": [
+        4777705
+      ]
+    },
+    {
+      "text": "Copy as Markdown",
+      "chinese": "复制为 Markdown",
+      "offsets": [
+        4802610
+      ]
+    },
+    {
+      "text": "Preview unavailable",
+      "chinese": "预览不可用",
+      "offsets": [
+        4803141,
+        4804301,
+        4807679
+      ]
+    },
+    {
+      "text": "Open in Tab",
+      "chinese": "在标签页中打开",
+      "offsets": [
+        4806907
+      ]
+    },
+    {
+      "text": "Invalid embed:",
+      "chinese": "无效的嵌入内容：",
+      "offsets": [
+        5138284
+      ]
+    },
+    {
+      "text": "Suggested plugin:",
+      "chinese": "建议的插件：",
+      "offsets": [
+        5146609
+      ]
+    },
+    {
+      "text": "Details:",
+      "chinese": "详情：",
+      "offsets": [
+        5169681
+      ]
+    },
+    {
+      "text": "Error ID:",
+      "chinese": "错误 ID：",
+      "offsets": [
+        5170083
+      ]
+    },
+    {
+      "text": "insertion",
+      "chinese": "处新增",
+      "offsets": [
+        5177712
+      ]
+    },
+    {
+      "text": "deletion",
+      "chinese": "处删除",
+      "offsets": [
+        5177775
+      ]
+    },
+    {
+      "text": "lint error",
+      "chinese": "个代码检查错误",
+      "offsets": [
+        5177843
+      ]
+    },
+    {
+      "text": "Commented on:",
+      "chinese": "评论对象：",
+      "offsets": [
+        5198250
+      ]
+    },
+    {
+      "text": "Captured DOM tree for",
+      "chinese": "已捕获 DOM 树：",
+      "offsets": [
+        5210246
+      ]
+    },
+    {
+      "text": "tokens",
+      "chinese": "词元",
+      "offsets": [
+        5225274
+      ]
+    },
+    {
+      "text": "result",
+      "chinese": "个结果",
+      "offsets": [
+        5235390,
+        5259879,
+        5260031,
+        5261512,
+        5312984,
+        5326817,
+        5328978,
+        5350992
+      ]
+    },
+    {
+      "text": "results",
+      "chinese": "个结果",
+      "offsets": [
+        5235399
+      ]
+    },
+    {
+      "text": "Multi-select",
+      "chinese": "多选",
+      "offsets": [
+        5248573,
+        5614566
+      ]
+    },
+    {
+      "text": "of",
+      "chinese": "/",
+      "offsets": [
+        5249054,
+        5620220
+      ]
+    },
+    {
+      "text": "Failed target:",
+      "chinese": "失败的目标：",
+      "offsets": [
+        5255203,
+        5255552
+      ]
+    },
+    {
+      "text": "files",
+      "chinese": "个文件",
+      "offsets": [
+        5256759
+      ]
+    },
+    {
+      "text": "updated",
+      "chinese": "已更新",
+      "offsets": [
+        5256771
+      ]
+    },
+    {
+      "text": "...and",
+      "chinese": "…以及",
+      "offsets": [
+        5259032,
+        5260760,
+        5262305,
+        5263761,
+        5349950,
+        5351764
+      ]
+    },
+    {
+      "text": "finding",
+      "chinese": "条发现",
+      "offsets": [
+        5263190
+      ]
+    },
+    {
+      "text": "Go to",
+      "chinese": "前往",
+      "offsets": [
+        5271473,
+        6371423
+      ]
+    },
+    {
+      "text": "in the top menu.",
+      "chinese": "（位于顶部菜单）。",
+      "offsets": [
+        5271542
+      ]
+    },
+    {
+      "text": "Select the latest snapshot from the",
+      "chinese": "从以下列表选择最新快照：",
+      "offsets": [
+        5271589
+      ]
+    },
+    {
+      "text": "quick pick",
+      "chinese": "快速选择列表",
+      "offsets": [
+        5271653
+      ]
+    },
+    {
+      "text": "Working directory:",
+      "chinese": "工作目录：",
+      "offsets": [
+        5288972
+      ]
+    },
+    {
+      "text": "above hidden)",
+      "chinese": "行以上已隐藏）",
+      "offsets": [
+        5290085
+      ]
+    },
+    {
+      "text": "Full output written to",
+      "chinese": "完整输出已写入",
+      "offsets": [
+        5297004
+      ]
+    },
+    {
+      "text": "image",
+      "chinese": "张图片",
+      "offsets": [
+        5297238,
+        5325902
+      ]
+    },
+    {
+      "text": "images",
+      "chinese": "张图片",
+      "offsets": [
+        5297246,
+        5325910,
+        5337177
+      ]
+    },
+    {
+      "text": "above hidden",
+      "chinese": "行以上已隐藏",
+      "offsets": [
+        5306934
+      ]
+    },
+    {
+      "text": "for",
+      "chinese": "针对",
+      "offsets": [
+        5314956,
+        5337995,
+        6712720,
+        6713242,
+        6713547,
+        6862210,
+        6862742,
+        6863057
+      ]
+    },
+    {
+      "text": "terminal",
+      "chinese": "终端",
+      "offsets": [
+        5319037,
+        5319415
+      ]
+    },
+    {
+      "text": "Page title:",
+      "chinese": "页面标题：",
+      "offsets": [
+        5323305
+      ]
+    },
+    {
+      "text": "In this case,",
+      "chinese": "此次操作中，",
+      "offsets": [
+        5323544
+      ]
+    },
+    {
+      "text": "chunks were collapsed into one. Chunks included in this read:",
+      "chinese": "个内容块合并为一个。本次读取包含以下内容块：",
+      "offsets": [
+        5323570
+      ]
+    },
+    {
+      "text": "Section header:",
+      "chinese": "章节标题：",
+      "offsets": [
+        5323767
+      ]
+    },
+    {
+      "text": "Read resource:",
+      "chinese": "读取资源：",
+      "offsets": [
+        5325235
+      ]
+    },
+    {
+      "text": "List resources:",
+      "chinese": "列出资源：",
+      "offsets": [
+        5326955
+      ]
+    },
+    {
+      "text": "in Browser",
+      "chinese": "在浏览器中",
+      "offsets": [
+        5329838
+      ]
+    },
+    {
+      "text": "web",
+      "chinese": "网页",
+      "offsets": [
+        5337186
+      ]
+    },
+    {
+      "text": "Web search prioritized results from",
+      "chinese": "网络搜索优先使用以下来源的结果：",
+      "offsets": [
+        5337536
+      ]
+    },
+    {
+      "text": ". The LLM decided that this would yield the best results. If this is not desired, you can simply tell the agent to search without a domain filter.",
+      "chinese": "。模型认为这样可以获得更好的结果。如果不希望如此，可以告诉代理搜索时不限制域名。",
+      "offsets": [
+        5337584
+      ]
+    },
+    {
+      "text": "Long pages like this one will be broken down into outlines and read as needed. Read more at our",
+      "chinese": "此类长页面会被拆分为大纲并按需读取。更多详情请查看我们的",
+      "offsets": [
+        5340505
+      ]
+    },
+    {
+      "text": "docs",
+      "chinese": "文档",
+      "offsets": [
+        5340658
+      ]
+    },
+    {
+      "text": "Skipping...",
+      "chinese": "正在跳过…",
+      "offsets": [
+        5344485
+      ]
+    },
+    {
+      "text": "Generation Steps (",
+      "chinese": "生成步骤（",
+      "offsets": [
+        5356817
+      ]
+    },
+    {
+      "text": "(skipped)",
+      "chinese": "（已跳过）",
+      "offsets": [
+        5357788
+      ]
+    },
+    {
+      "text": "question",
+      "chinese": "个问题",
+      "offsets": [
+        5365645
+      ]
+    },
+    {
+      "text": "Working Directory:",
+      "chinese": "工作目录：",
+      "offsets": [
+        5367057
+      ]
+    },
+    {
+      "text": "Copied!",
+      "chinese": "已复制！",
+      "offsets": [
+        5368189,
+        5762184,
+        6351826
+      ]
+    },
+    {
+      "text": "attempt",
+      "chinese": "次尝试",
+      "offsets": [
+        5484637
+      ]
+    },
+    {
+      "text": "· estimated",
+      "chinese": "· 估算",
+      "offsets": [
+        5489920
+      ]
+    },
+    {
+      "text": "Input:",
+      "chinese": "输入：",
+      "offsets": [
+        5490065
+      ]
+    },
+    {
+      "text": "/ 1M tokens",
+      "chinese": "/ 百万词元",
+      "offsets": [
+        5490211,
+        5490402,
+        5490596
+      ]
+    },
+    {
+      "text": "Output:",
+      "chinese": "输出：",
+      "offsets": [
+        5490254
+      ]
+    },
+    {
+      "text": "Cache:",
+      "chinese": "缓存：",
+      "offsets": [
+        5490445
+      ]
+    },
+    {
+      "text": "No rate card for this model; showing comparable rates.",
+      "chinese": "此模型没有价格表，正在显示同类价格供参考。",
+      "offsets": [
+        5490686
+      ]
+    },
+    {
+      "text": "Good Response",
+      "chinese": "优质回复",
+      "offsets": [
+        5505808
+      ]
+    },
+    {
+      "text": "Bad Response",
+      "chinese": "不佳回复",
+      "offsets": [
+        5505867
+      ]
+    },
+    {
+      "text": "Thanks for helping make Gemini better! This is a critical part of evaluating and improving our models.",
+      "chinese": "感谢你帮助改进 Gemini！你的反馈对评估和改进模型非常重要。",
+      "offsets": [
+        5506102
+      ]
+    },
+    {
+      "text": "Thanks for your feedback!",
+      "chinese": "感谢你的反馈！",
+      "offsets": [
+        5506207
+      ]
+    },
+    {
+      "text": "Model Label",
+      "chinese": "模型名称",
+      "offsets": [
+        5508353
+      ]
+    },
+    {
+      "text": "Model URL",
+      "chinese": "模型网址",
+      "offsets": [
+        5508951
+      ]
+    },
+    {
+      "text": "Max Tokens Until Compaction",
+      "chinese": "压缩前的最大词元数",
+      "offsets": [
+        5509821
+      ]
+    },
+    {
+      "text": "Features",
+      "chinese": "功能",
+      "offsets": [
+        5510708
+      ]
+    },
+    {
+      "text": "Images",
+      "chinese": "图片",
+      "offsets": [
+        5510977
+      ]
+    },
+    {
+      "text": "Tool Calls",
+      "chinese": "工具调用",
+      "offsets": [
+        5511251
+      ]
+    },
+    {
+      "text": "Trajectory ID:",
+      "chinese": "执行轨迹 ID：",
+      "offsets": [
+        5512537
+      ]
+    },
+    {
+      "text": "Agent ID:",
+      "chinese": "代理 ID：",
+      "offsets": [
+        5512716
+      ]
+    },
+    {
+      "text": "Trajectory Stats",
+      "chinese": "执行轨迹统计",
+      "offsets": [
+        5512862
+      ]
+    },
+    {
+      "text": "(Specific to this client's truncation and pagination)",
+      "chinese": "（对应此客户端的截断和分页情况）",
+      "offsets": [
+        5512939
+      ]
+    },
+    {
+      "text": "Step Type",
+      "chinese": "步骤类型",
+      "offsets": [
+        5513217
+      ]
+    },
+    {
+      "text": "Count",
+      "chinese": "数量",
+      "offsets": [
+        5513301
+      ]
+    },
+    {
+      "text": "Bytes",
+      "chinese": "字节数",
+      "offsets": [
+        5513385
+      ]
+    },
+    {
+      "text": "Cleared Count",
+      "chinese": "已清除数量",
+      "offsets": [
+        5513469
+      ]
+    },
+    {
+      "text": "See all",
+      "chinese": "查看全部",
+      "offsets": [
+        6093802,
+        6095950
+      ]
+    },
+    {
+      "text": "Connect to Remote Workspace",
+      "chinese": "连接远程工作区",
+      "offsets": [
+        5576528
+      ]
+    },
+    {
+      "text": "Open SSH connection in setup window. When finished, you will be able to select the workspace in the sidebar.",
+      "chinese": "在设置窗口中建立 SSH 连接。完成后，可以在侧栏中选择此工作区。",
+      "offsets": [
+        5576813
+      ]
+    },
+    {
+      "text": "Recent Remote Workspaces",
+      "chinese": "最近的远程工作区",
+      "offsets": [
+        5577174
+      ]
+    },
+    {
+      "text": "Open Setup Window",
+      "chinese": "打开设置窗口",
+      "offsets": [
+        5577351
+      ]
+    },
+    {
+      "text": "Terms of Service & Data Use",
+      "chinese": "服务条款与数据使用",
+      "offsets": [
+        5588307
+      ]
+    },
+    {
+      "text": "AI coding agents are known to have certain security risks, including autonomous code execution, data exfiltration, prompt injection and supply chain risks. Ensure that you monitor and verify all actions taken by the agent.",
+      "chinese": "AI 编程代理存在一些已知的安全风险，包括自主执行代码、数据外传、提示词注入和供应链风险。请监督并核实代理执行的所有操作。",
+      "offsets": [
+        5588397
+      ]
+    },
+    {
+      "text": "does not collect any of your prompts, content, or model responses but does collect general usage patterns such as feature adoption and active user counts (“product analytics”). Telemetry data will be handled in accordance with the Google Privacy Policy.",
+      "chinese": "不会收集你的提示词、内容或模型回复，但会收集功能使用情况、活跃用户数等总体使用数据（“产品分析”）。遥测数据将依据 Google 隐私政策处理。",
+      "offsets": [
+        5588684
+      ]
+    },
+    {
+      "text": "Terms and Privacy:",
+      "chinese": "条款与隐私：",
+      "offsets": [
+        5589086
+      ]
+    },
+    {
+      "text": "(excluding product analytics data)",
+      "chinese": "（不包括产品分析数据）",
+      "offsets": [
+        5589541
+      ]
+    },
+    {
+      "text": "Privacy Notice",
+      "chinese": "隐私声明",
+      "offsets": [
+        5589519
+      ]
+    },
+    {
+      "text": "Security Notice & Data Use",
+      "chinese": "安全声明与数据使用",
+      "offsets": [
+        5589866
+      ]
+    },
+    {
+      "text": "AI coding agents are known to have certain security limitations. Users should be aware of potential risks, including data exfiltration and possible code execution. Avoid processing highly sensitive data and verify all the actions taken by the agent.",
+      "chinese": "AI 编程代理存在一些已知的安全限制。请注意数据外传和可能执行代码等风险，避免处理高度敏感的数据，并核实代理执行的所有操作。",
+      "offsets": [
+        5589955
+      ]
+    },
+    {
+      "text": "For",
+      "chinese": "对于",
+      "offsets": [
+        5590328
+      ]
+    },
+    {
+      "text": "does not collect any of your prompts, content, or model responses but will still collect general usage patterns (e.g., feature adoption, active user counts).",
+      "chinese": "不会收集你的提示词、内容或模型回复，但仍会收集总体使用情况（例如功能使用情况和活跃用户数）。",
+      "offsets": [
+        5590344
+      ]
+    },
+    {
+      "text": "Yes, I agree to help improve",
+      "chinese": "是，我同意帮助改进",
+      "offsets": [
+        5590649
+      ]
+    },
+    {
+      "text": "by allowing Google to collect and use my Interactions data, subject to the",
+      "chinese": "，允许 Google 根据以下条款收集并使用我的互动数据：",
+      "offsets": [
+        5590683
+      ]
+    },
+    {
+      "text": "and",
+      "chinese": "和",
+      "offsets": [
+        5590926
+      ]
+    },
+    {
+      "text": ". I understand I can choose to opt out later whenever I want via my settings.",
+      "chinese": "。我了解以后随时可以通过设置选择退出。",
+      "offsets": [
+        5591087
+      ]
+    },
+    {
+      "text": "Google Privacy Policy",
+      "chinese": "Google 隐私政策",
+      "offsets": [
+        5591062
+      ]
+    },
+    {
+      "text": "Yes, I'd like to receive product updates, tips, and promotions from Google",
+      "chinese": "是，我希望收到 Google 的产品更新、技巧和推广信息",
+      "offsets": [
+        5591260
+      ]
+    },
+    {
+      "text": "via email.",
+      "chinese": "（通过电子邮件）。",
+      "offsets": [
+        5591341
+      ]
+    },
+    {
+      "text": "Accept and continue",
+      "chinese": "同意并继续",
+      "offsets": [
+        5593018
+      ]
+    },
+    {
+      "text": "Submitting...",
+      "chinese": "正在提交…",
+      "offsets": [
+        5607035,
+        5835628
+      ]
+    },
+    {
+      "text": "need",
+      "chinese": "需要",
+      "offsets": [
+        5619181
+      ]
+    },
+    {
+      "text": "input",
+      "chinese": "输入",
+      "offsets": [
+        5619209
+      ]
+    },
+    {
+      "text": "Clear all",
+      "chinese": "清除全部",
+      "offsets": [
+        5619600
+      ]
+    },
+    {
+      "text": "Authentication Required",
+      "chinese": "需要身份验证",
+      "offsets": [
+        5621102
+      ]
+    },
+    {
+      "text": "Please sign in using the Antigravity sidebar panel to view this page.",
+      "chinese": "请通过 Antigravity 侧栏面板登录以查看此页面。",
+      "offsets": [
+        5621193
+      ]
+    },
+    {
+      "text": "Failed to load shared conversation",
+      "chinese": "加载共享对话失败",
+      "offsets": [
+        5625191
+      ]
+    },
+    {
+      "text": "Go to Home",
+      "chinese": "返回首页",
+      "offsets": [
+        5625452
+      ]
+    },
+    {
+      "text": "Importing shared conversation...",
+      "chinese": "正在导入共享对话…",
+      "offsets": [
+        5625676
+      ]
+    },
+    {
+      "text": "Mark All as Read",
+      "chinese": "全部标为已读",
+      "offsets": [
+        5626827
+      ]
+    },
+    {
+      "text": "Show submitted (",
+      "chinese": "显示已提交项（",
+      "offsets": [
+        5629279
+      ]
+    },
+    {
+      "text": "Show more (",
+      "chinese": "显示更多（",
+      "offsets": [
+        5629777
+      ]
+    },
+    {
+      "text": "Group By",
+      "chinese": "分组方式",
+      "offsets": [
+        5633179
+      ]
+    },
+    {
+      "text": "Sort By",
+      "chinese": "排序方式",
+      "offsets": [
+        5633589,
+        6643366
+      ]
+    },
+    {
+      "text": "Only Unread",
+      "chinese": "仅未读",
+      "offsets": [
+        5635210
+      ]
+    },
+    {
+      "text": "Archived",
+      "chinese": "已归档",
+      "offsets": [
+        5635381
+      ]
+    },
+    {
+      "text": "Subtitles",
+      "chinese": "副标题",
+      "offsets": [
+        5636021
+      ]
+    },
+    {
+      "text": "Decorations",
+      "chinese": "装饰",
+      "offsets": [
+        5636281
+      ]
+    },
+    {
+      "text": "Archived Only",
+      "chinese": "仅归档项",
+      "offsets": [
+        5636478
+      ]
+    },
+    {
+      "text": "Telemetry",
+      "chinese": "遥测",
+      "offsets": [
+        5659079
+      ]
+    },
+    {
+      "text": "Are you sure you want to delete this conversation? This action cannot be undone.",
+      "chinese": "确定要删除此对话吗？此操作无法撤销。",
+      "offsets": [
+        5663247
+      ]
+    },
+    {
+      "text": "Sharing is a preview feature. It exports this conversation's history to your",
+      "chinese": "共享是一项预览功能。它会将此对话历史导出到你的",
+      "offsets": [
+        5665414
+      ]
+    },
+    {
+      "text": "user directory, and any Googler with the link can load and view it. Storage will move to Google Drive in a future version.",
+      "chinese": "用户目录中，持有链接的 Google 员工都可以加载并查看。后续版本将迁移至 Google Drive 存储。",
+      "offsets": [
+        5665623
+      ]
+    },
+    {
+      "text": "DO NOT share",
+      "chinese": "请勿共享",
+      "offsets": [
+        5665986
+      ]
+    },
+    {
+      "text": "User Data",
+      "chinese": "用户数据",
+      "offsets": [
+        5666145
+      ]
+    },
+    {
+      "text": "PII",
+      "chinese": "个人身份信息（PII）",
+      "offsets": [
+        5666327
+      ]
+    },
+    {
+      "text": "One-time x20 setup",
+      "chinese": "一次性 x20 设置",
+      "offsets": [
+        5666683
+      ]
+    },
+    {
+      "text": "Shared conversations live in your x20 user directory, so readers need",
+      "chinese": "共享对话存储在你的 x20 用户目录中，因此查看者需要",
+      "offsets": [
+        5666782
+      ]
+    },
+    {
+      "text": "on it. This makes the directory listable by any Googler; the files inside keep their own permissions.",
+      "chinese": "权限。这会允许 Google 员工查看目录列表，但其中的文件仍保留各自的访问权限。",
+      "offsets": [
+        5666910
+      ]
+    },
+    {
+      "text": "Generating Link",
+      "chinese": "正在生成链接",
+      "offsets": [
+        5667746
+      ]
+    },
+    {
+      "text": "Generate Share Link",
+      "chinese": "生成共享链接",
+      "offsets": [
+        5667838
+      ]
+    },
+    {
+      "text": "Archive Conversation",
+      "chinese": "归档对话",
+      "offsets": [
+        5727842
+      ]
+    },
+    {
+      "text": "Drop to add to group",
+      "chinese": "拖放以添加到分组",
+      "offsets": [
+        5745949
+      ]
+    },
+    {
+      "text": "Get started",
+      "chinese": "开始使用",
+      "offsets": [
+        5761113
+      ]
+    },
+    {
+      "text": "Copy sign-in link",
+      "chinese": "复制登录链接",
+      "offsets": [
+        5762194
+      ]
+    },
+    {
+      "text": "Last Used",
+      "chinese": "最近使用",
+      "offsets": [
+        5764189
+      ]
+    },
+    {
+      "text": "Use Business Account",
+      "chinese": "使用企业账号",
+      "offsets": [
+        5764867
+      ]
+    },
+    {
+      "text": "Business Account Sign In",
+      "chinese": "企业账号登录",
+      "offsets": [
+        5765051
+      ]
+    },
+    {
+      "text": "Continue with Google Cloud",
+      "chinese": "通过 Google Cloud 继续",
+      "offsets": [
+        5765545
+      ]
+    },
+    {
+      "text": "Use Advanced SSO Config",
+      "chinese": "使用高级 SSO 配置",
+      "offsets": [
+        5766065
+      ]
+    },
+    {
+      "text": "Use this if your admin gave you a WIF config. Paste it below to sign in.",
+      "chinese": "如果管理员提供了 WIF 配置，请使用此选项。将配置粘贴到下方以登录。",
+      "offsets": [
+        5766444
+      ]
+    },
+    {
+      "text": "WIF Config",
+      "chinese": "WIF 配置",
+      "offsets": [
+        5767276
+      ]
+    },
+    {
+      "text": "Sign In with SSO",
+      "chinese": "通过 SSO 登录",
+      "offsets": [
+        5768117
+      ]
+    },
+    {
+      "text": "Having trouble signing in?",
+      "chinese": "登录遇到问题？",
+      "offsets": [
+        5768283,
+        5786877,
+        5788509,
+        5789990,
+        5791010
+      ]
+    },
+    {
+      "text": "Continue with Google",
+      "chinese": "通过 Google 继续",
+      "offsets": [
+        5786217
+      ]
+    },
+    {
+      "text": "Use Google Cloud project instead",
+      "chinese": "改用 Google Cloud 项目",
+      "offsets": [
+        5786582
+      ]
+    },
+    {
+      "text": "Welcome to",
+      "chinese": "欢迎使用",
+      "offsets": [
+        5787395
+      ]
+    },
+    {
+      "text": "There was an unexpected issue setting up your account.",
+      "chinese": "设置账号时出现了意外问题。",
+      "offsets": [
+        5788059
+      ]
+    },
+    {
+      "text": "We apologize for the inconvenience. Please try again later.",
+      "chinese": "很抱歉带来不便，请稍后重试。",
+      "offsets": [
+        5788190
+      ]
+    },
+    {
+      "text": "Continue with different account",
+      "chinese": "使用其他账号继续",
+      "offsets": [
+        5788334,
+        5790825
+      ]
+    },
+    {
+      "text": "Please verify your account, then sign in again to continue. Learn more by visiting our",
+      "chinese": "请验证账号，然后重新登录以继续。更多详情请查看我们的",
+      "offsets": [
+        5788882
+      ]
+    },
+    {
+      "text": "FAQ",
+      "chinese": "常见问题",
+      "offsets": [
+        5789137,
+        5790735
+      ]
+    },
+    {
+      "text": "Sorry, this account is ineligible to use",
+      "chinese": "很抱歉，此账号不符合使用条件：",
+      "offsets": [
+        5790385
+      ]
+    },
+    {
+      "text": "Learn more by visiting our",
+      "chinese": "更多详情请查看我们的",
+      "offsets": [
+        5790540
+      ]
+    },
+    {
+      "text": "Available for",
+      "chinese": "适用于",
+      "offsets": [
+        5791920
+      ]
+    },
+    {
+      "text": "project",
+      "chinese": "项目",
+      "offsets": [
+        5791939,
+        6623629
+      ]
+    },
+    {
+      "text": "Provide Google Cloud Project",
+      "chinese": "提供 Google Cloud 项目",
+      "offsets": [
+        5793154,
+        5796194
+      ]
+    },
+    {
+      "text": "Your Antigravity use will be associated with provided project.",
+      "chinese": "你在 Antigravity 中的使用活动将关联到所提供的项目。",
+      "offsets": [
+        5793253
+      ]
+    },
+    {
+      "text": "Choose Region",
+      "chinese": "选择区域",
+      "offsets": [
+        5793814,
+        5796996
+      ]
+    },
+    {
+      "text": "Select License",
+      "chinese": "选择许可证",
+      "offsets": [
+        5794480
+      ]
+    },
+    {
+      "text": "Verify that these licenses were provided by your administrator and that you trust the project ID before proceeding. Account activity and data may be logged by your organization.",
+      "chinese": "继续前，请确认这些许可证由管理员提供，并确认你信任此项目 ID。你的组织可能会记录账号活动和数据。",
+      "offsets": [
+        5794570,
+        5800090
+      ]
+    },
+    {
+      "text": "No license available for this project and location",
+      "chinese": "此项目和位置没有可用许可证",
+      "offsets": [
+        5795442
+      ]
+    },
+    {
+      "text": "Contact your administrator to set up Gemini Enterprise for this project",
+      "chinese": "请联系管理员，为此项目配置 Gemini Enterprise",
+      "offsets": [
+        5795546
+      ]
+    },
+    {
+      "text": "Your Antigravity use will be associated with provided project. Make sure you trust the project ID before proceeding. Account activity and data may be logged by your organization.",
+      "chinese": "你在 Antigravity 中的使用活动将关联到所提供的项目。继续前，请确认你信任此项目 ID。你的组织可能会记录账号活动和数据。",
+      "offsets": [
+        5796298
+      ]
+    },
+    {
+      "text": "Select Billing Model",
+      "chinese": "选择计费模式",
+      "offsets": [
+        5798353
+      ]
+    },
+    {
+      "text": "Choose a License",
+      "chinese": "选择许可证",
+      "offsets": [
+        5799973
+      ]
+    },
+    {
+      "text": "Location:",
+      "chinese": "位置：",
+      "offsets": [
+        5801430
+      ]
+    },
+    {
+      "text": "No Gemini Enterprise license was found for this project and location.",
+      "chinese": "未找到适用于此项目和位置的 Gemini Enterprise 许可证。",
+      "offsets": [
+        5801603
+      ]
+    },
+    {
+      "text": "Other License",
+      "chinese": "其他许可证",
+      "offsets": [
+        5802083
+      ]
+    },
+    {
+      "text": "Enter Google Cloud Project Details",
+      "chinese": "输入 Google Cloud 项目详情",
+      "offsets": [
+        5802876
+      ]
+    },
+    {
+      "text": "This sign-in option is only available to invited teams.",
+      "chinese": "此登录选项仅适用于受邀团队。",
+      "offsets": [
+        5802992
+      ]
+    },
+    {
+      "text": "Learn more.",
+      "chinese": "了解更多。",
+      "offsets": [
+        5803251
+      ]
+    },
+    {
+      "text": "Google Cloud Project ID",
+      "chinese": "Google Cloud 项目 ID",
+      "offsets": [
+        5803436
+      ]
+    },
+    {
+      "text": "Location",
+      "chinese": "位置",
+      "offsets": [
+        5803928
+      ]
+    },
+    {
+      "text": "global (default)",
+      "chinese": "全球（默认）",
+      "offsets": [
+        5804483
+      ]
+    },
+    {
+      "text": "For a full list of available locations and deployment endpoints, please refer to the",
+      "chinese": "要查看可用位置和部署端点的完整列表，请参阅",
+      "offsets": [
+        5804791
+      ]
+    },
+    {
+      "text": "official documentation",
+      "chinese": "官方文档",
+      "offsets": [
+        5805091
+      ]
+    },
+    {
+      "text": "This Google Cloud project is not supported. Input a different project, or sign in with another account.",
+      "chinese": "不支持此 Google Cloud 项目。请输入其他项目，或使用另一个账号登录。",
+      "offsets": [
+        5805188
+      ]
+    },
+    {
+      "text": "Sign in with a different account",
+      "chinese": "使用其他账号登录",
+      "offsets": [
+        5805610
+      ]
+    },
+    {
+      "text": "Build with Google",
+      "chinese": "使用 Google 平台构建",
+      "offsets": [
+        5809528
+      ]
+    },
+    {
+      "text": "Plugins are packaged collections of skills and MCPs to help the Agent",
+      "chinese": "插件是技能与 MCP 的打包集合，可以帮助代理",
+      "offsets": [
+        5809649
+      ]
+    },
+    {
+      "text": "work with Google developer products. You can always change your choices in Settings.",
+      "chinese": "使用 Google 开发者产品。你随时可以在设置中更改选择。",
+      "offsets": [
+        5809741,
+        5974707
+      ]
+    },
+    {
+      "text": "Get Anything Done with",
+      "chinese": "使用以下产品完成各项任务：",
+      "offsets": [
+        5812093
+      ]
+    },
+    {
+      "text": "What best describes you?",
+      "chinese": "以下哪项最符合你的情况？",
+      "offsets": [
+        5813718
+      ]
+    },
+    {
+      "text": "We'll tailor the experience to you.",
+      "chinese": "我们将为你定制使用体验。",
+      "offsets": [
+        5813815
+      ]
+    },
+    {
+      "text": "Select Theme",
+      "chinese": "选择主题",
+      "offsets": [
+        5815545
+      ]
+    },
+    {
+      "text": "unknown",
+      "chinese": "未知",
+      "offsets": [
+        5888260,
+        5888314,
+        5888373,
+        5888437
+      ]
+    },
+    {
+      "text": "(none)",
+      "chinese": "（无）",
+      "offsets": [
+        5892420
+      ]
+    },
+    {
+      "text": "documentation",
+      "chinese": "文档",
+      "offsets": [
+        5902920
+      ]
+    },
+    {
+      "text": "Untitled project",
+      "chinese": "未命名项目",
+      "offsets": [
+        5935362
+      ]
+    },
+    {
+      "text": "an",
+      "chinese": "一个",
+      "offsets": [
+        5941957
+      ]
+    },
+    {
+      "text": "the",
+      "chinese": "此",
+      "offsets": [
+        5941915
+      ]
+    },
+    {
+      "text": "two",
+      "chinese": "两个",
+      "offsets": [
+        5958396
+      ]
+    },
+    {
+      "text": "three",
+      "chinese": "三个",
+      "offsets": [
+        5958402
+      ]
+    },
+    {
+      "text": "Refreshing...",
+      "chinese": "正在刷新…",
+      "offsets": [
+        5974448,
+        6436138,
+        6437727
+      ]
+    },
+    {
+      "text": "Plugins are packaged collections of skills and MCPs to help the Agent in",
+      "chinese": "插件是技能与 MCP 的打包集合，可以帮助代理",
+      "offsets": [
+        5974628
+      ]
+    },
+    {
+      "text": "Downloading...",
+      "chinese": "正在下载…",
+      "offsets": [
+        5975789
+      ]
+    },
+    {
+      "text": "There are currently no Build with",
+      "chinese": "目前没有可用的构建平台：",
+      "offsets": [
+        5976070
+      ]
+    },
+    {
+      "text": "plugins available.",
+      "chinese": "插件。",
+      "offsets": [
+        5976109
+      ]
+    },
+    {
+      "text": "Agent",
+      "chinese": "代理",
+      "offsets": [
+        5989913
+      ]
+    },
+    {
+      "text": "Matcher:",
+      "chinese": "匹配器：",
+      "offsets": [
+        6001645,
+        6002900
+      ]
+    },
+    {
+      "text": "Opening...",
+      "chinese": "正在打开…",
+      "offsets": [
+        6041717
+      ]
+    },
+    {
+      "text": "resources",
+      "chinese": "资源",
+      "offsets": [
+        6046981
+      ]
+    },
+    {
+      "text": "Are you sure you want to delete the",
+      "chinese": "确定要删除",
+      "offsets": [
+        6060863
+      ]
+    },
+    {
+      "text": "This will permanently delete",
+      "chinese": "这将永久删除",
+      "offsets": [
+        6061049
+      ]
+    },
+    {
+      "text": "within it.",
+      "chinese": "中的内容。",
+      "offsets": [
+        6061118
+      ]
+    },
+    {
+      "text": "A",
+      "chinese": "一个",
+      "offsets": [
+        6069913,
+        6966462
+      ]
+    },
+    {
+      "text": "with this name already exists.",
+      "chinese": "已存在同名项。",
+      "offsets": [
+        6069930
+      ]
+    },
+    {
+      "text": "This",
+      "chinese": "此",
+      "offsets": [
+        6072153
+      ]
+    },
+    {
+      "text": "Customize Sections",
+      "chinese": "自定义栏目",
+      "offsets": [
+        6096680,
+        6096817
+      ]
+    },
+    {
+      "text": "subagent",
+      "chinese": "个子代理",
+      "offsets": [
+        6135237,
+        6768772
+      ]
+    },
+    {
+      "text": "No plugins available",
+      "chinese": "没有可用插件",
+      "offsets": [
+        6139085
+      ]
+    },
+    {
+      "text": "Extensions",
+      "chinese": "扩展",
+      "offsets": [
+        6139724
+      ]
+    },
+    {
+      "text": "Updating…",
+      "chinese": "正在更新…",
+      "offsets": [
+        6149785,
+        6155711,
+        6156379,
+        6157078
+      ]
+    },
+    {
+      "text": "Open in Hub",
+      "chinese": "在 Hub 中打开",
+      "offsets": [
+        6152140
+      ]
+    },
+    {
+      "text": "Update Available",
+      "chinese": "有可用更新",
+      "offsets": [
+        6155728,
+        6156396,
+        6157095
+      ]
+    },
+    {
+      "text": "You have a conversation in progress. Updating will interrupt it, and it will automatically resume once the update completes.",
+      "chinese": "你有正在进行的对话。更新会中断它，更新完成后会自动恢复。",
+      "offsets": [
+        6152984
+      ]
+    },
+    {
+      "text": "You have a conversation in progress. Updating will cancel it and you'll need to manually restart it.",
+      "chinese": "你有正在进行的对话。更新会取消它，之后需要手动重新启动。",
+      "offsets": [
+        6153111
+      ]
+    },
+    {
+      "text": "Updating will restart the server and apply the latest changes.",
+      "chinese": "更新将重启服务器并应用最新更改。",
+      "offsets": [
+        6153215
+      ]
+    },
+    {
+      "text": "Active Tasks & Conversations:",
+      "chinese": "活动任务与对话：",
+      "offsets": [
+        6153493
+      ]
+    },
+    {
+      "text": "Update Anyway",
+      "chinese": "仍然更新",
+      "offsets": [
+        6153928
+      ]
+    },
+    {
+      "text": "Update",
+      "chinese": "更新",
+      "offsets": [
+        6153944
+      ]
+    },
+    {
+      "text": "Open IDE",
+      "chinese": "打开 IDE",
+      "offsets": [
+        6160224,
+        6160483,
+        6160780
+      ]
+    },
+    {
+      "text": "Open Antigravity IDE",
+      "chinese": "打开 Antigravity IDE",
+      "offsets": [
+        6160295
+      ]
+    },
+    {
+      "text": "Open in Antigravity IDE",
+      "chinese": "在 Antigravity IDE 中打开",
+      "offsets": [
+        6160554,
+        6161054
+      ]
+    },
+    {
+      "text": "Resolving link…",
+      "chinese": "正在解析链接…",
+      "offsets": [
+        6163005
+      ]
+    },
+    {
+      "text": "Remote Control isn't active on this instance. Enable it in",
+      "chinese": "此实例未开启远程控制。请在以下位置开启：",
+      "offsets": [
+        6163602
+      ]
+    },
+    {
+      "text": ", then reopen this dialog.",
+      "chinese": "，然后重新打开此对话框。",
+      "offsets": [
+        6163752
+      ]
+    },
+    {
+      "text": "Remove from Split",
+      "chinese": "移出分屏",
+      "offsets": [
+        6171131
+      ]
+    },
+    {
+      "text": "Open in Cider",
+      "chinese": "在 Cider 中打开",
+      "offsets": [
+        6171837
+      ]
+    },
+    {
+      "text": "Settings -",
+      "chinese": "设置 -",
+      "offsets": [
+        6178211
+      ]
+    },
+    {
+      "text": "Unable to load PDF:",
+      "chinese": "无法加载 PDF：",
+      "offsets": [
+        6220947,
+        6745743
+      ]
+    },
+    {
+      "text": "comment",
+      "chinese": "条评论",
+      "offsets": [
+        6227846
+      ]
+    },
+    {
+      "text": "Thinking...",
+      "chinese": "正在思考…",
+      "offsets": [
+        6318365,
+        6319677
+      ]
+    },
+    {
+      "text": "Start Best-of-",
+      "chinese": "开始 Best of ",
+      "offsets": [
+        6326529
+      ]
+    },
+    {
+      "text": "Checking...",
+      "chinese": "正在检查…",
+      "offsets": [
+        6329346
+      ]
+    },
+    {
+      "text": "See our",
+      "chinese": "查看我们的",
+      "offsets": [
+        6345768
+      ]
+    },
+    {
+      "text": "Customization",
+      "chinese": "自定义配置",
+      "offsets": [
+        6354499
+      ]
+    },
+    {
+      "text": "Unknown error.",
+      "chinese": "未知错误。",
+      "offsets": [
+        6354892
+      ]
+    },
+    {
+      "text": "Show less",
+      "chinese": "收起",
+      "offsets": [
+        6355132
+      ]
+    },
+    {
+      "text": "Workflows are changing on October 19th—stay tuned for updates. You can use the agent to migrate your workflows.",
+      "chinese": "工作流将在 10 月 19 日发生调整，请留意更新。你可以使用代理迁移工作流。",
+      "offsets": [
+        6355365
+      ]
+    },
+    {
+      "text": "Migrate with Agent",
+      "chinese": "使用代理迁移",
+      "offsets": [
+        6355716
+      ]
+    },
+    {
+      "text": "If that machine is a cloudtop, reach it via",
+      "chinese": "如果该设备是 Cloudtop，请通过以下方式访问：",
+      "offsets": [
+        6371193
+      ]
+    },
+    {
+      "text": ", open Chrome",
+      "chinese": "，打开 Chrome",
+      "offsets": [
+        6371562
+      ]
+    },
+    {
+      "text": "that runs Jetski Web.",
+      "chinese": "（运行 Jetski Web 的设备）。",
+      "offsets": [
+        6371632
+      ]
+    },
+    {
+      "text": "on your cloudtop server",
+      "chinese": "在你的 Cloudtop 服务器上",
+      "offsets": [
+        6371605
+      ]
+    },
+    {
+      "text": "Navigate to",
+      "chinese": "前往",
+      "offsets": [
+        6371887
+      ]
+    },
+    {
+      "text": "\"Allow remote debugging for this browser instance\"",
+      "chinese": "“允许对此浏览器实例进行远程调试”",
+      "offsets": [
+        6372036
+      ]
+    },
+    {
+      "text": "Select Environment (",
+      "chinese": "选择环境（",
+      "offsets": [
+        6429228
+      ]
+    },
+    {
+      "text": "Initializing...",
+      "chinese": "正在初始化…",
+      "offsets": [
+        6469889
+      ]
+    },
+    {
+      "text": "Pick order sets the harness for each response; the rest run control.",
+      "chinese": "选择顺序决定每个回复使用的执行框架；其他回复使用对照配置。",
+      "offsets": [
+        6472476
+      ]
+    },
+    {
+      "text": "Zipping",
+      "chinese": "正在压缩",
+      "offsets": [
+        6504992
+      ]
+    },
+    {
+      "text": "Google3 projects are deprecated",
+      "chinese": "Google3 项目已弃用",
+      "offsets": [
+        6507860
+      ]
+    },
+    {
+      "text": "Previous chats live under a deprecated Google3 Project",
+      "chinese": "之前的对话保存在已弃用的 Google3 项目下",
+      "offsets": [
+        6507963
+      ]
+    },
+    {
+      "text": "New chats will be grouped by workspace.",
+      "chinese": "新对话将按工作区分组。",
+      "offsets": [
+        6508141
+      ]
+    },
+    {
+      "text": "learn more",
+      "chinese": "了解更多",
+      "offsets": [
+        6508121
+      ]
+    },
+    {
+      "text": "Chat anyways",
+      "chinese": "仍然开始对话",
+      "offsets": [
+        6508320
+      ]
+    },
+    {
+      "text": "Select CitC workspace",
+      "chinese": "选择 CitC 工作区",
+      "offsets": [
+        6508395
+      ]
+    },
+    {
+      "text": "to add to Agent",
+      "chinese": "以添加到代理",
+      "offsets": [
+        6543650
+      ]
+    },
+    {
+      "text": "No matching",
+      "chinese": "没有匹配项",
+      "offsets": [
+        6590592
+      ]
+    },
+    {
+      "text": "found",
+      "chinese": "已找到",
+      "offsets": [
+        6590825
+      ]
+    },
+    {
+      "text": "Google3 projects are being deprecated. Select a CitC workspace instead.",
+      "chinese": "Google3 项目即将弃用，请改选 CitC 工作区。",
+      "offsets": [
+        6591693
+      ]
+    },
+    {
+      "text": "Change VCS in General settings, under Advanced",
+      "chinese": "在“常规”设置的“高级”选项中更改版本控制系统",
+      "offsets": [
+        6591849
+      ]
+    },
+    {
+      "text": "available",
+      "chinese": "可用",
+      "offsets": [
+        6593801
+      ]
+    },
+    {
+      "text": "ABFS workspace creation is not available in this environment.",
+      "chinese": "此环境不支持创建 ABFS 工作区。",
+      "offsets": [
+        6603732
+      ]
+    },
+    {
+      "text": "ABFS is required to create ABFS workspaces. Please visit",
+      "chinese": "创建 ABFS 工作区需要 ABFS。请访问",
+      "offsets": [
+        6604477
+      ]
+    },
+    {
+      "text": "to set up ABFS.",
+      "chinese": "以设置 ABFS。",
+      "offsets": [
+        6604717
+      ]
+    },
+    {
+      "text": "(Optional)",
+      "chinese": "（可选）",
+      "offsets": [
+        6605486,
+        6620943
+      ]
+    },
+    {
+      "text": "Need help? Reach out in the",
+      "chinese": "需要帮助？请在以下位置联系我们：",
+      "offsets": [
+        6607489,
+        6633082
+      ]
+    },
+    {
+      "text": "ABFS Dogfood chat",
+      "chinese": "ABFS 内测交流群",
+      "offsets": [
+        6607674,
+        6633267
+      ]
+    },
+    {
+      "text": "Creating...",
+      "chinese": "正在创建…",
+      "offsets": [
+        6608183,
+        6611742,
+        6621951,
+        6624016,
+        6625551
+      ]
+    },
+    {
+      "text": "Searching...",
+      "chinese": "正在搜索…",
+      "offsets": [
+        6618130
+      ]
+    },
+    {
+      "text": "Cog workspace creation is not available in this environment.",
+      "chinese": "此环境不支持创建 Cog 工作区。",
+      "offsets": [
+        6619227
+      ]
+    },
+    {
+      "text": "cogfsd and cidermux are required to create Cog workspaces. Please visit",
+      "chinese": "创建 Cog 工作区需要 cogfsd 和 cidermux。请访问",
+      "offsets": [
+        6619861
+      ]
+    },
+    {
+      "text": "to set up Cog.",
+      "chinese": "以设置 Cog。",
+      "offsets": [
+        6620114
+      ]
+    },
+    {
+      "text": "already exists for this",
+      "chinese": "已关联此",
+      "offsets": [
+        6622273
+      ]
+    },
+    {
+      "text": "combination of folders",
+      "chinese": "文件夹组合",
+      "offsets": [
+        6622303
+      ]
+    },
+    {
+      "text": "folder",
+      "chinese": "文件夹",
+      "offsets": [
+        6622328
+      ]
+    },
+    {
+      "text": ". Would you like to continue using it or make a new one?",
+      "chinese": "。要继续使用它，还是创建新项目？",
+      "offsets": [
+        6622337
+      ]
+    },
+    {
+      "text": "Are you sure you want to delete the workspace",
+      "chinese": "确定要删除工作区",
+      "offsets": [
+        6633511
+      ]
+    },
+    {
+      "text": "Deprecated",
+      "chinese": "已弃用",
+      "offsets": [
+        6671281
+      ]
+    },
+    {
+      "text": "Add Workspace",
+      "chinese": "添加工作区",
+      "offsets": [
+        6680155
+      ]
+    },
+    {
+      "text": "Create New Project",
+      "chinese": "创建新项目",
+      "offsets": [
+        6680171
+      ]
+    },
+    {
+      "text": "Encountered an error while running the plugin.",
+      "chinese": "运行插件时出错。",
+      "offsets": [
+        6689709
+      ]
+    },
+    {
+      "text": "UI view does not exist.",
+      "chinese": "界面视图不存在。",
+      "offsets": [
+        6690067
+      ]
+    },
+    {
+      "text": "Terminal Disabled on Non-Corp Domains",
+      "chinese": "非公司域名下已禁用终端",
+      "offsets": [
+        6822960,
+        6865453
+      ]
+    },
+    {
+      "text": "You are accessing Jetski terminal on a non-corp domain, which may trigger a Chrome Password Alert. To use the terminal, visit the Jetski Corp domain instead.",
+      "chinese": "你正在通过非公司域名访问 Jetski 终端，这可能触发 Chrome Password Alert。要使用终端，请访问 Jetski 公司域名。",
+      "offsets": [
+        6823094,
+        6865586
+      ]
+    },
+    {
+      "text": "Open Jetski Corp",
+      "chinese": "打开 Jetski 公司域名",
+      "offsets": [
+        6823645,
+        6866137
+      ]
+    },
+    {
+      "text": "No active terminals. Click + to create one.",
+      "chinese": "没有活动终端。点击 + 创建终端。",
+      "offsets": [
+        6824214
+      ]
+    },
+    {
+      "text": "Creating terminal...",
+      "chinese": "正在创建终端…",
+      "offsets": [
+        6824407
+      ]
+    },
+    {
+      "text": "No workspaces open.",
+      "chinese": "没有打开的工作区。",
+      "offsets": [
+        6825074
+      ]
+    },
+    {
+      "text": "File Tree Component is not loaded.",
+      "chinese": "文件树组件尚未加载。",
+      "offsets": [
+        6825505
+      ]
+    },
+    {
+      "text": "Open File",
+      "chinese": "打开文件",
+      "offsets": [
+        6842968,
+        6854152
+      ]
+    },
+    {
+      "text": "New Terminal",
+      "chinese": "新建终端",
+      "offsets": [
+        6843272
+      ]
+    },
+    {
+      "text": "Connecting to terminal...",
+      "chinese": "正在连接终端…",
+      "offsets": [
+        6867367
+      ]
+    },
+    {
+      "text": "Full View",
+      "chinese": "完整视图",
+      "offsets": [
+        6874453
+      ]
+    },
+    {
+      "text": "Toggle sidebar",
+      "chinese": "切换侧栏",
+      "offsets": [
+        6882667
+      ]
+    },
+    {
+      "text": "No results",
+      "chinese": "没有结果",
+      "offsets": [
+        6890096
+      ]
+    },
+    {
+      "text": "Sent!",
+      "chinese": "已发送！",
+      "offsets": [
+        6932303
+      ]
+    },
+    {
+      "text": "Download the bundle manually and share it instead:",
+      "chinese": "请改为手动下载并共享诊断包：",
+      "offsets": [
+        6934018
+      ]
+    },
+    {
+      "text": "Something went wrong.",
+      "chinese": "出现了错误。",
+      "offsets": [
+        6936275
+      ]
+    },
+    {
+      "text": "Debug bundle uploaded!",
+      "chinese": "调试包已上传！",
+      "offsets": [
+        6936646
+      ]
+    },
+    {
+      "text": "Not shared automatically—share with",
+      "chinese": "不会自动共享，请与以下对象共享：",
+      "offsets": [
+        6936744,
+        6938574
+      ]
+    },
+    {
+      "text": "for debugging.",
+      "chinese": "以进行调试。",
+      "offsets": [
+        6936854,
+        6938684
+      ]
+    },
+    {
+      "text": "Open Drive bundle",
+      "chinese": "打开云端硬盘中的诊断包",
+      "offsets": [
+        6937058
+      ]
+    },
+    {
+      "text": "Can't open the Drive link?",
+      "chinese": "无法打开云端硬盘链接？",
+      "offsets": [
+        6937220
+      ]
+    },
+    {
+      "text": "Uploading…",
+      "chinese": "正在上传…",
+      "offsets": [
+        6937638
+      ]
+    },
+    {
+      "text": "Upload debug bundle",
+      "chinese": "上传调试包",
+      "offsets": [
+        6937745
+      ]
+    },
+    {
+      "text": "Upload Debug Bundle",
+      "chinese": "上传调试包",
+      "offsets": [
+        6940913
+      ]
+    },
+    {
+      "text": "Uploads logs, settings, and conversation summaries to your Drive.",
+      "chinese": "将日志、设置和对话摘要上传到你的云端硬盘。",
+      "offsets": [
+        6938480
+      ]
+    },
+    {
+      "text": "Trigger",
+      "chinese": "触发器",
+      "offsets": [
+        6961616,
+        6969697
+      ]
+    },
+    {
+      "text": "Automation \"",
+      "chinese": "自动化“",
+      "offsets": [
+        6963944
+      ]
+    },
+    {
+      "text": "\" not found.",
+      "chinese": "”未找到。",
+      "offsets": [
+        6963961,
+        7001318
+      ]
+    },
+    {
+      "text": "with ID",
+      "chinese": "ID 为",
+      "offsets": [
+        6966469
+      ]
+    },
+    {
+      "text": "already exists.",
+      "chinese": "已存在。",
+      "offsets": [
+        6966487
+      ]
+    },
+    {
+      "text": "ID:",
+      "chinese": "ID：",
+      "offsets": [
+        6966579
+      ]
+    },
+    {
+      "text": "See all (",
+      "chinese": "查看全部（",
+      "offsets": [
+        6979514
+      ]
+    },
+    {
+      "text": "New conversation",
+      "chinese": "新建对话",
+      "offsets": [
+        6982370
+      ]
+    },
+    {
+      "text": "Triggered",
+      "chinese": "已触发",
+      "offsets": [
+        6995854
+      ]
+    },
+    {
+      "text": "Task \"",
+      "chinese": "任务“",
+      "offsets": [
+        7001307
+      ]
+    },
+    {
+      "text": "Back to",
+      "chinese": "返回",
+      "offsets": [
+        7001511
+      ]
+    },
+    {
+      "text": "Multi-conversation view is not available",
+      "chinese": "多对话视图不可用",
+      "offsets": [
+        7008806
+      ]
+    },
+    {
+      "text": "Loading trajectory...",
+      "chinese": "正在加载执行轨迹…",
+      "offsets": [
+        7012279
+      ]
+    },
+    {
+      "text": "Run command step not found",
+      "chinese": "未找到运行命令的步骤",
+      "offsets": [
+        7012466
+      ]
+    }
+  ]
+}

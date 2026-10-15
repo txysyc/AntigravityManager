@@ -1,7 +1,20 @@
+# Locally recovered application resources
 analysis/original/
 analysis/embedded/
-output/
+
+# Generated patches, test profiles and runtime copies
 dist/*.asar
+output/
+
+# Dependencies and language caches
 node_modules/
+__pycache__/
+*.py[cod]
+
+# Installer temporary files and backups
 *.zh-CN-new
 *.zh-CN-original
+
+# Operating system metadata
+.DS_Store
+Thumbs.db

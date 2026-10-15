@@ -1,0 +1,43 @@
+<!-- Component shapes verified against Antigravity 2.23.0's recovered main.js. -->
+<div data-testid="title-menu-bar"><div data-testid="title-menu-bar-item">Antigravity</div><button id="title-file">File</button><button id="title-view">View</button><button id="title-window">Window</button><button data-testid="title-menu-bar-option" id="title-option"><span>New Window</span><span>Ctrl+Shift+N</span></button></div>
+<aside>
+  <a id="sidebar-new" href="/new" data-testid="new-conversation-button"><span>New Conversation</span></a>
+  <a id="sidebar-history" href="/history" data-testid="history-button"><span>Conversation History</span></a>
+  <button id="sidebar-automations" data-testid="automations-button"><span>Automations</span></button>
+  <a id="sidebar-customizations" href="/customizations"><span>Customizations</span></a>
+  <h2 id="sidebar-projects">Projects</h2>
+</aside>
+<nav>
+  <div><h1>Settings</h1></div>
+  <div><button id="nav-application" data-testid="settings-nav-item-App"><span>Application</span></button><button id="nav-models" data-testid="settings-nav-item-Models"><span>Models</span></button></div>
+  <div><h2>Projects</h2></div>
+  <div><button data-testid="settings-nav-item-Models" id="user-project-models" title="Models"><span>Models</span></button><button data-testid="settings-nav-item-Default" id="user-project-default"><span>Default</span></button></div>
+  <div><h2>Workspaces</h2></div>
+  <div><button data-testid="settings-nav-item-Application" id="user-workspace"><span>Application</span></button></div>
+  <div><h2 id="not-in-project">Not in Project</h2></div><div><button id="nav-conversations" data-testid="settings-nav-item-Conversations">Conversations</button></div>
+  <button data-testid="settings-nav-item-Account" id="account-name"><span>Models</span></button>
+</nav>
+<main class="max-w-2xl mx-auto">
+  <div><h2>General</h2><div class="text-sm text-muted-foreground bg-transparent" id="general-description">Configure agent execution, queued message delivery, and permissions.</div></div>
+  <h3 id="execution-title">Execution</h3>
+  <div><button id="queue">Queue</button><button id="send-immediately">Send Immediately</button></div>
+  <span class="flex items-center gap-1 text-xs text-muted-foreground"><span id="keyboard-shortcuts">Keyboard shortcuts</span><span data-tooltip-id="keyboard-help">ⓘ</span></span>
+  <span class="text-xs text-muted-foreground whitespace-pre-wrap">Controls the actions the agent can take. <span class="inline-block" id="modified">Modified in <button id="user-override" data-testid="security-preset-overrides-trigger">Default</button></span></span>
+  <span class="text-xs text-muted-foreground whitespace-pre-wrap"><span class="inline-block" id="modified-many">Modified in <button id="many-projects" data-testid="permission-preset-overrides-trigger" aria-controls="override-menu"><span id="project-count"></span></button></span></span>
+  <span class="flex items-center gap-1 mt-0.5"><span id="preset-help">Learn more about <span class="font-semibold" id="preset-help-value">Default</span></span><span data-tooltip-id="preset-learn-more-tooltip">ⓘ</span></span>
+  <button id="default-preset">Default</button><button id="open-permissions">Open</button>
+  <span class="text-xs text-muted-foreground whitespace-pre-wrap" id="tool-description">Modify permissions for file, terminal, and MCP tools.</span>
+  <div data-testid="plan-command-fyi-alert"><span id="plan-help"></span></div>
+</main>
+<div role="menu" id="override-menu"><div role="menuitem"><span id="user-override-menu">Models</span></div></div>
+<a href="/docs" id="unrelated-link">Models</a><div id="unrelated-div">Execution</div><button id="unrelated-fragment">Type</button>
+<script>
+  const count = document.querySelector('#project-count'); count.append(document.createTextNode('3'), document.createTextNode(' projects'));
+  const plan = document.querySelector('#plan-help');
+  for (const value of ['Type', ' ', '/', ' ', 'and select', ' ', 'plan', ' ', 'to have the agent generate a plan.']) {
+    if (value === '/' || value === 'plan') { const code = document.createElement('code'); code.textContent = value; plan.append(code); }
+    else plan.append(document.createTextNode(value));
+  }
+  window.coverageOriginals = Object.fromEntries([...document.querySelectorAll('[id]')].filter(el => el.id !== 'antigravity-language-switcher').map(el => [el.id, el.textContent]));
+  window.overrideClicks = 0; document.querySelector('#user-override').onclick = () => window.overrideClicks++;
+</script>

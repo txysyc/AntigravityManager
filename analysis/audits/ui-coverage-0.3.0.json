@@ -1,0 +1,37 @@
+{
+  "patchVersion": "0.3.0",
+  "applicationVersion": "2.23.0",
+  "sourceSha256": "867d1990b61d87f4b9ff8c5ecb1551c8688135267f32e56e02563f2d3e78fd68",
+  "planningRuntimeEvidence": "ev_90020e82a96cad3e2737cb77ed5e2e1bc154f07df91befda22475777b6f40f57",
+  "sourceAnchors": {
+    "settingsHeader": 5595664,
+    "settingsRow": 5829765,
+    "overrideProjects": 5934237,
+    "presetHelp": 5939091,
+    "planCommandHelp": 5951175,
+    "settingsNavigation": 6031430,
+    "webTitleMenu": 6919192,
+    "sidebar": 6943884
+  },
+  "anchorUnits": "UTF-16 indices in recovered minified main.js; approximate component offsets",
+  "dictionaryEntries": 476,
+  "newDictionaryEntries": 26,
+  "verified": [
+    "Existing 9 ASAR/native/locale tests pass",
+    "Actual packaged preload translates screenshot component fixtures",
+    "Mixed text preserves project buttons, code nodes, keyboard shortcuts and events",
+    "Dynamic options, project count re-render and tool-description changes translate",
+    "Models/Default project names and account/workspace names remain original",
+    "Portaled override menu names are protected through trigger association",
+    "Moving a translated settings control into a project group restores text and title",
+    "Chinese/English round trips restore exact original text and attributes",
+    "User updates survive language changes",
+    "Language survives reload and a new Electron process",
+    "Installed archive and original backup fingerprints match the manifest"
+  ],
+  "limitations": [
+    "Fixtures reproduce verified component shapes; they do not measure full product workflow or layout coverage",
+    "Post-install live application load failed; REA passive inspection returned target_not_allowed",
+    "Unknown templates and server-provided text may remain English"
+  ]
+}

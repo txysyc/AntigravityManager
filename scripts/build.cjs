@@ -29,11 +29,20 @@ for (const file of Object.keys(nativeManifest)) {
   replacements.set(file, Buffer.from(conditional)); changes.push(...result.replacements);
 }
 const dictionary = JSON.parse(fs.readFileSync(path.join(ROOT, 'translations/zh-CN.json'), 'utf8'));
+const rendererConfig = {
+  remote: JSON.parse(fs.readFileSync(path.join(ROOT, 'translations/zh-CN.remote.json'), 'utf8')),
+  rules: JSON.parse(fs.readFileSync(path.join(ROOT, 'translations/zh-CN.dynamic.json'), 'utf8'))
+};
+for (const rule of rendererConfig.rules) {
+  if (!['ui','settings','title-menu','attribute','marketplace'].includes(rule.scope) || !rule.pattern.startsWith('^') || !rule.pattern.endsWith('$') || !rule.replacement) throw Error('Unbounded dynamic rule');
+  new RegExp(rule.pattern);
+}
+for (const value of Object.values(rendererConfig.remote)) if (typeof value !== 'string' || !value) throw Error('Invalid remote translation');
 for (const [key, value] of Object.entries(dictionary)) if (!key || typeof value !== 'string' || !value) throw Error('Invalid translation');
 const { installChineseUI } = require('../src/renderer-localize.js');
 const preload = archive.files.get('dist/preload.js').data.toString('utf8');
 const bridge = `{getLanguage:()=>electron_1.ipcRenderer.invoke('antigravity-locale:get'),setLanguage:language=>electron_1.ipcRenderer.invoke('antigravity-locale:set',language),onLanguageChanged:callback=>electron_1.ipcRenderer.on('antigravity-locale:changed',(_event,language)=>callback(language))}`;
-const patchedPreload = preload + '\n// Antigravity Chinese UI patch\n(' + installChineseUI.toString() + ')(' + JSON.stringify(dictionary) + ',' + bridge + ');\n';
+const patchedPreload = preload + '\n// Antigravity Chinese UI patch\n(' + installChineseUI.toString() + ')(' + JSON.stringify(dictionary) + ',' + bridge + ',' + JSON.stringify(rendererConfig) + ');\n';
 new vm.Script(patchedPreload);
 replacements.set('dist/preload.js', Buffer.from(patchedPreload));
 const localeBytes = fs.readFileSync(path.join(ROOT, 'src/locale-main.cjs'));
@@ -49,5 +58,5 @@ for (const [file, original] of archive.files) {
 }
 fs.mkdirSync(path.join(ROOT, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(ROOT, 'dist/app.asar'), output);
-fs.writeFileSync(path.join(ROOT, 'dist/manifest.json'), JSON.stringify({ product: pkg.productName, version: pkg.version, patchVersion: '0.2.0', originalSha256: sha(input), patchedSha256: sha(output), acceptedPatchedSha256: priorHashes.filter(value => value !== sha(output)), dictionaryEntries: Object.keys(dictionary).length, changedFiles: [...replacements.keys()], nativeChanges: changes }, null, 2));
+fs.writeFileSync(path.join(ROOT, 'dist/manifest.json'), JSON.stringify({ product: pkg.productName, version: pkg.version, patchVersion: require('../package.json').version, originalSha256: sha(input), patchedSha256: sha(output), acceptedPatchedSha256: priorHashes.filter(value => value !== sha(output)), dictionaryEntries: Object.keys(dictionary).length, remoteDictionaryEntries: Object.keys(rendererConfig.remote).length, dynamicRules: rendererConfig.rules.length, changedFiles: [...replacements.keys()], nativeChanges: changes }, null, 2));
 console.log(JSON.stringify({ version: pkg.version, changedFiles: replacements.size, dictionaryEntries: Object.keys(dictionary).length, nativeAnchors: changes.length, output: path.join(ROOT, 'dist/app.asar') }));

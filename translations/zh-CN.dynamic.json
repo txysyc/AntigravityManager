@@ -1,0 +1,205 @@
+[
+  {
+    "scope": "title-menu",
+    "pattern": "^Version ([0-9]+(?:\\.[0-9]+)+)$",
+    "replacement": "版本 {1}"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^Manage (Antigravity) app settings\\.$",
+    "replacement": "管理 {1} 应用设置。"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^You can upgrade to a (Google AI [A-Za-z ]+) plan to receive higher rate limits\\.$",
+    "replacement": "可升级到 {1} 方案以获得更高的使用限额。"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^You have used some of your (weekly|5-hour|five-hour) limit, it will fully refresh in (.+)\\.$",
+    "replacement": "已使用部分{1}额度，将在 {2}后完全恢复。",
+    "limitGroups": [
+      1
+    ],
+    "durationGroups": [
+      2
+    ]
+  },
+  {
+    "scope": "settings",
+    "pattern": "^When toggled on, (Antigravity) will use your AI credits to fulfill model requests once you're out of model quota\\. \\1 will always use your model quota first before using AI credits\\.$",
+    "replacement": "启用后，当模型额度耗尽时，{1} 将使用 AI 点数处理模型请求。{1} 会始终优先使用模型额度，再使用 AI 点数。"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^Available AI Credits: ([0-9,.]+)$",
+    "replacement": "可用 AI 点数：{1}"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^When toggled on, (Antigravity) collects usage data to help Google enhance performance and features\\.$",
+    "replacement": "启用后，{1} 会收集使用数据，帮助 Google 改善性能和功能。"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^Receive product updates, tips, and promotions from Google (Antigravity) via email\\.$",
+    "replacement": "通过电子邮件接收 Google {1} 的产品更新、使用技巧和优惠信息。"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^Reset ([0-9]+) overrides?$",
+    "replacement": "重置 {1} 项覆盖设置"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^Shared with: (.+)$",
+    "replacement": "共享额度：{1}"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^Changes the base URL on each extension page\\. You must restart (Antigravity) to use the new marketplace after changing this value\\.$",
+    "replacement": "修改扩展页面的基础网址。更改后需重启 {1}，才能使用新的市场。"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^Changes the base URL for marketplace search results\\. You must restart (Antigravity) to use the new marketplace after changing this value\\.$",
+    "replacement": "修改市场搜索结果的基础网址。更改后需重启 {1}，才能使用新的市场。"
+  },
+  {
+    "scope": "ui",
+    "pattern": "^Resets in ((?:[0-9]+[dhm] ?)+|<1m)$",
+    "replacement": "{1}后重置",
+    "compactDurationGroups": [
+      1
+    ]
+  },
+  {
+    "scope": "ui",
+    "pattern": "^No (automations|scheduled tasks) configured\\.$",
+    "replacement": "尚未配置{1}。",
+    "labelGroups": {
+      "1": {
+        "automations": "自动化",
+        "scheduled tasks": "定时任务"
+      }
+    }
+  },
+  {
+    "scope": "ui",
+    "pattern": "^Send all \\(([0-9]+)\\)$",
+    "replacement": "全部发送（{1}）"
+  },
+  {
+    "scope": "ui",
+    "pattern": "^([0-9]+) files? changed$",
+    "replacement": "已更改 {1} 个文件"
+  },
+  {
+    "scope": "ui",
+    "pattern": "^Question ([0-9]+) of ([0-9]+)$",
+    "replacement": "第 {1} / {2} 个问题"
+  },
+  {
+    "scope": "ui",
+    "pattern": "^\\+([0-9]+) more \\(Show all\\)$",
+    "replacement": "另有 {1} 项（显示全部）"
+  },
+  {
+    "scope": "ui",
+    "pattern": "^See all \\(([0-9]+)\\)$",
+    "replacement": "查看全部（{1}）"
+  },
+  {
+    "scope": "ui",
+    "pattern": "^Show ([0-9]+) breakdowns?$",
+    "replacement": "显示 {1} 项明细"
+  },
+  {
+    "scope": "ui",
+    "pattern": "^([0-9]+) tools$",
+    "replacement": "{1} 个工具"
+  },
+  {
+    "scope": "attribute",
+    "pattern": "^Select model, current: (.+)$",
+    "replacement": "选择模型，当前：{1}"
+  },
+  {
+    "scope": "attribute",
+    "pattern": "^Select project, current: (.+)$",
+    "replacement": "选择项目，当前：{1}"
+  },
+  {
+    "scope": "attribute",
+    "pattern": "^Select workspace, current: (.+)$",
+    "replacement": "选择工作区，当前：{1}"
+  },
+  {
+    "scope": "attribute",
+    "pattern": "^Agent permissions preset selector, current: (.+)$",
+    "replacement": "代理权限预设选择器，当前：{1}"
+  },
+  {
+    "scope": "attribute",
+    "pattern": "^Load older messages, showing ([0-9]+) of ([0-9]+)$",
+    "replacement": "加载较早的消息，已显示 {1} / {2} 条"
+  },
+  {
+    "scope": "attribute",
+    "pattern": "^No more older messages, showing ([0-9]+) of ([0-9]+)$",
+    "replacement": "没有更早的消息，已显示 {1} / {2} 条"
+  },
+  {
+    "scope": "attribute",
+    "pattern": "^Refresh credentials for (.+)$",
+    "replacement": "刷新 {1} 的凭据"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^([0-9]+) tools? enabled$",
+    "replacement": "已启用 {1} 个工具"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^([0-9]+) tools? disabled$",
+    "replacement": "已禁用 {1} 个工具"
+  },
+  {
+    "scope": "settings",
+    "pattern": "^(.+) (Sends immediately|Queues after the turn|On empty prompt, sends next in queue)$",
+    "replacement": "{1} {2}",
+    "labelGroups": {
+      "2": {
+        "Sends immediately": "立即发送",
+        "Queues after the turn": "当前轮次结束后发送",
+        "On empty prompt, sends next in queue": "提示为空时发送下一条排队消息"
+      }
+    }
+  },
+  {
+    "scope": "marketplace",
+    "pattern": "^See (more|less) in (.+)$",
+    "replacement": "{1}{2}",
+    "labelGroups": {
+      "1": {
+        "more": "查看更多：",
+        "less": "收起："
+      }
+    }
+  },
+  {
+    "scope": "marketplace",
+    "pattern": "^No plugins found for \"(.*)\"\\.$",
+    "replacement": "未找到与“{1}”匹配的插件。"
+  },
+  {
+    "scope": "marketplace",
+    "pattern": "^Search for \"(.*)\" in the Marketplace$",
+    "replacement": "在市场中搜索“{1}”"
+  },
+  {
+    "scope": "ui",
+    "pattern": "^Low contrast ratio \\(([0-9]+\\.[0-9]+):1\\)\\. Text may be hard to read\\.$",
+    "replacement": "对比度过低（{1}:1），文字可能难以阅读。"
+  }
+]

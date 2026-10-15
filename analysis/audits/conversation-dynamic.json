@@ -1,0 +1,313 @@
+{
+  "source": "analysis/embedded/142809195-main.js",
+  "sourceSha256": "867d1990b61d87f4b9ff8c5ecb1551c8688135267f32e56e02563f2d3e78fd68",
+  "offsetUnit": "UTF-16 code units (JavaScript/Babel start offsets)",
+  "evidenceType": "static packaged JavaScript; not runtime coverage",
+  "dictionaryCandidates": "analysis/audits/conversation-candidates.json",
+  "provenance": "analysis/audits/conversation-provenance.json",
+  "dynamicCases": [
+    {
+      "feature": "Tool title prefix and content",
+      "offset": 5164542,
+      "component": "NZ",
+      "observation": "prefix, content, progressMessage and customTitle are rendered in separate spans; prefix often a static UI verb while content is a path, command, resource title, search text or backend/model summary. Some prefixes are themselves backend titlePrefix.",
+      "recommendation": "Only translate exact known static display prefixes after identifying the prefix span; protect data-uri/data-quotable-inline file pills. Do not translate the whole tool row or customTitle/toolSummary/progressMessage blindly.",
+      "dynamicTemplates": [
+        {
+          "english": "Error while ${c.toLowerCase()}",
+          "recommendation": "Preserve backend c; only translate Error while in a component-scoped adapter."
+        },
+        {
+          "english": "Error while running: ${b}",
+          "recommendation": "Translate the static prefix; preserve b verbatim."
+        },
+        {
+          "english": "${e.length} question${e.length===1?'':'s'}",
+          "offset": 5364186,
+          "recommendation": "Numeric count template to N 个问题, confined to ask-question step title."
+        }
+      ],
+      "sourceAnchor": "function NZ({prefix:"
+    },
+    {
+      "feature": "Animated tool titles",
+      "offset": 5164377,
+      "component": "MZ/Cvb",
+      "observation": "When textTransitionsEnabled is on, a string is split into unchanged segments and animated slots; data-slot-in contains m.to text, data-slot-out=m.from is displayed by CSS after:content-[attr(data-slot-out)].",
+      "recommendation": "The ordinary text-node observer cannot fully handle split phrases or CSS attr content. Treat this as an unresolved rendering path unless source-level display localization or a component-specific grouped adapter is added. Never concatenate/rewrite a parent containing mixed dynamic backend content. Keep animation outgoing/incoming values synchronized and reversible.",
+      "scope": "Only known static tool-title prefix spans; do not globally translate every data-slot-out attribute.",
+      "sourceAnchor": "var MZ=a=>Dvb()"
+    },
+    {
+      "feature": "Queued messages",
+      "offset": 6491678,
+      "component": "aZb",
+      "scope": "[data-testid='queued-messages-card']",
+      "observation": "User text y=S3a(r.items) appears in span.line-clamp-2; fallback spans have text-muted-foreground and contain 1 comment, `${w} comments`, Empty message. Existing pending-user-messages exclusion does not cover this card.",
+      "protectedScope": "[data-testid='queued-messages-card'] span.line-clamp-2:not(.text-muted-foreground)",
+      "recommendation": "Translate header/status/buttons and numeric fallback comments only; protect user message and user-derived messageLabel in edit/delete menu labels. Never make the entire role=region translatable.",
+      "dynamicTemplates": [
+        {
+          "english": "${w} comments",
+          "chinese": "${w} 条评论",
+          "guard": "Numeric count fallback span only."
+        },
+        {
+          "english": "Send all (${g.length})",
+          "offset": 6253114,
+          "chinese": "全部发送 (${g.length})",
+          "guard": "The actual button under pending-user-messages; do not relax protection for user message descendants."
+        }
+      ],
+      "sourceAnchor": "\"data-testid\":\"queued-messages-card\""
+    },
+    {
+      "feature": "Permission requests",
+      "offset": 6298699,
+      "observation": "Permission app header M.displayName||M.name, actionDescription, reason and target are provider/model/user content. Shell target is rendered in pre and textarea. Fixed choices, action type labels and explanation text are UI.",
+      "protectedScope": "[data-testid='permission-app-header']; pre; [data-testid='permission-target-editor'] value; dynamic actionDescription and reason descendants",
+      "recommendation": "Translate fixed confirmation controls and static explanation. Translate aria-label='Edit permission target' while preserving editor value. Never translate the permission target, shell command, URL, path, or reason by whole container matching.",
+      "dynamicTemplates": [
+        {
+          "english": "Requesting permission to ${action.toLowerCase()} ${g.target}",
+          "chinese": "正在请求${translatedAction}权限：${g.target}",
+          "guard": "Known action enum only; preserve target exactly; toast scope only."
+        },
+        {
+          "english": "Grant administrator access for ${target}",
+          "guard": "Translate static prefix only and preserve target; do not match arbitrary content globally."
+        }
+      ],
+      "sourceAnchor": "\"data-testid\":\"permission-app-header\""
+    },
+    {
+      "feature": "Project creation and workspace selection",
+      "offset": 6622208,
+      "observation": "Existing-project confirmation uses separate literal Project, dynamic project name, already exists for this, combination of folders, and trailing question. Workspace delete similarly separates dynamic workspace name from confirmation.",
+      "recommendation": "Use per-text-node component scoped fragments; preserve project/workspace names and selected folder paths. Project-selector-item carries data-project-name and its direct truncate span is user-owned; translate only its separate Project Settings action.",
+      "dynamicTemplates": [
+        {
+          "englishFragments": [
+            "Project ",
+            " already exists for this ",
+            "combination of folders",
+            ". Would you like to continue using it or make a new one?"
+          ],
+          "chineseFragments": [
+            "项目 ",
+            " 已关联这组 ",
+            "文件夹",
+            "。要继续使用它，还是创建新项目？"
+          ],
+          "guard": "Existing-project confirmation component only; preserve intervening project name."
+        },
+        {
+          "englishFragments": [
+            "Are you sure you want to delete the workspace",
+            "? This action cannot be undone."
+          ],
+          "offset": 6633511,
+          "chineseFragments": [
+            "确定要删除工作区",
+            "吗？此操作无法撤销。"
+          ],
+          "guard": "Delete-workspace confirmation only; preserve intervening workspace name."
+        },
+        {
+          "englishFragments": [
+            "A similar",
+            "with the same folder exists",
+            "with the same folders exists"
+          ],
+          "offset": 6582505,
+          "guard": "Reuse-project banner only; project count and folder parameters remain unchanged."
+        },
+        {
+          "englishFragments": [
+            "No matching ",
+            "No ",
+            " found",
+            " available"
+          ],
+          "offset": 6590592,
+          "guard": "Only project/workspace selector empty states; do not add global generic fragments to dictionary."
+        }
+      ],
+      "sourceAnchor": "\"Project \","
+    },
+    {
+      "feature": "Model selection",
+      "offset": 6440853,
+      "scope": "[data-testid='model-selector-trigger']",
+      "observation": "The trigger contains model label t and optional effort v; menu RXb renders backend/custom model a.label. Either may equal a short UI key (Custom, High, Extra, etc.).",
+      "recommendation": "Preserve trigger model-name text and model menu names, including custom names. Effort translation requires separately identified effort node. Translate fixed Edit Model/Select Model controls and tooltip copy.",
+      "dynamicTemplates": [
+        {
+          "english": "Select model, current: ${t}${v ? ' '+v : ''}",
+          "chinese": "选择模型，当前：${t}${v ? ' '+translatedEffort : ''}",
+          "guard": "aria-label on model-selector-trigger only; preserve model t verbatim and map effort from finite known enum."
+        }
+      ],
+      "sourceAnchor": "\"data-testid\":\"model-selector-trigger\""
+    },
+    {
+      "feature": "Context/file/browser pills",
+      "offset": 2824232,
+      "component": "cC/qC",
+      "observation": "File basename, resource displayName, pageTitle/URL host, conversation title and sectionName are nested in button/span .inline-pill with data-uri and data-quotable-inline. They can match dictionary keys exactly.",
+      "protectedScope": "[data-quotable-inline][data-uri]",
+      "recommendation": "Protect entire pill text/title, including descendants. Internal fallback labels Task Log, Overview, Sections may remain untranslated under conservative protection; translating those requires a semantic source marker. Do not infer that clickable text is UI copy.",
+      "sourceAnchor": "var cC=({fileUri:"
+    },
+    {
+      "feature": "Browser page card",
+      "offset": 5207583,
+      "component": "QZ",
+      "observation": "Browser action button contains a.pageTitle||a.url, URL and a formatted time. Nearby QL menu actions Mention Page/Capture screenshot/Capture console logs are fixed UI.",
+      "recommendation": "Preserve the button's page-title/url spans; translate only fixed dropdown actions. DOM marker is not explicit, so a generic button whitelist cannot distinguish a page named Review/Project/Home from application copy.",
+      "sourceAnchor": "var QZ=({page:"
+    },
+    {
+      "feature": "File titles and file viewer",
+      "offset": 3411680,
+      "observation": "CL FileTitle uses data-file-uri on the clickable parent, file-title-name for user basename/title, and SLa sibling for filesystem path. UI badge and action buttons share that parent.",
+      "protectedScope": "[data-testid='file-title-name']; [data-file-uri] > div[style] path display; notebook code/output, pre, code, .xterm, .monaco-editor",
+      "recommendation": "Protect name/path spans without excluding genuine action-button labels in the same header. Notebook cell output has data-independent content and must remain user-owned, including image alt generated from output.",
+      "sourceAnchor": "\"data-testid\":\"file-title-name\""
+    },
+    {
+      "feature": "Artifact comments and agent HTML",
+      "offset": 5136477,
+      "scope": "[data-testid='agent-embed']; [data-testid='agent-embed-fallback']",
+      "observation": "Agent HTML and artifact comments are generated/user content; fallback contains user src basename c and static Preview disabled/Open Source Code. Controls and comments can be in the same outer card.",
+      "recommendation": "Protect generated HTML, filename span and comments; translate only control labels. Existing protectedSelector blocks entire markdown/prose ancestors, so comment/control buttons within those remain skipped unless carefully whitelisted as known UI controls. Do not globally remove markdown/prose protection.",
+      "sourceAnchor": "\"data-testid\":\"agent-embed-fallback\""
+    }
+  ],
+  "ambiguousShortKeys": {
+    "recommendation": "The dictionary entries below are genuine UI labels, but must not be applied to arbitrary buttons/menu options/headers without user-content protections. If protection cannot be established, exclude from generic matching and allow only known UI scopes.",
+    "keys": [
+      "Input",
+      "Comment",
+      "Quote",
+      "Before",
+      "After",
+      "Staged",
+      "Conflict",
+      "Preview",
+      "Error",
+      "Create",
+      "Modified",
+      "Confirm",
+      "Play",
+      "Pause",
+      "Configure",
+      "Hide",
+      "Show",
+      "New",
+      "Run",
+      "Read",
+      "Write",
+      "Use",
+      "Access",
+      "Review",
+      "Project",
+      "Conversation",
+      "Workspace",
+      "Worktree",
+      "Folder",
+      "Document",
+      "Artifact",
+      "Subagent",
+      "Model",
+      "Custom",
+      "Low",
+      "Medium",
+      "High",
+      "Extra",
+      "Max",
+      "Local",
+      "Total",
+      "Turn",
+      "Media",
+      "Video",
+      "Image",
+      "Actions",
+      "Sources",
+      "Goal",
+      "Checkpoint",
+      "Prompt",
+      "Other",
+      "Clear",
+      "Remove",
+      "Waiting",
+      "Thinking",
+      "Working",
+      "Running",
+      "Editing",
+      "Created",
+      "Deleted",
+      "Accepted",
+      "Approved"
+    ],
+    "brandsExcludedFromCandidateMap": [
+      "Antigravity",
+      "Jetski",
+      "Cider",
+      "Gemini",
+      "Gemini 3.1 Flash Image",
+      "Gemini 3 Pro Image",
+      "Gemini 2.5 Flash Image",
+      "Gemini Next",
+      "Fig",
+      "Piper",
+      "Chromium",
+      "Android (main)",
+      "Google Drive"
+    ],
+    "brandBearingLabels": "Compound fixed UI labels such as Open in Sponge, Fig share, CitC Clone, GoB Repository retain the product name and translate only the surrounding function noun/verb. They are not model-name rewrite rules."
+  },
+  "safeUiScopes": [
+    {
+      "selector": "[data-testid='terminal-password-warning']",
+      "offset": 6696578,
+      "purpose": "Fixed terminal security note and aria-label."
+    },
+    {
+      "selector": "[data-testid='model-quota-refreshing']",
+      "offset": 6435886,
+      "purpose": "Known quota-refresh status only; quota bucket/model displayName siblings remain dynamic."
+    },
+    {
+      "selector": "[data-testid='queued-messages-expand-button']",
+      "offset": 6491409,
+      "purpose": "Fixed collapse/expand action and aria-label."
+    },
+    {
+      "selector": "[data-testid='permission-details-toggle']",
+      "offset": 6300634,
+      "purpose": "Fixed Show details button only; actionDescription/reason are dynamic."
+    },
+    {
+      "selector": "[data-testid='battle-winner-survey']",
+      "offset": 6255537,
+      "purpose": "Known first-party feedback questionnaire labels/options. Do not use all ask-question panels as fixed UI; agent questions/options are model content."
+    },
+    {
+      "selector": "[data-testid='agent-embed-fallback'] a",
+      "offset": 5136477,
+      "purpose": "Fixed Open Source Code action; adjacent source filename remains protected."
+    }
+  ],
+  "suggestedRegressionCases": [
+    "Project/workspace/conversation titles exactly matching Models, Review, Project, Default, Home, Folder, Artifact or New retain originals through Chinese->English->Chinese.",
+    "A file named Review or Folder without extension, browser page title Review, resource displayName New, custom model label High are never translated.",
+    "Queued user message exactly Open, Review, Continue or Models remains unchanged while Queued Messages and empty/comment fallback translate.",
+    "Permission command/target/reason/actionDescription and plugin displayName remain unchanged; fixed permission controls translate.",
+    "Tool title known prefix translates; command/file pill/backend summary remains unchanged; CSS animated outgoing/incoming text does not mix languages.",
+    "Notebook plain-text output equal to a dictionary key remains unchanged; fixed notebook preview/error UI translates.",
+    "Agent ask-question prompt/options stay model content while first-party battle-winner-survey questionnaire translates.",
+    "Removed/recreated nodes, changed tool state and language switching restore app original values without overwriting updates."
+  ],
+  "remainingBoundary": "931 exact static dictionary candidates were checked against selected app UI regions; this does not establish runtime coverage for gated/internal features, dynamic server error text, generated UI, nested remote documents or animations. Candidate numbers must not be presented as a percentage of complete localization."
+}

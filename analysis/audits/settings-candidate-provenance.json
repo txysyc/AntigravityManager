@@ -1,0 +1,3355 @@
+[
+  {
+    "en": "Require Review",
+    "zh": "要求审核",
+    "offsets": [
+      3496254,
+      5948103,
+      5948370
+    ]
+  },
+  {
+    "en": "Proceed in Sandbox",
+    "zh": "在沙箱中执行",
+    "offsets": [
+      3496285,
+      3505585,
+      5948082,
+      5948349
+    ]
+  },
+  {
+    "en": "Auto",
+    "zh": "自动",
+    "offsets": [
+      3496201,
+      3505501
+    ]
+  },
+  {
+    "en": "Turbo",
+    "zh": "完全放行",
+    "offsets": [
+      3495086
+    ]
+  },
+  {
+    "en": "Suggestions",
+    "zh": "建议",
+    "offsets": [
+      3498190
+    ]
+  },
+  {
+    "en": "Navigation",
+    "zh": "导航",
+    "offsets": [
+      3498320,
+      5906142
+    ]
+  },
+  {
+    "en": "Context",
+    "zh": "上下文",
+    "offsets": [
+      3498367
+    ]
+  },
+  {
+    "en": "Advanced",
+    "zh": "高级",
+    "offsets": [
+      3498619,
+      5966503,
+      5972533
+    ]
+  },
+  {
+    "en": "Quota",
+    "zh": "额度",
+    "offsets": [
+      3498834
+    ]
+  },
+  {
+    "en": "App",
+    "zh": "应用",
+    "offsets": [
+      3499279,
+      3514646,
+      3514823,
+      3515049,
+      5879875,
+      6025423
+    ]
+  },
+  {
+    "en": "Editor",
+    "zh": "编辑器",
+    "offsets": [
+      3501871,
+      3513838,
+      3513899,
+      3513965,
+      6025223
+    ]
+  },
+  {
+    "en": "Updater",
+    "zh": "更新",
+    "offsets": [
+      3499377
+    ]
+  },
+  {
+    "en": "Choose between the Default and Project 4K experience.",
+    "zh": "选择默认体验或 Project 4K 体验。",
+    "offsets": [
+      3499659
+    ]
+  },
+  {
+    "en": "Project 4K interface without developer tooling.",
+    "zh": "不包含开发工具的 Project 4K 界面。",
+    "offsets": [
+      3499846
+    ]
+  },
+  {
+    "en": "The full developer experience.",
+    "zh": "完整的开发体验。",
+    "offsets": [
+      3499896
+    ]
+  },
+  {
+    "en": "Toggle if a confirmation is shown when using the \"Reload Window\" button.",
+    "zh": "设置使用“重新加载窗口”按钮时是否显示确认提示。",
+    "offsets": [
+      3501922
+    ]
+  },
+  {
+    "en": "Continue \"Explain and Fix\" actions in the current conversation instead of starting a new one.",
+    "zh": "在当前对话中继续“解释并修复”操作。",
+    "offsets": [
+      3502564
+    ]
+  },
+  {
+    "en": "Slightly modify your UI to ensure more consistent demos. This is only recommended for demo purposes. In most cases, you can run \"Antigravity: Start Demo Mode\" and \"Antigravity: Stop Demo Mode\" to control this switch and update your ~/.gemini/antigravity data directory.",
+    "zh": "调整界面以保持演示一致性，建议仅在演示时使用。通常可运行“Antigravity: Start Demo Mode”和“Antigravity: Stop Demo Mode”控制此开关并更新 ~/.gemini/antigravity 数据目录。",
+    "offsets": [
+      3502126
+    ]
+  },
+  {
+    "en": "Enforce settings that prevent the agent from autonomously running targeted exploits and require human review for all agent actions. Visit antigravity.google/docs/strict-mode for details.",
+    "zh": "强制启用限制，防止代理自主运行针对性攻击，并要求人工审核所有代理操作。详情见 antigravity.google/docs/strict-mode。",
+    "offsets": [
+      3502779
+    ]
+  },
+  {
+    "en": "Allow the agent to automatically view and edit files outside the current workspace. Use with caution: this gives the agent access to additional potentially-relevant information, but also allows the agent to access credential files, secrets, and other files outside of the workspace that could be targeted in prompt injection attacks or other exploits by malicious actors.",
+    "zh": "允许代理自动查看和编辑当前工作区之外的文件。请谨慎使用：代理可获取更多相关信息，也能访问工作区外的凭据、密钥等文件，这些文件可能成为提示注入或其他恶意攻击的目标。",
+    "offsets": [
+      3503125
+    ]
+  },
+  {
+    "en": "Use the IDE's shell integration to detect and report terminal command execution. When disabled, the agent uses its own shell. Restart the application for this to take effect.",
+    "zh": "使用 IDE 的 Shell 集成检测并报告终端命令执行情况。关闭时代理使用自己的 Shell。重启应用后生效。",
+    "offsets": [
+      3504268
+    ]
+  },
+  {
+    "en": "Controls whether terminal commands require your approval before running.\n\nNote: A change to this setting will only apply to new messages sent to the agent. In-progress responses will use the previous setting value.",
+    "zh": "控制运行终端命令前是否需要你批准。\n\n注意：修改仅对之后发送的消息生效，正在生成的回复仍使用原设置。",
+    "offsets": [
+      3504915
+    ]
+  },
+  {
+    "en": "The agent never asks for confirmation before executing terminal commands (except those in the Deny list). This provides the agent with the maximum ability to operate over long periods without intervention, but also has the highest risk of the agent executing an unsafe terminal command.",
+    "zh": "代理执行终端命令前不请求确认（拒绝列表中的命令除外）。这让代理可以长时间自主工作，但执行不安全命令的风险也最高。",
+    "offsets": [
+      3505698
+    ]
+  },
+  {
+    "en": "Terminal commands automatically proceed inside the sandbox. A command that needs to leave the sandbox proceeds only if an agent judges it reversible, and otherwise requests review.",
+    "zh": "终端命令在沙箱内自动执行。需要离开沙箱的命令，仅在代理判断其可撤销时执行，否则请求审核。",
+    "offsets": [
+      3506034
+    ]
+  },
+  {
+    "en": "The agent always asks for confirmation before executing terminal commands (except those in the Allow list).",
+    "zh": "代理执行终端命令前始终请求确认（允许列表中的命令除外）。",
+    "offsets": [
+      3506264
+    ]
+  },
+  {
+    "en": "Terminal command automatically proceeds if the command runs inside the sandbox. Otherwise, it requests review.",
+    "zh": "沙箱内的终端命令自动执行，其他命令请求审核。",
+    "offsets": [
+      3506388
+    ]
+  },
+  {
+    "en": "When running commands, the agent will try to use this address, and fall back to the \"connector.host.featureDefault\" host if not defined.\n\nNote: hosts set here with auto-run enabled will have internet access restricted soon.",
+    "zh": "运行命令时，代理优先使用此地址；未设置时使用“connector.host.featureDefault”主机。\n\n注意：此处启用自动执行的主机即将受到互联网访问限制。",
+    "offsets": [
+      3506629
+    ]
+  },
+  {
+    "en": "Specifies the agent's behavior when asking for review on artifacts, which are documents it creates to enable a richer conversation experience.",
+    "zh": "指定代理请求审核其生成文档时的行为。这些文档用于提供更丰富的对话体验。",
+    "offsets": [
+      3506991
+    ]
+  },
+  {
+    "en": "The agent never asks for review. This maximizes the autonomy of the agent, but also has the highest risk of the agent operating over unsafe or injected artifact content.",
+    "zh": "代理从不请求审核。这能最大程度提高自主性，但处理不安全或被注入内容的文档时风险也最高。",
+    "offsets": [
+      3507316
+    ]
+  },
+  {
+    "en": "Agent never asks for review. This maximizes the autonomy of the Agent, but also has the highest risk of the Agent operating over unsafe or injected Artifact content.",
+    "zh": "代理从不请求审核。这能最大程度提高自主性，但处理不安全或被注入内容的文档时风险也最高。",
+    "offsets": [
+      3481539
+    ]
+  },
+  {
+    "en": "The agent always asks for review.",
+    "zh": "代理始终请求审核。",
+    "offsets": [
+      3507528
+    ]
+  },
+  {
+    "en": "[Dev] GCP Project ID",
+    "zh": "[开发] GCP 项目 ID",
+    "offsets": [
+      3508366
+    ]
+  },
+  {
+    "en": "GCP Project ID for enterprise features.",
+    "zh": "企业功能使用的 GCP 项目 ID。",
+    "offsets": [
+      3508401
+    ]
+  },
+  {
+    "en": "Narrow",
+    "zh": "窄",
+    "offsets": [
+      3509738
+    ]
+  },
+  {
+    "en": "Wide",
+    "zh": "宽",
+    "offsets": [
+      3509760,
+      3510045
+    ]
+  },
+  {
+    "en": "Fill",
+    "zh": "填满",
+    "offsets": [
+      3510065
+    ]
+  },
+  {
+    "en": "Fast",
+    "zh": "快",
+    "offsets": [
+      3510904,
+      3510968
+    ]
+  },
+  {
+    "en": "Slow",
+    "zh": "慢",
+    "offsets": [
+      3510947
+    ]
+  },
+  {
+    "en": "Allow Tab to view and edit the files in .gitignore. Use with caution if your .gitignore lists files containing credentials, secrets, or other sensitive information.",
+    "zh": "允许 Tab 查看和编辑 .gitignore 中列出的文件。若这些文件包含凭据、密钥或其他敏感信息，请谨慎使用。",
+    "offsets": [
+      3511295
+    ]
+  },
+  {
+    "en": "Let the agent use browser tools to open URLs, read web pages, and interact with browser content. This gives the agent access to important (and often critical) knowledge and methods of validation, but any browser integration does increase exposure to external malicious parties for security exploits.",
+    "zh": "允许代理使用浏览器工具打开网址、读取网页并与网页交互。这样可获取重要信息和验证方法，同时也会增加遭受外部恶意攻击的风险。",
+    "offsets": [
+      3511589
+    ]
+  },
+  {
+    "en": "Block all browser JavaScript execution.",
+    "zh": "禁止浏览器执行所有 JavaScript。",
+    "offsets": [
+      3512594
+    ]
+  },
+  {
+    "en": "Prompt for approval before running browser scripts.",
+    "zh": "运行浏览器脚本前请求批准。",
+    "offsets": [
+      3512685,
+      3512854
+    ]
+  },
+  {
+    "en": "Allow full browser script execution without prompting.",
+    "zh": "允许执行所有浏览器脚本，无需确认。",
+    "offsets": [
+      3512783
+    ]
+  },
+  {
+    "en": "Custom path for the browser user profile directory. Leave empty for default (~/.gemini/antigravity-browser-profile).",
+    "zh": "自定义浏览器用户配置目录。留空使用默认路径（~/.gemini/antigravity-browser-profile）。",
+    "offsets": [
+      3513324
+    ]
+  },
+  {
+    "en": "Show \"Edit\" and \"Chat\" buttons when selecting text in the editor.",
+    "zh": "在编辑器中选中文本时显示“编辑”和“对话”按钮。",
+    "offsets": [
+      3514017
+    ]
+  },
+  {
+    "en": "Automatically prompt you to restart the app when a new update is available. When disabled, you can check for updates manually from the app menu.",
+    "zh": "有新版本时自动提示重启应用。关闭后可在应用菜单中手动检查更新。",
+    "offsets": [
+      3515103
+    ]
+  },
+  {
+    "en": "Nickname",
+    "zh": "昵称",
+    "offsets": [
+      3515534
+    ]
+  },
+  {
+    "en": "A nickname for identifying this application in the companion website. Changing this will restart the connection.",
+    "zh": "在配套网站中标识此应用的昵称。修改后会重新连接。",
+    "offsets": [
+      3515557
+    ]
+  },
+  {
+    "en": "Show a floating notification card when background conversations need your input. Answer questions, approve commands, and grant permissions without leaving your current conversation. Share feedback at go/inline-actions-feedback.",
+    "zh": "后台对话需要输入时显示悬浮通知卡片。无需离开当前对话即可回答问题、批准命令和授予权限。反馈地址：go/inline-actions-feedback。",
+    "offsets": [
+      3515808
+    ]
+  },
+  {
+    "en": "Adds an Autonomous Mode switch to the modes dropdown below the input box. Turns sent with it on run non-interactively: the agent does not ask questions or request new permissions.",
+    "zh": "在输入框下方的模式菜单中添加自主模式开关。开启后发送的消息将以无人交互方式执行，代理不会提问或请求新权限。",
+    "offsets": [
+      3516165
+    ]
+  },
+  {
+    "en": "VCS used when creating a new workspace, including workspaces generated based off your initial prompt.",
+    "zh": "创建新工作区时使用的版本控制系统，包括根据初始提示生成的工作区。",
+    "offsets": [
+      3516475
+    ]
+  },
+  {
+    "en": "Default Cog Repository",
+    "zh": "默认 Cog 仓库",
+    "offsets": [
+      3516843
+    ]
+  },
+  {
+    "en": "Git-on-Borg repository used when creating a new Cog workspace from your initial prompt (e.g., chromium/src or android/platform/superproject).",
+    "zh": "根据初始提示创建 Cog 工作区时使用的 Git-on-Borg 仓库（例如 chromium/src 或 android/platform/superproject）。",
+    "offsets": [
+      3516880
+    ]
+  },
+  {
+    "en": "Default Cog Branch / Ref",
+    "zh": "默认 Cog 分支 / 引用",
+    "offsets": [
+      3517169
+    ]
+  },
+  {
+    "en": "Optional branch or ref used when creating a new Cog workspace (defaults to main if unset).",
+    "zh": "创建 Cog 工作区时使用的可选分支或引用，未设置时默认为 main。",
+    "offsets": [
+      3517208
+    ]
+  },
+  {
+    "en": "Give each Best of N fork a full clone of your workspace, including its local commit history. Choosing a winner then gives your workspace that fork's state, so the commits it made are kept. Forks take longer to create than the default CitC clone. See go/jetski-best-of-n.",
+    "zh": "为每个 Best of N 分支完整克隆工作区及本地提交历史。选出结果后，工作区采用该分支状态并保留其提交。创建速度比默认 CitC 克隆更慢。详情见 go/jetski-best-of-n。",
+    "offsets": [
+      3517713
+    ]
+  },
+  {
+    "en": "Give each Best of N fork its own clone of your Git repository instead of a copy-on-write overlay. Each fork is then a real repository, so commits it makes are kept when you choose it as the winner. Forks take longer to create, and the wait grows with the size of your repository. See go/jetski-best-of-n.",
+    "zh": "为每个 Best of N 分支独立克隆 Git 仓库。每个分支都具有真实仓库，选中后保留其提交。创建耗时更长，且随仓库大小增加。详情见 go/jetski-best-of-n。",
+    "offsets": [
+      3518131
+    ]
+  },
+  {
+    "en": "Failed to parse settings. Fix and restart.",
+    "zh": "设置解析失败，请修复后重启。",
+    "offsets": [
+      5828244
+    ]
+  },
+  {
+    "en": "Copy error messages",
+    "zh": "复制错误信息",
+    "offsets": [
+      5828543,
+      5828582
+    ]
+  },
+  {
+    "en": "your plan",
+    "zh": "你的套餐",
+    "offsets": [
+      5589602,
+      5832152,
+      5833260
+    ]
+  },
+  {
+    "en": "Auto-assignment not configured",
+    "zh": "未配置自动分配",
+    "offsets": [
+      5834672
+    ]
+  },
+  {
+    "en": "Select your license",
+    "zh": "选择许可证",
+    "offsets": [
+      5834904
+    ]
+  },
+  {
+    "en": "Loading licenses...",
+    "zh": "正在加载许可证…",
+    "offsets": [
+      5835042
+    ]
+  },
+  {
+    "en": "Confirm Selection",
+    "zh": "确认选择",
+    "offsets": [
+      5835663
+    ]
+  },
+  {
+    "en": "Your Plan:",
+    "zh": "你的套餐：",
+    "offsets": [
+      5837330,
+      5901039
+    ]
+  },
+  {
+    "en": "Authenticated via Enterprise Gateway",
+    "zh": "已通过企业网关认证",
+    "offsets": [
+      5837361
+    ]
+  },
+  {
+    "en": "Project ID:",
+    "zh": "项目 ID：",
+    "offsets": [
+      5837491
+    ]
+  },
+  {
+    "en": "Manage",
+    "zh": "管理",
+    "offsets": [
+      5837675
+    ]
+  },
+  {
+    "en": "Upgrade",
+    "zh": "升级",
+    "offsets": [
+      5838047,
+      5901443
+    ]
+  },
+  {
+    "en": "Project Required",
+    "zh": "需要选择项目",
+    "offsets": [
+      5838172
+    ]
+  },
+  {
+    "en": "License Required",
+    "zh": "需要许可证",
+    "offsets": [
+      5838191
+    ]
+  },
+  {
+    "en": "A Google Cloud project is required to use Antigravity.",
+    "zh": "使用 Antigravity 需要 Google Cloud 项目。",
+    "offsets": [
+      5838243
+    ]
+  },
+  {
+    "en": "A license or project selection is required to use Antigravity.",
+    "zh": "使用 Antigravity 需要许可证或选择项目。",
+    "offsets": [
+      5838300
+    ]
+  },
+  {
+    "en": "Select Project",
+    "zh": "选择项目",
+    "offsets": [
+      5838467
+    ]
+  },
+  {
+    "en": "Manage License",
+    "zh": "管理许可证",
+    "offsets": [
+      5838484
+    ]
+  },
+  {
+    "en": "You cannot sign out from Remote Control. Please sign out on your local application.",
+    "zh": "无法在远程控制中退出登录，请在本地应用中操作。",
+    "offsets": [
+      5838802
+    ]
+  },
+  {
+    "en": "Signing Out...",
+    "zh": "正在退出登录…",
+    "offsets": [
+      5838998
+    ]
+  },
+  {
+    "en": "By using this app, you agree to its",
+    "zh": "使用此应用即表示你同意其",
+    "offsets": [
+      5839362
+    ]
+  },
+  {
+    "en": "Terms of Service",
+    "zh": "服务条款",
+    "offsets": [
+      5589330,
+      5590901,
+      5839572
+    ]
+  },
+  {
+    "en": "Version",
+    "zh": "版本",
+    "offsets": [
+      5840142
+    ]
+  },
+  {
+    "en": "Notification Settings",
+    "zh": "通知设置",
+    "offsets": [
+      5840790
+    ]
+  },
+  {
+    "en": "To modify notification settings, open your operating system's system preferences.",
+    "zh": "请打开操作系统的系统设置修改通知设置。",
+    "offsets": [
+      5840889
+    ]
+  },
+  {
+    "en": "Open System Preferences",
+    "zh": "打开系统设置",
+    "offsets": [
+      5841036
+    ]
+  },
+  {
+    "en": "QR code",
+    "zh": "二维码",
+    "offsets": [
+      5855762
+    ]
+  },
+  {
+    "en": "Copy link",
+    "zh": "复制链接",
+    "offsets": [
+      5668306,
+      5857346,
+      5857375
+    ]
+  },
+  {
+    "en": "Remote Control link",
+    "zh": "远程控制链接",
+    "offsets": [
+      5857533,
+      5860127
+    ]
+  },
+  {
+    "en": "These settings can only be changed on the computer running the app, not from a remote session.",
+    "zh": "这些设置只能在运行应用的电脑上修改。",
+    "offsets": [
+      5858831
+    ]
+  },
+  {
+    "en": "Scan the code to open this device in Remote Control, or",
+    "zh": "扫描二维码在远程控制中打开此设备，或",
+    "offsets": [
+      5859548
+    ]
+  },
+  {
+    "en": "copy link",
+    "zh": "复制链接",
+    "offsets": [
+      5859747
+    ]
+  },
+  {
+    "en": "Show Remote Control QR code",
+    "zh": "显示远程控制二维码",
+    "offsets": [
+      5859819
+    ]
+  },
+  {
+    "en": "A label for this computer when you connect from another device. Changing it reconnects.",
+    "zh": "从另一台设备连接时显示的电脑名称。修改后会重新连接。",
+    "offsets": [
+      5860643
+    ]
+  },
+  {
+    "en": "Continue your work from another device with Remote Control. Scan the QR code or open the link below.",
+    "zh": "通过远程控制在其他设备上继续工作。请扫描二维码或打开下方链接。",
+    "offsets": [
+      5860906
+    ]
+  },
+  {
+    "en": "Windows Subsystem for Linux",
+    "zh": "适用于 Linux 的 Windows 子系统（WSL）",
+    "offsets": [
+      5861479
+    ]
+  },
+  {
+    "en": "Run the app against a Linux environment. Connecting relaunches the app into the selected WSL distro.",
+    "zh": "在 Linux 环境中运行应用。连接后会在所选 WSL 发行版中重新启动应用。",
+    "offsets": [
+      5861577
+    ]
+  },
+  {
+    "en": "Connected",
+    "zh": "已连接",
+    "offsets": [
+      5861801,
+      5861978
+    ]
+  },
+  {
+    "en": "Connect",
+    "zh": "连接",
+    "offsets": [
+      5861990,
+      6047895
+    ]
+  },
+  {
+    "en": "The app is currently connected to a WSL distro. Reopening locally relaunches it directly on Windows.",
+    "zh": "应用当前连接到 WSL 发行版。在本地重新打开会直接在 Windows 上启动应用。",
+    "offsets": [
+      5862277
+    ]
+  },
+  {
+    "en": "Reopen Locally",
+    "zh": "在本地重新打开",
+    "offsets": [
+      5862598
+    ]
+  },
+  {
+    "en": "Enter command...",
+    "zh": "输入命令…",
+    "offsets": [
+      5867124
+    ]
+  },
+  {
+    "en": "Delete command",
+    "zh": "删除命令",
+    "offsets": [
+      5868810
+    ]
+  },
+  {
+    "en": "Validation timed out.",
+    "zh": "验证超时。",
+    "offsets": [
+      5871405
+    ]
+  },
+  {
+    "en": "Validate",
+    "zh": "验证",
+    "offsets": [
+      5872694
+    ]
+  },
+  {
+    "en": "Validating setup script…",
+    "zh": "正在验证初始化脚本…",
+    "offsets": [
+      5873135
+    ]
+  },
+  {
+    "en": "Setup script ran successfully.",
+    "zh": "初始化脚本运行成功。",
+    "offsets": [
+      5873351
+    ]
+  },
+  {
+    "en": "Setup script failed.",
+    "zh": "初始化脚本运行失败。",
+    "offsets": [
+      5873568
+    ]
+  },
+  {
+    "en": "Copy output",
+    "zh": "复制输出",
+    "offsets": [
+      5874122,
+      5874153
+    ]
+  },
+  {
+    "en": "⚠️ Warning: \"Always Proceed\" is enabled without sandbox protection. This is very dangerous and we do not recommend doing this.",
+    "zh": "⚠️ 警告：已启用“始终执行”，但未开启沙箱保护。这样非常危险，不建议使用。",
+    "offsets": [
+      5876182,
+      5954299
+    ]
+  },
+  {
+    "en": "Turn on a flag you don't have",
+    "zh": "启用尚未启用的功能开关",
+    "offsets": [
+      5880619
+    ]
+  },
+  {
+    "en": "Custom flag to turn on",
+    "zh": "要启用的自定义功能开关",
+    "offsets": [
+      5880664
+    ]
+  },
+  {
+    "en": "forced on",
+    "zh": "强制开启",
+    "offsets": [
+      5881469
+    ]
+  },
+  {
+    "en": "forced off",
+    "zh": "强制关闭",
+    "offsets": [
+      5881481
+    ]
+  },
+  {
+    "en": "Custom Flags",
+    "zh": "自定义功能开关",
+    "offsets": [
+      5883095
+    ]
+  },
+  {
+    "en": "Reset overrides",
+    "zh": "重置覆盖设置",
+    "offsets": [
+      5883226
+    ]
+  },
+  {
+    "en": "Search flags",
+    "zh": "搜索功能开关",
+    "offsets": [
+      5883303,
+      5883331
+    ]
+  },
+  {
+    "en": "No matching flags",
+    "zh": "没有匹配的功能开关",
+    "offsets": [
+      5883596
+    ]
+  },
+  {
+    "en": "This client was started with no custom flags.",
+    "zh": "此客户端启动时未设置自定义功能开关。",
+    "offsets": [
+      5883641
+    ]
+  },
+  {
+    "en": "No custom flag matches your search.",
+    "zh": "没有匹配搜索条件的自定义功能开关。",
+    "offsets": [
+      5883689
+    ]
+  },
+  {
+    "en": "Not referenced by any feature (",
+    "zh": "未被任何功能引用（",
+    "offsets": [
+      5884012
+    ]
+  },
+  {
+    "en": "Flags come from Mendel experiments and from the host app. Overrides are local to this browser and change how every feature gated on the flag resolves. Some features are only read at startup — reload the window if a change does not take effect.",
+    "zh": "功能开关来自 Mendel 实验和宿主应用。覆盖设置仅保存在当前浏览器中，会影响所有由相应开关控制的功能。部分功能仅在启动时读取设置；修改无效时请重新加载窗口。",
+    "offsets": [
+      5884317
+    ]
+  },
+  {
+    "en": "Auto (detected)",
+    "zh": "自动（检测）",
+    "offsets": [
+      5884607,
+      5884785,
+      5885890,
+      5886000
+    ]
+  },
+  {
+    "en": "Electron (Desktop)",
+    "zh": "Electron（桌面）",
+    "offsets": [
+      5884835
+    ]
+  },
+  {
+    "en": "Electron (Gemini App)",
+    "zh": "Electron（Gemini 应用）",
+    "offsets": [
+      5884898
+    ]
+  },
+  {
+    "en": "Electron (Android Desktop)",
+    "zh": "Electron（Android 桌面）",
+    "offsets": [
+      5884969
+    ]
+  },
+  {
+    "en": "Web (desktop)",
+    "zh": "网页（桌面）",
+    "offsets": [
+      5885033
+    ]
+  },
+  {
+    "en": "Web (desktop, PWA)",
+    "zh": "网页（桌面，PWA）",
+    "offsets": [
+      5885089
+    ]
+  },
+  {
+    "en": "Web (desktop, remote control)",
+    "zh": "网页（桌面，远程控制）",
+    "offsets": [
+      5885159
+    ]
+  },
+  {
+    "en": "Web (desktop, remote control, PWA)",
+    "zh": "网页（桌面，远程控制，PWA）",
+    "offsets": [
+      5885244
+    ]
+  },
+  {
+    "en": "Web (mobile)",
+    "zh": "网页（移动）",
+    "offsets": [
+      5885315
+    ]
+  },
+  {
+    "en": "Web (mobile, PWA)",
+    "zh": "网页（移动，PWA）",
+    "offsets": [
+      5885368
+    ]
+  },
+  {
+    "en": "Web (mobile, remote control)",
+    "zh": "网页（移动，远程控制）",
+    "offsets": [
+      5885436
+    ]
+  },
+  {
+    "en": "Web (mobile, remote control, PWA)",
+    "zh": "网页（移动，远程控制，PWA）",
+    "offsets": [
+      5885519
+    ]
+  },
+  {
+    "en": "Extension",
+    "zh": "扩展",
+    "offsets": [
+      5885588
+    ]
+  },
+  {
+    "en": "Extension (Cider)",
+    "zh": "扩展（Cider）",
+    "offsets": [
+      5885640
+    ]
+  },
+  {
+    "en": "Extension (VS Code)",
+    "zh": "扩展（VS Code）",
+    "offsets": [
+      5885700
+    ]
+  },
+  {
+    "en": "Extension (Visual Studio)",
+    "zh": "扩展（Visual Studio）",
+    "offsets": [
+      5885768
+    ]
+  },
+  {
+    "en": "Extension (Eclipse)",
+    "zh": "扩展（Eclipse）",
+    "offsets": [
+      5885837
+    ]
+  },
+  {
+    "en": "IDE (editor)",
+    "zh": "IDE（编辑器）",
+    "offsets": [
+      5885954
+    ]
+  },
+  {
+    "en": "Google (internal)",
+    "zh": "Google（内部）",
+    "offsets": [
+      5886041
+    ]
+  },
+  {
+    "en": "External",
+    "zh": "外部用户",
+    "offsets": [
+      5886086
+    ]
+  },
+  {
+    "en": "Enterprise",
+    "zh": "企业用户",
+    "offsets": [
+      5886125
+    ]
+  },
+  {
+    "en": "Feature Environment Override",
+    "zh": "覆盖功能环境",
+    "offsets": [
+      5886557
+    ]
+  },
+  {
+    "en": "Override feature environment",
+    "zh": "覆盖功能环境",
+    "offsets": [
+      5886639
+    ]
+  },
+  {
+    "en": "When enabled, the values below replace the auto-detected OS, host, binary, and user type used for feature gating.",
+    "zh": "开启后，下方设置会替代自动检测的操作系统、宿主、程序及用户类型，用于决定功能是否启用。",
+    "offsets": [
+      5886682
+    ]
+  },
+  {
+    "en": "Operating System",
+    "zh": "操作系统",
+    "offsets": [
+      5886906
+    ]
+  },
+  {
+    "en": "Simulate running on a different OS.",
+    "zh": "模拟在其他操作系统上运行。",
+    "offsets": [
+      5886937
+    ]
+  },
+  {
+    "en": "Host Environment",
+    "zh": "宿主环境",
+    "offsets": [
+      5887185
+    ]
+  },
+  {
+    "en": "Simulate a different host (Electron, desktop or mobile Web, Extension, remote control, or installed PWA).",
+    "zh": "模拟其他宿主（Electron、桌面或移动网页、扩展、远程控制或已安装的 PWA）。",
+    "offsets": [
+      5887216
+    ]
+  },
+  {
+    "en": "Binary",
+    "zh": "程序",
+    "offsets": [
+      5887539
+    ]
+  },
+  {
+    "en": "Simulate running as a different binary (Hub or the IDE/editor).",
+    "zh": "模拟运行其他程序（Hub 或 IDE/编辑器）。",
+    "offsets": [
+      5887560
+    ]
+  },
+  {
+    "en": "User Type",
+    "zh": "用户类型",
+    "offsets": [
+      5887845
+    ]
+  },
+  {
+    "en": "Simulate a different user cohort (Google, External, Enterprise).",
+    "zh": "模拟其他用户类型（Google、外部或企业用户）。",
+    "offsets": [
+      5887869
+    ]
+  },
+  {
+    "en": "Active environment: os=",
+    "zh": "当前环境：操作系统=",
+    "offsets": [
+      5888203
+    ]
+  },
+  {
+    "en": ", host=",
+    "zh": "，宿主=",
+    "offsets": [
+      5888271
+    ]
+  },
+  {
+    "en": ", binary=",
+    "zh": "，程序=",
+    "offsets": [
+      5888325
+    ]
+  },
+  {
+    "en": ", userType=",
+    "zh": "，用户类型=",
+    "offsets": [
+      5888384
+    ]
+  },
+  {
+    "en": ". Reload the window if a change does not take effect.",
+    "zh": "。修改无效时请重新加载窗口。",
+    "offsets": [
+      5888448
+    ]
+  },
+  {
+    "en": "Workspace URI Switcher",
+    "zh": "切换工作区 URI",
+    "offsets": [
+      5890065
+    ]
+  },
+  {
+    "en": "Workspace URI query parameter",
+    "zh": "工作区 URI 查询参数",
+    "offsets": [
+      5890141
+    ]
+  },
+  {
+    "en": "Sets the `workspaceUri` URL parameter and reloads, repointing the active workspace. Pick a folder from an existing project or enter a custom URI (e.g. file:///google/src/cloud/<user>/<client>/google3).",
+    "zh": "设置 workspaceUri URL 参数并重新加载以切换当前工作区。请选择现有项目的文件夹或输入自定义 URI（例如 file:///google/src/cloud/<user>/<client>/google3）。",
+    "offsets": [
+      5890185
+    ]
+  },
+  {
+    "en": "Select or enter a workspace URI",
+    "zh": "选择或输入工作区 URI",
+    "offsets": [
+      5890581
+    ]
+  },
+  {
+    "en": "Workspace URI to switch to",
+    "zh": "要切换到的工作区 URI",
+    "offsets": [
+      5890628
+    ]
+  },
+  {
+    "en": "Clear",
+    "zh": "清除",
+    "offsets": [
+      5891370
+    ]
+  },
+  {
+    "en": "Workspace folder suggestions",
+    "zh": "工作区文件夹建议",
+    "offsets": [
+      5891434
+    ]
+  },
+  {
+    "en": "No matching project folders. Apply to use the custom URI.",
+    "zh": "没有匹配的项目文件夹。点击应用以使用自定义 URI。",
+    "offsets": [
+      5892172
+    ]
+  },
+  {
+    "en": "Current parameter:",
+    "zh": "当前参数：",
+    "offsets": [
+      5892302
+    ]
+  },
+  {
+    "en": "(not set)",
+    "zh": "（未设置）",
+    "offsets": [
+      5892352
+    ]
+  },
+  {
+    "en": ". Active workspace URI:",
+    "zh": "。当前工作区 URI：",
+    "offsets": [
+      5892365
+    ]
+  },
+  {
+    "en": ". Applying or clearing reloads the window. Suggestions come from your recent workspaces and the folders of your existing projects and their environments",
+    "zh": "。应用或清除会重新加载窗口。建议来自近期工作区、现有项目及其环境中的文件夹",
+    "offsets": [
+      5892430
+    ]
+  },
+  {
+    "en": "(still loading…)",
+    "zh": "（仍在加载…）",
+    "offsets": [
+      5892609
+    ]
+  },
+  {
+    "en": "Developer-only tools. These settings are stored locally in this browser and do not affect other users.",
+    "zh": "开发者工具。这些设置仅保存在当前浏览器中，不影响其他用户。",
+    "offsets": [
+      5892881
+    ]
+  },
+  {
+    "en": "Marketplace Item URL",
+    "zh": "市场项目 URL",
+    "offsets": [
+      5894348
+    ]
+  },
+  {
+    "en": "Marketplace Gallery URL",
+    "zh": "市场列表 URL",
+    "offsets": [
+      5894722
+    ]
+  },
+  {
+    "en": "To modify editor settings, open Settings within the editor window.",
+    "zh": "请在编辑器窗口中打开设置以修改编辑器设置。",
+    "offsets": [
+      5895597
+    ]
+  },
+  {
+    "en": "Open Editor Settings",
+    "zh": "打开编辑器设置",
+    "offsets": [
+      5895753
+    ]
+  },
+  {
+    "en": "Regroup Google3 Chats",
+    "zh": "重新分组 Google3 对话",
+    "offsets": [
+      5895830,
+      6025676
+    ]
+  },
+  {
+    "en": "Google3 chats will be regrouped into their workspaces in the sidebar.",
+    "zh": "Google3 对话将在侧栏中按工作区重新分组。",
+    "offsets": [
+      5895981
+    ]
+  },
+  {
+    "en": "This migration may mess up your settings, chats, and sidebar.",
+    "zh": "此迁移可能影响你的设置、对话和侧栏。",
+    "offsets": [
+      5896441
+    ]
+  },
+  {
+    "en": "Follow the guide at",
+    "zh": "请参照以下指南",
+    "offsets": [
+      5896593
+    ]
+  },
+  {
+    "en": "to back up your data and run the migration.",
+    "zh": "备份数据并执行迁移。",
+    "offsets": [
+      5896785
+    ]
+  },
+  {
+    "en": "No quota information available.",
+    "zh": "暂无额度信息。",
+    "offsets": [
+      5900313
+    ]
+  },
+  {
+    "en": "Models & Usage",
+    "zh": "模型与用量",
+    "offsets": [
+      5900557
+    ]
+  },
+  {
+    "en": "See Activity",
+    "zh": "查看用量记录",
+    "offsets": [
+      5902236
+    ]
+  },
+  {
+    "en": "Get More AI Credits",
+    "zh": "获取更多 AI 点数",
+    "offsets": [
+      5902526
+    ]
+  },
+  {
+    "en": "For Antigravity Business consumption options, see",
+    "zh": "Antigravity Business 的计费选项请参阅",
+    "offsets": [
+      5902712
+    ]
+  },
+  {
+    "en": "Volume",
+    "zh": "音量",
+    "offsets": [
+      5903246
+    ]
+  },
+  {
+    "en": "Chime volume",
+    "zh": "提示音音量",
+    "offsets": [
+      5903412
+    ]
+  },
+  {
+    "en": "Conversation",
+    "zh": "对话",
+    "offsets": [
+      5905033
+    ]
+  },
+  {
+    "en": "Remove",
+    "zh": "移除",
+    "offsets": [
+      5910892,
+      5987547,
+      5989081
+    ]
+  },
+  {
+    "en": "Enter target...",
+    "zh": "输入目标…",
+    "offsets": [
+      5911046
+    ]
+  },
+  {
+    "en": "Customization token budget exceeded. Large customizations are excluded from context.",
+    "zh": "自定义配置超出 Token 预算。较大的配置将不加入上下文。",
+    "offsets": [
+      5913071
+    ]
+  },
+  {
+    "en": "Rules and customization token budgets exceeded. Large rules are demoted to path pointers and large customizations are excluded from context.",
+    "zh": "规则和自定义配置超出 Token 预算。较大的规则仅提供路径引用，较大的配置将不加入上下文。",
+    "offsets": [
+      5913165
+    ]
+  },
+  {
+    "en": "Rules token budget exceeded. Large rules are demoted to path pointers.",
+    "zh": "规则超出 Token 预算。较大的规则将仅提供路径引用。",
+    "offsets": [
+      5913314
+    ]
+  },
+  {
+    "en": "The breakdown below shows token usage from customizations like rules, skills, and MCP. If a budget is exceeded, large rules are demoted to path pointers and large customizations are excluded automatically.",
+    "zh": "下方显示规则、技能和 MCP 等自定义配置的 Token 用量。超出预算时，较大的规则将仅提供路径引用，较大的配置会自动从上下文中移除。",
+    "offsets": [
+      5913543
+    ]
+  },
+  {
+    "en": "There are no customizations enabled.",
+    "zh": "未启用自定义配置。",
+    "offsets": [
+      5914110
+    ]
+  },
+  {
+    "en": "Loading token usage...",
+    "zh": "正在加载 Token 用量…",
+    "offsets": [
+      5914689
+    ]
+  },
+  {
+    "en": "No token data available.",
+    "zh": "暂无 Token 数据。",
+    "offsets": [
+      5915114
+    ]
+  },
+  {
+    "en": "Unnamed",
+    "zh": "未命名",
+    "offsets": [
+      5919116,
+      5920049
+    ]
+  },
+  {
+    "en": "Unnamed rule",
+    "zh": "未命名规则",
+    "offsets": [
+      5919577
+    ]
+  },
+  {
+    "en": "Copy path",
+    "zh": "复制路径",
+    "offsets": [
+      5921904
+    ]
+  },
+  {
+    "en": "Path copied!",
+    "zh": "路径已复制！",
+    "offsets": [
+      5923311
+    ]
+  },
+  {
+    "en": "Plugin:",
+    "zh": "插件：",
+    "offsets": [
+      5923469
+    ]
+  },
+  {
+    "en": "Global",
+    "zh": "全局",
+    "offsets": [
+      5791070,
+      5801455,
+      5923738
+    ]
+  },
+  {
+    "en": "Workspace",
+    "zh": "工作区",
+    "offsets": [
+      5632551,
+      5632613,
+      5657951,
+      5923792,
+      5923804,
+      5928538,
+      6066393,
+      6070503
+    ]
+  },
+  {
+    "en": "Edit config",
+    "zh": "编辑配置",
+    "offsets": [
+      5924928,
+      5925482,
+      5987494
+    ]
+  },
+  {
+    "en": "Edit Config",
+    "zh": "编辑配置",
+    "offsets": [
+      5988767
+    ]
+  },
+  {
+    "en": "Delete agent",
+    "zh": "删除代理",
+    "offsets": [
+      5924991
+    ]
+  },
+  {
+    "en": "Delete plugin",
+    "zh": "删除插件",
+    "offsets": [
+      5925539
+    ]
+  },
+  {
+    "en": "Loading workspace customizations...",
+    "zh": "正在加载工作区自定义配置…",
+    "offsets": [
+      5926981
+    ]
+  },
+  {
+    "en": "Plugins",
+    "zh": "插件",
+    "offsets": [
+      5635732,
+      5927797,
+      6016173
+    ]
+  },
+  {
+    "en": "Connecting to language server...",
+    "zh": "正在连接语言服务器…",
+    "offsets": [
+      5929116,
+      6009694
+    ]
+  },
+  {
+    "en": "Workspace Settings",
+    "zh": "工作区设置",
+    "offsets": [
+      5930275
+    ]
+  },
+  {
+    "en": "These allowed domain rules are set by your organization's administrator and cannot be removed.",
+    "zh": "这些域名允许规则由组织管理员设置，无法移除。",
+    "offsets": [
+      5933281
+    ]
+  },
+  {
+    "en": "Allowed Domains",
+    "zh": "允许的域名",
+    "offsets": [
+      5933567
+    ]
+  },
+  {
+    "en": "Inherit Global",
+    "zh": "继承全局设置",
+    "offsets": [
+      5938545,
+      5946493,
+      5946912,
+      5947115,
+      5947479,
+      5947950,
+      5948218,
+      5948709,
+      5948805,
+      5948901,
+      5949583,
+      5949766,
+      5950736,
+      5950897,
+      5951016,
+      5953095,
+      5953161
+    ]
+  },
+  {
+    "en": "Custom",
+    "zh": "自定义",
+    "offsets": [
+      5938576,
+      5938610,
+      5949615,
+      5949649,
+      5949797,
+      5949831
+    ]
+  },
+  {
+    "en": "Inherits your Global Permissions when working in this project.",
+    "zh": "在此项目中工作时继承全局权限。",
+    "offsets": [
+      5938667,
+      5949889,
+      5953246
+    ]
+  },
+  {
+    "en": "Manually customize individual settings.",
+    "zh": "手动自定义各项设置。",
+    "offsets": [
+      5938746,
+      5949968
+    ]
+  },
+  {
+    "en": "Also includes",
+    "zh": "同时包含",
+    "offsets": [
+      5941364
+    ]
+  },
+  {
+    "en": "when working in this project.",
+    "zh": "，适用于在此项目中工作时。",
+    "offsets": [
+      5941511
+    ]
+  },
+  {
+    "en": "This project was created for",
+    "zh": "此项目由以下自动化创建：",
+    "offsets": [
+      5941845
+    ]
+  },
+  {
+    "en": "automation.",
+    "zh": "自动化。",
+    "offsets": [
+      5941966
+    ]
+  },
+  {
+    "en": "Allow",
+    "zh": "允许",
+    "offsets": [
+      5616796,
+      5946542,
+      5946962,
+      5947164
+    ]
+  },
+  {
+    "en": "Disabled by organization policy",
+    "zh": "已被组织策略禁用",
+    "offsets": [
+      5946820,
+      5947848
+    ]
+  },
+  {
+    "en": "managed by your organization",
+    "zh": "由组织管理",
+    "offsets": [
+      5948641,
+      5949181,
+      5949521
+    ]
+  },
+  {
+    "en": "Enable Sandbox Mode",
+    "zh": "启用沙箱模式",
+    "offsets": [
+      5948867,
+      5949242
+    ]
+  },
+  {
+    "en": "Agent Settings",
+    "zh": "代理设置",
+    "offsets": [
+      5949381
+    ]
+  },
+  {
+    "en": "Artifact Review Policy",
+    "zh": "文档审核策略",
+    "offsets": [
+      5950973
+    ]
+  },
+  {
+    "en": "Your agent’s ability to execute commands is also controlled by enterprise security policies.",
+    "zh": "代理执行命令的权限还受企业安全策略控制。",
+    "offsets": [
+      5950240
+    ]
+  },
+  {
+    "en": "Configure global allowed and denied resource permissions.",
+    "zh": "配置全局资源的允许与拒绝权限。",
+    "offsets": [
+      5951839,
+      5953868
+    ]
+  },
+  {
+    "en": "Agent security mode",
+    "zh": "代理安全模式",
+    "offsets": [
+      5958279
+    ]
+  },
+  {
+    "en": "Select one of the",
+    "zh": "请选择一种",
+    "offsets": [
+      5958373
+    ]
+  },
+  {
+    "en": "options. Agent settings and permissions can be further customized below.",
+    "zh": "模式。你可以在下方进一步自定义代理设置和权限。",
+    "offsets": [
+      5958410
+    ]
+  },
+  {
+    "en": "Full access",
+    "zh": "完全访问",
+    "offsets": [
+      5959103
+    ]
+  },
+  {
+    "en": "Agents have full access to your machine and external resources.",
+    "zh": "代理可完全访问你的电脑及外部资源。",
+    "offsets": [
+      5959229
+    ]
+  },
+  {
+    "en": "Sandboxed",
+    "zh": "沙箱模式",
+    "offsets": [
+      5959517
+    ]
+  },
+  {
+    "en": "Agents run in a secure sandbox that restricts access to external resources outside of your trusted folders.",
+    "zh": "代理在安全沙箱中运行，限制访问可信文件夹之外的资源。",
+    "offsets": [
+      5959642
+    ]
+  },
+  {
+    "en": "Strict",
+    "zh": "严格模式",
+    "offsets": [
+      5959978
+    ]
+  },
+  {
+    "en": "Terminal commands always require review and the agent cannot access files outside of its given workspaces.",
+    "zh": "终端命令始终需要审核，代理无法访问指定工作区之外的文件。",
+    "offsets": [
+      5960100
+    ]
+  },
+  {
+    "en": "Agent will always ask to review in strict mode.",
+    "zh": "在严格模式下代理始终请求审核。",
+    "offsets": [
+      5960987
+    ]
+  },
+  {
+    "en": "When enabled, Agent will use IDE's shell integration to detect and report terminal command execution.",
+    "zh": "开启后代理使用 IDE 的 Shell 集成检测并报告终端命令执行情况。",
+    "offsets": [
+      5961487
+    ]
+  },
+  {
+    "en": "File Access",
+    "zh": "文件访问",
+    "offsets": [
+      5961713
+    ]
+  },
+  {
+    "en": "Agent cannot modify files outside of the workspace in strict mode.",
+    "zh": "在严格模式下代理无法修改工作区之外的文件。",
+    "offsets": [
+      5962714
+    ]
+  },
+  {
+    "en": "Planning",
+    "zh": "规划",
+    "offsets": [
+      5963404
+    ]
+  },
+  {
+    "en": "Automation",
+    "zh": "自动化",
+    "offsets": [
+      5963716
+    ]
+  },
+  {
+    "en": "When enabled, Agent is given awareness of lint errors created by its edits and may fix them without explicit user prompting.",
+    "zh": "开启后代理会获知其编辑造成的 Lint 错误，并可主动修复。",
+    "offsets": [
+      5963906
+    ]
+  },
+  {
+    "en": "History",
+    "zh": "历史",
+    "offsets": [
+      5964206
+    ]
+  },
+  {
+    "en": "When enabled, the agent will be able to access past conversations to inform its responses.",
+    "zh": "开启后代理可参考历史对话生成回复。",
+    "offsets": [
+      5964391
+    ]
+  },
+  {
+    "en": "When enabled, 'Explain and Fix' actions will continue in the current conversation instead of starting a new one.",
+    "zh": "开启后“解释并修复”操作将在当前对话中继续。",
+    "offsets": [
+      5965054
+    ]
+  },
+  {
+    "en": "When enabled, Antigravity will play a sound when Agent finishes generating a response.",
+    "zh": "开启后代理完成回复时 Antigravity 会播放提示音。",
+    "offsets": [
+      5965573
+    ]
+  },
+  {
+    "en": "When enabled, the Changes Overview toolbar will automatically expand when Agent finishes generating a response.",
+    "zh": "开启后代理完成回复时变更概览工具栏会自动展开。",
+    "offsets": [
+      5965866
+    ]
+  },
+  {
+    "en": "Advanced File Access",
+    "zh": "高级文件访问",
+    "offsets": [
+      5967036
+    ]
+  },
+  {
+    "en": "Advanced Command Access",
+    "zh": "高级命令访问",
+    "offsets": [
+      5967786
+    ]
+  },
+  {
+    "en": "Advanced Web Access",
+    "zh": "高级网页访问",
+    "offsets": [
+      5968891
+    ]
+  },
+  {
+    "en": "The browser subagent has been disabled by your administrator. Contact your administrator to enable browser use.",
+    "zh": "管理员已禁用浏览器子代理。请联系管理员启用浏览器功能。",
+    "offsets": [
+      5969770
+    ]
+  },
+  {
+    "en": "Configure the browser subagent. It requires",
+    "zh": "配置浏览器子代理。需要安装",
+    "offsets": [
+      5969929
+    ]
+  },
+  {
+    "en": "to be installed.",
+    "zh": "。",
+    "offsets": [
+      5970140
+    ]
+  },
+  {
+    "en": "The browser subagent can be invoked by typing /browser in the conversation input box.",
+    "zh": "在对话输入框中输入 /browser 即可调用浏览器子代理。",
+    "offsets": [
+      5970203
+    ]
+  },
+  {
+    "en": "Try out early-stage features before they ship. These may be changed or removed at any time. These features are experimental, and we make no guarantees about performance or functionality.",
+    "zh": "抢先体验开发中的功能。这些实验功能可能随时调整或移除，其性能和功能不作保证。",
+    "offsets": [
+      5971574
+    ]
+  },
+  {
+    "en": "Plugin operations are not supported in this environment.",
+    "zh": "当前环境不支持插件操作。",
+    "offsets": [
+      5973261
+    ]
+  },
+  {
+    "en": "Loading plugins...",
+    "zh": "正在加载插件…",
+    "offsets": [
+      5809287,
+      5974144
+    ]
+  },
+  {
+    "en": "Plugin Operation Error:",
+    "zh": "插件操作错误：",
+    "offsets": [
+      5974866
+    ]
+  },
+  {
+    "en": "No description available.",
+    "zh": "暂无说明。",
+    "offsets": [
+      5975454
+    ]
+  },
+  {
+    "en": "Download",
+    "zh": "下载",
+    "offsets": [
+      5975806
+    ]
+  },
+  {
+    "en": "No Plugins Available",
+    "zh": "暂无可用插件",
+    "offsets": [
+      5975968
+    ]
+  },
+  {
+    "en": "Unknown Server",
+    "zh": "未知服务器",
+    "offsets": [
+      5977779
+    ]
+  },
+  {
+    "en": "Paste auth code",
+    "zh": "粘贴授权码",
+    "offsets": [
+      5978140
+    ]
+  },
+  {
+    "en": "Submit",
+    "zh": "提交",
+    "offsets": [
+      5607053,
+      5616643,
+      5978732
+    ]
+  },
+  {
+    "en": "Error:",
+    "zh": "错误：",
+    "offsets": [
+      5809366,
+      5979358
+    ]
+  },
+  {
+    "en": "Click to disable tool",
+    "zh": "点击禁用工具",
+    "offsets": [
+      5979796
+    ]
+  },
+  {
+    "en": "Click to enable tool",
+    "zh": "点击启用工具",
+    "offsets": [
+      5979820
+    ]
+  },
+  {
+    "en": "Blocked by organization policy",
+    "zh": "已被组织策略阻止",
+    "offsets": [
+      5979843,
+      5980709,
+      5980839,
+      5980895
+    ]
+  },
+  {
+    "en": "Authenticate",
+    "zh": "授权",
+    "offsets": [
+      5981475
+    ]
+  },
+  {
+    "en": "Sign out of this server?",
+    "zh": "退出此服务器登录？",
+    "offsets": [
+      5981603
+    ]
+  },
+  {
+    "en": "Delete server",
+    "zh": "删除服务器",
+    "offsets": [
+      5981851
+    ]
+  },
+  {
+    "en": "MCP Servers Disabled",
+    "zh": "MCP 服务器已禁用",
+    "offsets": [
+      5983890
+    ]
+  },
+  {
+    "en": "Your administrator has disabled MCP servers for this workspace.",
+    "zh": "管理员已为此工作区禁用 MCP 服务器。",
+    "offsets": [
+      5984001
+    ]
+  },
+  {
+    "en": "Add MCP",
+    "zh": "添加 MCP",
+    "offsets": [
+      5984556
+    ]
+  },
+  {
+    "en": "Open MCP Config",
+    "zh": "打开 MCP 配置",
+    "offsets": [
+      5984716
+    ]
+  },
+  {
+    "en": "MCP Configuration Error:",
+    "zh": "MCP 配置错误：",
+    "offsets": [
+      5984807
+    ]
+  },
+  {
+    "en": "Loading MCP servers...",
+    "zh": "正在加载 MCP 服务器…",
+    "offsets": [
+      5985100
+    ]
+  },
+  {
+    "en": "No MCP servers installed",
+    "zh": "尚未安装 MCP 服务器",
+    "offsets": [
+      5985630
+    ]
+  },
+  {
+    "en": "Use Add MCP to browse the store, or add a custom server via the MCP config.",
+    "zh": "点击“添加 MCP”浏览市场，或在 MCP 配置中添加自定义服务器。",
+    "offsets": [
+      5985750
+    ]
+  },
+  {
+    "en": "Use Add MCP to browse the store.",
+    "zh": "点击“添加 MCP”浏览市场。",
+    "offsets": [
+      5985828
+    ]
+  },
+  {
+    "en": "Organization MCP Allowlist (Read-Only)",
+    "zh": "组织 MCP 允许列表（只读）",
+    "offsets": [
+      5986353
+    ]
+  },
+  {
+    "en": "These MCP allowlist rules are enforced by your organization's administrator.",
+    "zh": "这些 MCP 允许规则由组织管理员强制执行。",
+    "offsets": [
+      5986463
+    ]
+  },
+  {
+    "en": "Refresh custom agents",
+    "zh": "刷新自定义代理",
+    "offsets": [
+      5992533
+    ]
+  },
+  {
+    "en": "Loading custom agents...",
+    "zh": "正在加载自定义代理…",
+    "offsets": [
+      5992892
+    ]
+  },
+  {
+    "en": "No Custom Agents or Plugins",
+    "zh": "尚无自定义代理或插件",
+    "offsets": [
+      5993419
+    ]
+  },
+  {
+    "en": "You don't have any custom agents or plugins configured. Create agent scripts in the agents/ directory or add plugins to the plugins/ directory inside your Gemini configuration folder.",
+    "zh": "尚未配置自定义代理或插件。请在 Gemini 配置目录的 agents/ 中创建代理脚本，或在 plugins/ 中添加插件。",
+    "offsets": [
+      5993528
+    ]
+  },
+  {
+    "en": "Pre Tool Use",
+    "zh": "工具调用前",
+    "offsets": [
+      5994709
+    ]
+  },
+  {
+    "en": "Post Tool Use",
+    "zh": "工具调用后",
+    "offsets": [
+      5994736
+    ]
+  },
+  {
+    "en": "Pre Invocation",
+    "zh": "模型调用前",
+    "offsets": [
+      5994766
+    ]
+  },
+  {
+    "en": "Post Invocation",
+    "zh": "调用完成后",
+    "offsets": [
+      5994798
+    ]
+  },
+  {
+    "en": "All tools (*)",
+    "zh": "所有工具（*）",
+    "offsets": [
+      5994850
+    ]
+  },
+  {
+    "en": "Hook will trigger if any tool is executed.",
+    "zh": "执行任意工具时触发钩子。",
+    "offsets": [
+      5994878
+    ]
+  },
+  {
+    "en": "Hook will only trigger if the tool name matches run_command.",
+    "zh": "仅当工具名匹配 run_command 时触发钩子。",
+    "offsets": [
+      5994977
+    ]
+  },
+  {
+    "en": "run_command or view_file",
+    "zh": "run_command 或 view_file",
+    "offsets": [
+      5995078
+    ]
+  },
+  {
+    "en": "Hook will only trigger if the tool name matches run_command or view_file.",
+    "zh": "仅当工具名匹配 run_command 或 view_file 时触发钩子。",
+    "offsets": [
+      5995117
+    ]
+  },
+  {
+    "en": "Browser tools (browser_.*)",
+    "zh": "浏览器工具（browser_.*）",
+    "offsets": [
+      5995221
+    ]
+  },
+  {
+    "en": "Hook will only trigger if the tool name starts with browser_.",
+    "zh": "仅当工具名以 browser_ 开头时触发钩子。",
+    "offsets": [
+      5995262
+    ]
+  },
+  {
+    "en": "Fires before a tool step executes.",
+    "zh": "工具步骤执行前触发。",
+    "offsets": [
+      5995344
+    ]
+  },
+  {
+    "en": "Fires after a tool step completes.",
+    "zh": "工具步骤完成后触发。",
+    "offsets": [
+      5995393
+    ]
+  },
+  {
+    "en": "Fires before the model is called.",
+    "zh": "模型调用前触发。",
+    "offsets": [
+      5995444
+    ]
+  },
+  {
+    "en": "Fires after tool calls finish.",
+    "zh": "工具调用完成后触发。",
+    "offsets": [
+      5995495
+    ]
+  },
+  {
+    "en": "Fires when the execution loop terminates.",
+    "zh": "执行循环结束时触发。",
+    "offsets": [
+      5995533
+    ]
+  },
+  {
+    "en": "Command is required",
+    "zh": "命令不能为空",
+    "offsets": [
+      5998061,
+      5999442
+    ]
+  },
+  {
+    "en": "Must be positive",
+    "zh": "必须为正数",
+    "offsets": [
+      5998149
+    ]
+  },
+  {
+    "en": "Handler #",
+    "zh": "处理器 #",
+    "offsets": [
+      6001264
+    ]
+  },
+  {
+    "en": "No handlers configured for",
+    "zh": "尚未配置处理器：",
+    "offsets": [
+      6002311
+    ]
+  },
+  {
+    "en": "Add Handler",
+    "zh": "添加处理器",
+    "offsets": [
+      6002424,
+      6004181,
+      6004372
+    ]
+  },
+  {
+    "en": "Add New Handler to",
+    "zh": "添加新处理器到",
+    "offsets": [
+      6002615
+    ]
+  },
+  {
+    "en": "Configuration saved successfully!",
+    "zh": "配置保存成功！",
+    "offsets": [
+      6005308
+    ]
+  },
+  {
+    "en": "Hook with this name already exists",
+    "zh": "已存在同名钩子",
+    "offsets": [
+      6005584
+    ]
+  },
+  {
+    "en": "Are you sure you want to delete this handler?",
+    "zh": "确定删除此处理器？",
+    "offsets": [
+      6006147
+    ]
+  },
+  {
+    "en": "Are you sure you want to delete this hook card?",
+    "zh": "确定删除此钩子卡片？",
+    "offsets": [
+      6006455
+    ]
+  },
+  {
+    "en": "Loading hooks...",
+    "zh": "正在加载钩子…",
+    "offsets": [
+      6006846
+    ]
+  },
+  {
+    "en": "Agent Hooks Configuration",
+    "zh": "代理钩子配置",
+    "offsets": [
+      6007219
+    ]
+  },
+  {
+    "en": "+ Add Hook",
+    "zh": "+ 添加钩子",
+    "offsets": [
+      6007323
+    ]
+  },
+  {
+    "en": "New hook name",
+    "zh": "新钩子名称",
+    "offsets": [
+      6007505
+    ]
+  },
+  {
+    "en": "Save Configuration",
+    "zh": "保存配置",
+    "offsets": [
+      6008259
+    ]
+  },
+  {
+    "en": "Skills Configuration Error:",
+    "zh": "技能配置错误：",
+    "offsets": [
+      6012686
+    ]
+  },
+  {
+    "en": "Clear search",
+    "zh": "清除搜索",
+    "offsets": [
+      6013804
+    ]
+  },
+  {
+    "en": "MCP Install Error:",
+    "zh": "MCP 安装错误：",
+    "offsets": [
+      6014230
+    ]
+  },
+  {
+    "en": "No MCP servers found for \"",
+    "zh": "未找到匹配的 MCP 服务器：“",
+    "offsets": [
+      6014479
+    ]
+  },
+  {
+    "en": "Search for MCP servers to add to your configuration",
+    "zh": "搜索要添加到配置中的 MCP 服务器",
+    "offsets": [
+      6014620
+    ]
+  },
+  {
+    "en": "Build With Google Plugins",
+    "zh": "使用 Google 开发的插件",
+    "offsets": [
+      6014920,
+      6016234
+    ]
+  },
+  {
+    "en": "Configure default behaviors, skills, and MCP servers.",
+    "zh": "配置默认行为、技能和 MCP 服务器。",
+    "offsets": [
+      6015111
+    ]
+  },
+  {
+    "en": "When enabled, the agent will include default customizations, including default skills.",
+    "zh": "开启后代理包含默认自定义配置和默认技能。",
+    "offsets": [
+      6015740
+    ]
+  },
+  {
+    "en": "Browse and enable plugins from the Build With Google catalog.",
+    "zh": "浏览并启用 Build With Google 目录中的插件。",
+    "offsets": [
+      6016275
+    ]
+  },
+  {
+    "en": "Customize",
+    "zh": "自定义",
+    "offsets": [
+      6016435,
+      6016712
+    ]
+  },
+  {
+    "en": "Creating Cloud Project",
+    "zh": "正在创建云项目",
+    "offsets": [
+      6017032
+    ]
+  },
+  {
+    "en": "Creating Chat Bot",
+    "zh": "正在创建聊天机器人",
+    "offsets": [
+      6017073
+    ]
+  },
+  {
+    "en": "Installing Chat Bot",
+    "zh": "正在安装聊天机器人",
+    "offsets": [
+      6017109
+    ]
+  },
+  {
+    "en": "Creating Sidecar",
+    "zh": "正在创建扩展",
+    "offsets": [
+      6017147
+    ]
+  },
+  {
+    "en": "Bot name must be between 3 and 24 characters",
+    "zh": "机器人名称必须为 3 至 24 个字符",
+    "offsets": [
+      6017662
+    ]
+  },
+  {
+    "en": "Must be a valid URL",
+    "zh": "请输入有效 URL",
+    "offsets": [
+      6017741
+    ]
+  },
+  {
+    "en": "Bot Name",
+    "zh": "机器人名称",
+    "offsets": [
+      6018949
+    ]
+  },
+  {
+    "en": "Enter bot name (optional)",
+    "zh": "输入机器人名称（可选）",
+    "offsets": [
+      6019053
+    ]
+  },
+  {
+    "en": "Avatar URL",
+    "zh": "头像 URL",
+    "offsets": [
+      6019161
+    ]
+  },
+  {
+    "en": "Enter avatar URL (optional)",
+    "zh": "输入头像 URL（可选）",
+    "offsets": [
+      6019273
+    ]
+  },
+  {
+    "en": "Setup may take over 5 minutes. Please keep this screen open during setup.",
+    "zh": "设置可能超过 5 分钟。请保持此页面打开。",
+    "offsets": [
+      6020541
+    ]
+  },
+  {
+    "en": "Authorization Required",
+    "zh": "需要授权",
+    "offsets": [
+      6020861
+    ]
+  },
+  {
+    "en": "We opened a popup for you to authorize adding the bot to your chat. Please copy the code from it and paste it below:",
+    "zh": "已打开授权弹窗，用于将机器人添加到聊天中。请复制弹窗中的授权码并粘贴到下方：",
+    "offsets": [
+      6020954
+    ]
+  },
+  {
+    "en": "Paste code here",
+    "zh": "在此粘贴授权码",
+    "offsets": [
+      6021199
+    ]
+  },
+  {
+    "en": "Complete Setup",
+    "zh": "完成设置",
+    "offsets": [
+      6021751
+    ]
+  },
+  {
+    "en": "Setup Jetski Chat",
+    "zh": "设置 Jetski Chat",
+    "offsets": [
+      6022058
+    ]
+  },
+  {
+    "en": "Running",
+    "zh": "运行中",
+    "offsets": [
+      5649417,
+      5649518,
+      6022388
+    ]
+  },
+  {
+    "en": "Errored",
+    "zh": "出错",
+    "offsets": [
+      6022478
+    ]
+  },
+  {
+    "en": "Backoff",
+    "zh": "等待重试",
+    "offsets": [
+      6022523
+    ]
+  },
+  {
+    "en": "Enable Chat",
+    "zh": "启用聊天",
+    "offsets": [
+      6022826
+    ]
+  },
+  {
+    "en": "Status:",
+    "zh": "状态：",
+    "offsets": [
+      6023408
+    ]
+  },
+  {
+    "en": "Configure a chat bot so you can use Jetski directly from Google Chat.",
+    "zh": "配置聊天机器人，以便直接在 Google Chat 中使用 Jetski。",
+    "offsets": [
+      6023748
+    ]
+  },
+  {
+    "en": "For help, visit",
+    "zh": "需要帮助请访问",
+    "offsets": [
+      6023824
+    ]
+  },
+  {
+    "en": "or join the",
+    "zh": "或加入",
+    "offsets": [
+      6024002
+    ]
+  },
+  {
+    "en": "chat space",
+    "zh": "聊天空间",
+    "offsets": [
+      6024180
+    ]
+  },
+  {
+    "en": "Jetski Chat configuration is not available in the current environment.",
+    "zh": "当前环境不支持配置 Jetski Chat。",
+    "offsets": [
+      6024275
+    ]
+  },
+  {
+    "en": "Project",
+    "zh": "项目",
+    "offsets": [
+      5632586,
+      5632625,
+      6028205,
+      6032167
+    ]
+  },
+  {
+    "en": "Show Less",
+    "zh": "收起",
+    "offsets": [
+      6030533
+    ]
+  },
+  {
+    "en": "Show All",
+    "zh": "显示全部",
+    "offsets": [
+      6030545
+    ]
+  },
+  {
+    "en": "Open settings menu",
+    "zh": "打开设置菜单",
+    "offsets": [
+      6032997
+    ]
+  },
+  {
+    "en": "The Google3 project is deprecated",
+    "zh": "Google3 项目已弃用",
+    "offsets": [
+      6035454
+    ]
+  },
+  {
+    "en": "The settings here only apply to conversations that are under Google3 Projects, which are deprecated. Any new conversations should be grouped by workspace and apply global settings.",
+    "zh": "此处设置仅适用于已弃用的 Google3 项目中的对话。新对话应按工作区分组并使用全局设置。",
+    "offsets": [
+      6035563
+    ]
+  },
+  {
+    "en": "Go to global settings",
+    "zh": "前往全局设置",
+    "offsets": [
+      6036039
+    ]
+  },
+  {
+    "en": "Show settings anyway",
+    "zh": "仍然显示设置",
+    "offsets": [
+      6036214
+    ]
+  },
+  {
+    "en": "CitC Workspace Type",
+    "zh": "CitC 工作区类型",
+    "offsets": [
+      6037437
+    ]
+  },
+  {
+    "en": "Select the workspace type that will be used for new conversations started with the New Workspace option.",
+    "zh": "选择通过“新建工作区”选项创建对话时使用的工作区类型。",
+    "offsets": [
+      6037471
+    ]
+  },
+  {
+    "en": "No project selected",
+    "zh": "未选择项目",
+    "offsets": [
+      6038566
+    ]
+  },
+  {
+    "en": "Back to resource menu",
+    "zh": "返回资源菜单",
+    "offsets": [
+      6040903
+    ]
+  },
+  {
+    "en": "Complete sign-in in the popup window, then click Continue.",
+    "zh": "请在弹窗中完成登录，然后点击继续。",
+    "offsets": [
+      6041308
+    ]
+  },
+  {
+    "en": "Connect your Google Drive account to attach Docs, Sheets, Slides, files, and folders.",
+    "zh": "连接 Google Drive 账号以添加文档、表格、演示文稿、文件和文件夹。",
+    "offsets": [
+      6041369
+    ]
+  },
+  {
+    "en": "Re-open sign-in popup",
+    "zh": "重新打开登录弹窗",
+    "offsets": [
+      6041924
+    ]
+  },
+  {
+    "en": "Connect Google Drive",
+    "zh": "连接 Google Drive",
+    "offsets": [
+      6042099
+    ]
+  },
+  {
+    "en": "Select Google Drive files or folders",
+    "zh": "选择 Google Drive 文件或文件夹",
+    "offsets": [
+      6042784
+    ]
+  },
+  {
+    "en": "Google Drive is not configured in this environment.",
+    "zh": "当前环境未配置 Google Drive。",
+    "offsets": [
+      6043282
+    ]
+  },
+  {
+    "en": "Loading resources...",
+    "zh": "正在加载资源…",
+    "offsets": [
+      6047389
+    ]
+  },
+  {
+    "en": "Connect your account to browse",
+    "zh": "连接账号以浏览",
+    "offsets": [
+      6047569
+    ]
+  },
+  {
+    "en": "Filter resources...",
+    "zh": "筛选资源…",
+    "offsets": [
+      6048159
+    ]
+  },
+  {
+    "en": "No matching resources found.",
+    "zh": "未找到匹配资源。",
+    "offsets": [
+      6048592
+    ]
+  },
+  {
+    "en": "Upload Files",
+    "zh": "上传文件",
+    "offsets": [
+      6050230
+    ]
+  },
+  {
+    "en": "Add folder path",
+    "zh": "添加文件夹路径",
+    "offsets": [
+      6051702
+    ]
+  },
+  {
+    "en": "Open folder",
+    "zh": "打开文件夹",
+    "offsets": [
+      6051815
+    ]
+  },
+  {
+    "en": "Add Resource",
+    "zh": "添加资源",
+    "offsets": [
+      6052120
+    ]
+  },
+  {
+    "en": "Add Folder",
+    "zh": "添加文件夹",
+    "offsets": [
+      6052135
+    ]
+  },
+  {
+    "en": "Folder doesn't exist",
+    "zh": "文件夹不存在",
+    "offsets": [
+      6055216
+    ]
+  },
+  {
+    "en": "Cannot parse folder URI.",
+    "zh": "无法解析文件夹 URI。",
+    "offsets": [
+      6055478
+    ]
+  },
+  {
+    "en": "Work in Google3. Create conversations in new and existing workspaces.",
+    "zh": "在 Google3 中工作。在新工作区或现有工作区中创建对话。",
+    "offsets": [
+      6055782
+    ]
+  },
+  {
+    "en": "Remove resource",
+    "zh": "移除资源",
+    "offsets": [
+      6056169
+    ]
+  },
+  {
+    "en": "1 active conversation",
+    "zh": "1 个活跃对话",
+    "offsets": [
+      6058280
+    ]
+  },
+  {
+    "en": "1 archived conversation",
+    "zh": "1 个已归档对话",
+    "offsets": [
+      6058351
+    ]
+  },
+  {
+    "en": "Duplicate project name",
+    "zh": "项目名称重复",
+    "offsets": [
+      6062405
+    ]
+  },
+  {
+    "en": "No project selected or project management not available.",
+    "zh": "尚未选择项目或项目管理不可用。",
+    "offsets": [
+      6068685
+    ]
+  },
+  {
+    "en": "All Workspaces",
+    "zh": "所有工作区",
+    "offsets": [
+      6070458
+    ]
+  },
+  {
+    "en": "A shell setup script run before every command the agent executes in this project. Overrides the global script.",
+    "zh": "代理在此项目中执行每条命令前运行的 Shell 初始化脚本。此设置覆盖全局脚本。",
+    "offsets": [
+      6070786
+    ]
+  },
+  {
+    "en": "Resources",
+    "zh": "资源",
+    "offsets": [
+      6071075
+    ]
+  },
+  {
+    "en": "Folders",
+    "zh": "文件夹",
+    "offsets": [
+      6071087
+    ]
+  },
+  {
+    "en": "No resources added yet.",
+    "zh": "尚未添加资源。",
+    "offsets": [
+      6071234
+    ]
+  },
+  {
+    "en": "No folders added yet.",
+    "zh": "尚未添加文件夹。",
+    "offsets": [
+      6071261
+    ]
+  },
+  {
+    "en": "Google3 Configuration",
+    "zh": "Google3 配置",
+    "offsets": [
+      6071896
+    ]
+  },
+  {
+    "en": "Permanently delete",
+    "zh": "永久删除",
+    "offsets": [
+      6072328
+    ]
+  },
+  {
+    "en": "including",
+    "zh": "，包括",
+    "offsets": [
+      6072444
+    ]
+  },
+  {
+    "en": "is managed by the",
+    "zh": "由以下自动化管理：",
+    "offsets": [
+      6072173
+    ]
+  },
+  {
+    "en": "automation and can only be deleted by deleting that automation.",
+    "zh": "，只能通过删除该自动化来删除。",
+    "offsets": [
+      6072231
+    ]
+  },
+  {
+    "en": "Bug Report",
+    "zh": "报告问题",
+    "offsets": [
+      5597035
+    ]
+  },
+  {
+    "en": "Feature Request",
+    "zh": "功能建议",
+    "offsets": [
+      5597066
+    ]
+  },
+  {
+    "en": "Auth and Billing",
+    "zh": "登录与计费",
+    "offsets": [
+      5597103
+    ]
+  },
+  {
+    "en": "Remote Control Issue",
+    "zh": "远程控制问题",
+    "offsets": [
+      5597145
+    ]
+  },
+  {
+    "en": "General Feedback",
+    "zh": "其他反馈",
+    "offsets": [
+      5597187
+    ]
+  },
+  {
+    "en": "Please describe the issue in detail. The more actionable your feedback, the quicker our team can address your request. Some helpful information includes:",
+    "zh": "请详细描述问题。反馈越具体，团队越能及时处理。建议提供：",
+    "offsets": [
+      5597257
+    ]
+  },
+  {
+    "en": "Steps to reproduce the issue",
+    "zh": "问题复现步骤",
+    "offsets": [
+      5597506
+    ]
+  },
+  {
+    "en": "Expected behavior",
+    "zh": "预期行为",
+    "offsets": [
+      5597565
+    ]
+  },
+  {
+    "en": "Actual behavior",
+    "zh": "实际行为",
+    "offsets": [
+      5597612
+    ]
+  },
+  {
+    "en": "Any error messages",
+    "zh": "错误信息",
+    "offsets": [
+      5597657
+    ]
+  },
+  {
+    "en": "Any relevant information",
+    "zh": "其他相关信息",
+    "offsets": [
+      5597705
+    ]
+  },
+  {
+    "en": "Please describe the feature you'd like to see. The more detailed the requirements, the easier it will be for our team to incorporate your ideas. Some helpful information includes:",
+    "zh": "请描述你希望增加的功能。需求越具体，团队越容易采纳。建议提供：",
+    "offsets": [
+      5597785
+    ]
+  },
+  {
+    "en": "What is missing in your workflow",
+    "zh": "当前工作流程缺少什么",
+    "offsets": [
+      5598061
+    ]
+  },
+  {
+    "en": "What you would like to see to address this gap in your workflow",
+    "zh": "你希望如何补足工作流程中的不足",
+    "offsets": [
+      5598123
+    ]
+  },
+  {
+    "en": "How this feature would help you and other users",
+    "zh": "该功能如何帮助你和其他用户",
+    "offsets": [
+      5598216
+    ]
+  },
+  {
+    "en": "Please describe your auth or billing issue. More details will help our support team resolve your issue quicker. Some helpful information includes:",
+    "zh": "请描述登录或计费问题。提供更多细节有助于支持团队更快处理。建议提供：",
+    "offsets": [
+      5598320
+    ]
+  },
+  {
+    "en": "What quota or feature is being incorrectly limited",
+    "zh": "哪些额度或功能受到错误限制",
+    "offsets": [
+      5598563
+    ]
+  },
+  {
+    "en": "What functionality you expect your account tier to have available that is missing",
+    "zh": "你的账号套餐应有但缺失哪些功能",
+    "offsets": [
+      5598643
+    ]
+  },
+  {
+    "en": "Any error messages seen when trying to log in",
+    "zh": "尝试登录时出现的错误信息",
+    "offsets": [
+      5598754
+    ]
+  },
+  {
+    "en": "Use this form if you cannot connect to Remote Control. If your instance is already connected and you are experiencing issues in the browser, report directly from the Remote Control web page so that relevant logs are included. Some helpful information includes:",
+    "zh": "无法连接远程控制时请使用此表单。若已连接但浏览器中出现问题，请直接在远程控制网页反馈，以便附带相关日志。建议提供：",
+    "offsets": [
+      5598860
+    ]
+  },
+  {
+    "en": "Whether it never connects or is intermittent/flaky",
+    "zh": "始终无法连接还是连接不稳定",
+    "offsets": [
+      5599217
+    ]
+  },
+  {
+    "en": "Did restarting the desktop app help?",
+    "zh": "重启桌面应用是否有效",
+    "offsets": [
+      5599297
+    ]
+  },
+  {
+    "en": "For any feedback that does not fit into the above categories.",
+    "zh": "用于不属于以上分类的其他反馈。",
+    "offsets": [
+      5599358
+    ]
+  },
+  {
+    "en": "Describe the bug you encountered...",
+    "zh": "描述遇到的问题…",
+    "offsets": [
+      5599441
+    ]
+  },
+  {
+    "en": "Describe the feature you would like to see...",
+    "zh": "描述希望增加的功能…",
+    "offsets": [
+      5599497
+    ]
+  },
+  {
+    "en": "Describe your auth or billing issue...",
+    "zh": "描述登录或计费问题…",
+    "offsets": [
+      5599564
+    ]
+  },
+  {
+    "en": "Describe your Remote Control issue...",
+    "zh": "描述远程控制问题…",
+    "offsets": [
+      5599628
+    ]
+  },
+  {
+    "en": "Enter your feedback here...",
+    "zh": "在此输入反馈…",
+    "offsets": [
+      5599688
+    ]
+  },
+  {
+    "en": "Feedback Type",
+    "zh": "反馈类型",
+    "offsets": [
+      5601238
+    ]
+  },
+  {
+    "en": "Description",
+    "zh": "描述",
+    "offsets": [
+      5601811
+    ]
+  },
+  {
+    "en": "Steps to Reproduce",
+    "zh": "复现步骤",
+    "offsets": [
+      5602349
+    ]
+  },
+  {
+    "en": "Please list the steps to reproduce the issue",
+    "zh": "请列出问题的复现步骤",
+    "offsets": [
+      5602475
+    ]
+  },
+  {
+    "en": "Screenshot must be under 10 MB",
+    "zh": "截图大小必须小于 10 MB",
+    "offsets": [
+      5603817
+    ]
+  },
+  {
+    "en": "Attach a screenshot (optional)",
+    "zh": "附加截图（可选）",
+    "offsets": [
+      5604101
+    ]
+  },
+  {
+    "en": "Attach Antigravity server logs",
+    "zh": "附加 Antigravity 服务器日志",
+    "offsets": [
+      5604209
+    ]
+  },
+  {
+    "en": "Send feedback as",
+    "zh": "反馈身份：",
+    "offsets": [
+      5604403
+    ]
+  },
+  {
+    "en": "Attaching logs requires an email address",
+    "zh": "附加日志需要邮箱地址",
+    "offsets": [
+      5604520
+    ]
+  },
+  {
+    "en": "Thank you! Your feedback has been submitted successfully.",
+    "zh": "感谢反馈！提交成功。",
+    "offsets": [
+      5606201
+    ]
+  },
+  {
+    "en": "An error occurred while submitting your feedback. Please try again.",
+    "zh": "提交反馈时出错，请重试。",
+    "offsets": [
+      5606508,
+      5606698
+    ]
+  },
+  {
+    "en": "We recommend attaching logs. Attaching logs will help the Antigravity team act on and prioritize your feedback.",
+    "zh": "建议附加日志，以帮助 Antigravity 团队处理反馈并确定优先级。",
+    "offsets": [
+      5607128
+    ]
+  },
+  {
+    "en": "Visit",
+    "zh": "访问",
+    "offsets": [
+      5607296
+    ]
+  },
+  {
+    "en": "Legal Help",
+    "zh": "法律帮助",
+    "offsets": [
+      5607490
+    ]
+  },
+  {
+    "en": "to ask for content changes for legal reasons.",
+    "zh": "以法律原因请求修改内容。",
+    "offsets": [
+      5607508
+    ]
+  },
+  {
+    "en": "Weekly Limit Remaining",
+    "zh": "每周剩余额度",
+    "offsets": []
+  },
+  {
+    "en": "Five Hour Limit Remaining",
+    "zh": "五小时剩余额度",
+    "offsets": []
+  },
+  {
+    "en": "Gemini Models",
+    "zh": "Gemini 模型",
+    "offsets": []
+  },
+  {
+    "en": "Claude and GPT models",
+    "zh": "Claude 和 GPT 模型",
+    "offsets": []
+  },
+  {
+    "en": "You can upgrade to a Google AI Ultra plan to receive higher rate limits.",
+    "zh": "升级至 Google AI Ultra 套餐可获得更高的使用限额。",
+    "offsets": []
+  },
+  {
+    "en": "Manage Antigravity app settings.",
+    "zh": "管理 Antigravity 应用设置。",
+    "offsets": []
+  },
+  {
+    "en": "When toggled on, Antigravity will use your AI credits to fulfill model requests once you're out of model quota. Antigravity will always use your model quota first before using AI credits.",
+    "zh": "开启后，模型额度用尽时 Antigravity 会使用 AI 点数完成模型请求。Antigravity 始终优先使用模型额度，再使用 AI 点数。",
+    "offsets": []
+  },
+  {
+    "en": "When toggled on, Antigravity collects usage data to help Google enhance performance and features.",
+    "zh": "开启后，Antigravity 收集使用数据，以帮助 Google 改进性能和功能。",
+    "offsets": []
+  },
+  {
+    "en": "Receive product updates, tips, and promotions from Google Antigravity via email.",
+    "zh": "通过邮件接收 Google Antigravity 的产品更新、提示和推广信息。",
+    "offsets": []
+  },
+  {
+    "en": "Sign in to use Antigravity!",
+    "zh": "登录以使用 Antigravity！",
+    "offsets": []
+  },
+  {
+    "en": "Edit project name",
+    "zh": "编辑项目名称",
+    "offsets": []
+  },
+  {
+    "en": "Edit workspace name",
+    "zh": "编辑工作区名称",
+    "offsets": []
+  },
+  {
+    "en": "Delete Project",
+    "zh": "删除项目",
+    "offsets": []
+  },
+  {
+    "en": "Delete Workspace",
+    "zh": "删除工作区",
+    "offsets": []
+  },
+  {
+    "en": "Delete project",
+    "zh": "删除项目",
+    "offsets": []
+  },
+  {
+    "en": "Delete workspace",
+    "zh": "删除工作区",
+    "offsets": []
+  },
+  {
+    "en": "Duplicate workspace name",
+    "zh": "工作区名称重复",
+    "offsets": []
+  },
+  {
+    "en": "Agent settings and permissions for conversations outside of projects.",
+    "zh": "不属于项目的对话所使用的代理设置和权限。",
+    "offsets": []
+  },
+  {
+    "en": "Agent settings and permissions for conversations outside of workspaces.",
+    "zh": "不属于工作区的对话所使用的代理设置和权限。",
+    "offsets": []
+  },
+  {
+    "en": "Manage project resources, agent settings, and permissions.",
+    "zh": "管理项目资源、代理设置和权限。",
+    "offsets": []
+  },
+  {
+    "en": "Manage project folders, agent settings, and permissions.",
+    "zh": "管理项目文件夹、代理设置和权限。",
+    "offsets": []
+  },
+  {
+    "en": "Manage workspace resources, agent settings, and permissions.",
+    "zh": "管理工作区资源、代理设置和权限。",
+    "offsets": []
+  },
+  {
+    "en": "Manage workspace folders, agent settings, and permissions.",
+    "zh": "管理工作区文件夹、代理设置和权限。",
+    "offsets": []
+  },
+  {
+    "en": "The agent auto-executes commands matched by an allow list entry. For Unix shells, an allow list entry matches a command if its space-separated tokens form a prefix of the command's tokens. For PowerShell, the entry tokens may match any contiguous subsequence of the command tokens.",
+    "zh": "代理自动执行匹配允许列表条目的命令。对于 Unix Shell，允许条目按空格分隔的词元必须匹配命令词元的前缀；对于 PowerShell，条目词元可以匹配命令词元的任意连续片段。",
+    "offsets": [
+      3500049,
+      3500232
+    ]
+  },
+  {
+    "en": "The agent asks for permission before executing commands matched by a deny list entry. The deny list follows the same matching rules as the allow list and takes precedence over the allow list.",
+    "zh": "代理执行匹配拒绝列表条目的命令前请求许可。拒绝列表使用与允许列表相同的匹配规则，且优先于允许列表。",
+    "offsets": [
+      3500611,
+      3500815
+    ]
+  }
+]

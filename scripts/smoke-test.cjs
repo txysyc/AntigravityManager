@@ -26,6 +26,8 @@ const fixture = `<!doctype html><html><head><meta charset="utf-8"><title>Antigra
 <div data-testid="conversation-row-abc"><button><span id="actual-name" title="Settings" class="truncate text-left w-full text-sm">Settings</span></button><button id="row-action">Cancel</button></div>
 <button data-testid="project-selector-item"><span id="project-name" title="Settings" class="truncate">Settings</span></button>
 <div id="dynamic"></div><script>window.clickCount=0;document.querySelector('#settings').onclick=()=>window.clickCount++;</script>
+${fs.readFileSync(path.join(root, 'tests/fixtures/ui-coverage.html'), 'utf8')}
+${fs.readFileSync(path.join(root, 'tests/fixtures/full-audit.html'), 'utf8')}
 </body></html>`;
 const assetMap = { '/main.js': '142809195-main.js', '/prism_bundle.js': '145690865-prism_bundle.js', '/jetbox.css': '142785440-jetbox.css', '/compiled_tailwind.css': '142736347-compiled_tailwind.css', '/diff_worker.js': '142773510-diff_worker.js', '/audio_processor.js': '142735456-audio_processor.js' };
 const server = http.createServer((req, res) => {
@@ -46,12 +48,15 @@ async function main() {
     env: { ...process.env, DEV_URL: url }, windowsHide: true, stdio: 'ignore'
   });
   let browser;
+  let childError, childExit, connectionError;
+  child.on('error', error => { childError = error.message; });
+  child.on('exit', (code, signal) => { childExit = { code, signal }; });
   try {
     for (let attempt = 0; attempt < 35; attempt++) {
       try { browser = await chromium.connectOverCDP('http://127.0.0.1:9231'); break; }
-      catch { await new Promise(resolve => setTimeout(resolve, 500)); }
+      catch (error) { connectionError = error.message.split('\n')[0]; await new Promise(resolve => setTimeout(resolve, 500)); }
     }
-    if (!browser) throw Error('Packaged Electron did not start');
+    if (!browser) throw Error('Packaged Electron did not start: ' + JSON.stringify({ childError, childExit, connectionError }));
     const context = browser.contexts()[0];
     let page;
     for (let attempt = 0; attempt < 25; attempt++) {
@@ -88,6 +93,57 @@ async function main() {
     await page.waitForFunction(() => document.querySelector('#new')?.textContent === '取消');
     assert.equal(await page.evaluate(() => typeof window.electronNative.minimize), 'function');
     assert.equal(await page.evaluate(() => typeof window.require), 'undefined');
+    const expected = {
+      'title-file': 'File', 'title-view': 'View', 'title-window': 'Window',
+      'sidebar-new': 'New Conversation', 'sidebar-history': 'Conversation History',
+      'sidebar-automations': 'Automations', 'sidebar-customizations': 'Customizations',
+      'sidebar-projects': 'Projects', 'nav-application': 'Application', 'nav-models': 'Models',
+      'not-in-project': 'Not in Project', 'nav-conversations': 'Conversations',
+      'general-description': 'Configure agent execution, queued message delivery, and permissions.',
+      'execution-title': 'Execution', 'queue': 'Queue', 'send-immediately': 'Send Immediately',
+      'keyboard-shortcuts': 'Keyboard shortcuts', 'default-preset': 'Default',
+      'open-permissions': 'Open', 'tool-description': 'Modify permissions for file, terminal, and MCP tools.'
+    };
+    for (const [id, key] of Object.entries(expected)) assert.equal(await page.locator('#' + id).textContent(), dictionary[key], id);
+    for (const id of ['user-project-models', 'user-project-default', 'user-workspace', 'account-name', 'user-override', 'user-override-menu', 'unrelated-link', 'unrelated-div']) {
+      assert.equal(await page.locator('#' + id).textContent(), await page.evaluate(id => window.coverageOriginals[id], id), id);
+    }
+    assert.equal(await page.locator('#user-project-models').getAttribute('title'), 'Models');
+    assert.equal(await page.locator('#unrelated-fragment').textContent(), '类型');
+    await require('./verify-audit.cjs').verifyChinese(page);
+    assert.equal(await page.locator('#modified').textContent(), '已在以下项目中修改： Default');
+    assert.equal(await page.locator('#modified-many').textContent(), '已在以下项目中修改： 3 个项目');
+    assert.equal(await page.locator('#preset-help').textContent(), '了解更多： 默认');
+    assert.equal(await page.locator('#plan-help').textContent(), '输入 / 并选择 plan ，让代理生成计划。');
+    assert.deepEqual(await page.locator('#plan-help code').allTextContents(), ['/', 'plan']);
+    assert.equal(await page.locator('#title-option').textContent(), '新建窗口Ctrl+Shift+N');
+    await page.locator('#user-override').click();
+    assert.equal(await page.evaluate(() => window.overrideClicks), 1);
+    // Names and mixed text updates after initial render must remain independent.
+    await page.evaluate(() => {
+      document.querySelector('#user-override').firstChild.nodeValue = 'Models';
+      document.querySelector('#project-count').firstChild.nodeValue = '5';
+      document.querySelector('#project-count').lastChild.nodeValue = ' projects';
+      document.querySelector('#tool-description').firstChild.nodeValue = 'Modify permissions for file and terminal tools.';
+      const button = document.createElement('button'); button.id = 'later-project'; button.dataset.testid = 'settings-nav-item-Default'; button.textContent = 'Default';
+      document.querySelector('#user-project-models').parentElement.append(button);
+      const option = document.createElement('div'); option.id = 'later-option'; option.setAttribute('role', 'option'); option.textContent = 'Queue'; document.body.append(option);
+    });
+    await page.waitForFunction(() => document.querySelector('#later-option')?.textContent === '排队');
+    assert.equal(await page.locator('#later-project').textContent(), 'Default');
+    assert.equal(await page.locator('#user-override').textContent(), 'Models');
+    assert.equal(await page.locator('#modified-many').textContent(), '已在以下项目中修改： 5 个项目');
+    assert.equal(await page.locator('#tool-description').textContent(), dictionary['Modify permissions for file and terminal tools.']);
+    // React may reuse a control in a protected user-name group. Restore both
+    // translated text and attributes when it moves into that group.
+    await page.evaluate(() => {
+      const button = document.createElement('button'); button.id = 'moving-name'; button.dataset.testid = 'settings-nav-item-Models'; button.title = 'Models'; button.textContent = 'Models';
+      document.querySelector('#nav-models').parentElement.append(button);
+    });
+    await page.waitForFunction(() => document.querySelector('#moving-name')?.textContent === '模型');
+    await page.evaluate(() => document.querySelector('#user-project-models').parentElement.append(document.querySelector('#moving-name')));
+    await page.waitForFunction(() => document.querySelector('#moving-name')?.textContent === 'Models');
+    assert.equal(await page.locator('#moving-name').getAttribute('title'), 'Models');
     fs.mkdirSync(path.join(root, 'output/playwright'), { recursive: true });
     await page.screenshot({ path: path.join(root, 'output/playwright/preload-smoke.png') });
     console.log('PASS: packaged preload, context isolation, dynamic changes, control events, protected chat/code/input.');
@@ -99,9 +155,19 @@ async function main() {
     assert.equal(await page.locator('#new').textContent(), 'Cancel');
     assert.equal(await page.locator('#input').getAttribute('placeholder'), 'Search conversations...');
     assert.equal(await page.locator('#actual-name').textContent(), 'Settings');
+    // Every untouched fixture node restores its exact original, including nested
+    // fragments, shortcut/code nodes, and portaled project names.
+    const restored = await page.evaluate(() => Object.entries(window.coverageOriginals)
+      .filter(([id]) => !['dynamic', 'modified', 'modified-many', 'many-projects', 'project-count', 'tool-description', 'user-override'].includes(id))
+      .filter(([id, value]) => document.getElementById(id)?.textContent !== value).map(([id]) => id));
+    assert.deepEqual(restored, []);
+    await require('./verify-audit.cjs').verifyEnglish(page);
+    assert.equal(await page.locator('#modified-many').textContent(), 'Modified in 5 projects');
+    assert.equal(await page.locator('#modified').textContent(), 'Modified in Models');
     await page.evaluate(() => document.querySelector('#new').firstChild.nodeValue = 'Settings');
     await languageSelect.selectOption('zh-CN');
     await page.waitForFunction(() => document.querySelector('#new')?.textContent === '设置');
+    assert.equal(await page.locator('#plan-help').textContent(), '输入 / 并选择 plan ，让代理生成计划。');
     // Application changes after translation must survive a later switch back.
     await page.evaluate(() => { document.querySelector('#new').firstChild.nodeValue = 'Custom value'; document.querySelector('#input').setAttribute('placeholder', 'Custom hint'); });
     await languageSelect.selectOption('en');
@@ -116,6 +182,7 @@ async function main() {
     assert.equal(await page.locator('#settings').textContent(), 'Settings');
     await page.screenshot({ path: path.join(root, 'output/playwright/language-switch-en.png') });
     console.log('PASS: Chinese ↔ English, original text/attributes, application updates, persisted setting and reload.');
+    console.log('PASS: screenshot component coverage, composite fragments, dynamic options, project-name collisions and exact English restoration.');
   } finally {
     if (browser) { try { const session = await browser.newBrowserCDPSession(); await Promise.race([session.send('Browser.close').catch(() => {}), new Promise(resolve => setTimeout(resolve, 1000))]); } catch {} }
     child.kill();

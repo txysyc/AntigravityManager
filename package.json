@@ -1,6 +1,6 @@
 {
   "name": "antigravity-zh-cn-patch",
-  "version": "0.2.0",
+  "version": "0.4.1",
   "private": true,
   "description": "Reversible Chinese UI patch for Google Antigravity 2.23.0",
   "scripts": {
