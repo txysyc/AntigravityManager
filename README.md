@@ -68,7 +68,9 @@ npm run build
 ├── tests/AntigravityManager.Checks/             # C# 与跨进程集成检查
 ├── tools/                                      # 离线分析和开发验证工具
 ├── scripts/                                    # 管理器运行与发布脚本
-├── docs/                                       # 架构、开发和历史报告
+├── AGENTS.md                                   # 中文协作与规范阅读入口
+├── spec/                                       # 长期规范与按需创建的变更规格
+├── docs/                                       # 操作、开发和历史报告
 ├── analysis/                                   # 来源证据与本地提取资源
 ├── runtime/                                    # 可选本地 Node.js，二进制忽略
 └── artifacts/                                  # 发布、补丁和测试产物，Git 忽略
@@ -104,6 +106,10 @@ npm run test:manager
 
 ## 文档
 
+- [协作与 Git 规范](AGENTS.md)
+- [项目规范索引](spec/README.md)
+- [架构与模块规范](spec/architecture.md)
+- [汉化模块规范](spec/modules/localization.md)
 - [项目架构与模块扩展](docs/architecture.md)
 - [开发、测试与发布](docs/development.md)
 - [汉化模块说明](docs/modules/localization.md)

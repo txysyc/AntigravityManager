@@ -40,14 +40,17 @@ node engines/localization/scripts/build.cjs 'artifacts/test-app'
 ```powershell
 npm test
 npm run test:manager
+npm run check:guidelines
 
 # 加上实际安装目录，额外验证只读的 C# → Node 应用检查
  dotnet run --project tests/AntigravityManager.Checks -- 'C:\path\to\antigravity'
 ```
 
-14 项 Node.js 检查包括 ASAR、原生菜单与语言设置、未知指纹拒绝、并发文件变化、损坏备份保护，以及完整隔离安装/重复安装/外部备份恢复。原生模块测试仍使用本地原始资源，语言分支测试使用已构建补丁。
+Node.js 检查包括 ASAR、原生菜单与语言设置、未知指纹拒绝、并发文件变化、损坏备份保护、中文错误反馈，以及完整隔离安装/重复安装/外部备份恢复。原生模块测试仍使用本地原始资源，语言分支测试使用已构建补丁。
 
 C# 检查使用轻量控制台入口，无额外测试框架依赖。覆盖模块注册、重复 ID、路径与设置保存，以及真实子进程的 JSON 成功/失败链路。输入了不兼容应用时，验证安装能力保持关闭。数据目录测试使用独立引导目录，验证迁移字节一致、保留原始文件、重启解析、非空目标和嵌套目录拒绝、并发锁、旧实例及目录链接保护。
+
+`check:guidelines` 不需要原始程序资源，只读检查规范链接、文档换行、管理器版本同步、部分英文界面提示及直接展示异常的代码路径。它不会自动改写规范；长期约定是否需要更新，仍须按 [AGENTS.md](../AGENTS.md) 和 [规范索引](../spec/README.md) 随开发任务审查。品牌、协议键、翻译原文和第三方工具诊断不应机械翻译。
 
 ## GUI 验证
 

@@ -7,6 +7,7 @@
     "build": "dotnet build AntigravityManager.slnx",
     "test": "node --test engines/localization/tests/*.test.cjs",
     "test:manager": "dotnet run --project tests/AntigravityManager.Checks",
+    "check:guidelines": "node tools/verification/check-guidelines.cjs",
     "localization:build": "node engines/localization/scripts/build.cjs",
     "localization:inspect": "node engines/localization/cli.cjs inspect",
     "localization:install": "node engines/localization/cli.cjs install",

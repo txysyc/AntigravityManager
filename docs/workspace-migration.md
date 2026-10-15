@@ -15,7 +15,7 @@
 | 旧 `package.json` | `engines/localization/package.json`，保留补丁版本 0.4.1 |
 | 旧 `docs/architecture.md` | `docs/reports/reverse-engineering-2.23.0.md`，保留历史记录 |
 
-根目录的新 `package.json` 属于管理器，版本为 0.1.0。`.slnx` 管理 C# 项目；`artifacts/` 统一存放发布、补丁、缓存和测试结果，Git 忽略。
+根目录的新 `package.json` 属于管理器，结构迁移时的初始版本为 0.1.0，当前版本以配置为准。`.slnx` 管理 C# 项目；`artifacts/` 统一存放发布、补丁、缓存和测试结果，Git 忽略。
 
 历史报告中的路径按当时工程记录保留，查找当前文件时参考上表；分析清单中的原始前端来源仍是 `analysis/embedded/`。
 
