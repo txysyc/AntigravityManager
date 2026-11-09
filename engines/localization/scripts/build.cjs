@@ -80,7 +80,8 @@ function buildPatch({ appDir, outputDirectory, backupPath, profile }) {
     const result = patchNativeSource(file, member.data.toString('utf8'));
     if (result.replacements.length !== nativeManifest[file].length) throw Error('原生文案锚点不匹配：' + file);
     const localePath = file.includes('/ideInstall/') ? '../locale.cjs' : './locale.cjs';
-    const setup = file === 'dist/main.js' ? 'require("./locale.cjs").setup();\n' : '';
+    const windowApi = profile.hubWindowApi ? '() => require("./utils.js")' : '';
+    const setup = file === 'dist/main.js' ? 'require("./locale.cjs").setup(' + windowApi + ');\n' : '';
     const conditional = '"use strict";\n' + setup + 'if (require(' + JSON.stringify(localePath) + ').startupLanguage === "zh-CN") {\n' + result.source + '\n} else {\n' + member.data.toString('utf8') + '\n}\n';
     new vm.Script(conditional, { filename: file });
     replacements.set(file, Buffer.from(conditional));

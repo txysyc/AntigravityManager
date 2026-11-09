@@ -31,9 +31,11 @@ function installChineseUI(dictionary, bridge, config) {
     '[data-testid="user-input-step"]', '[data-testid="planner-response-text"]',
     '[data-testid="pending-user-messages"]', '[data-testid="markdown-frontmatter"]',
     '[data-testid*="conversation-title"]', '[data-testid*="workspace-name"]',
-    '[data-testid^="conversation-row-"] span.truncate.text-left.w-full.text-sm',
-    '[data-testid="project-header"] span.truncate.text-sm',
+    '[data-testid^="conversation-row-"] span.truncate.text-left.w-full',
+    '[data-testid^="conversation-row-"] > a.absolute.inset-0',
+    '[data-testid="project-header"] span.truncate.text-sm', '[data-testid="project-header"] span.truncate.text-base',
     '[data-testid="project-selector-item"] > span.truncate',
+    '[data-testid^="project-selector-machine-trigger-"] span.truncate',
     '[data-testid="settings-nav-item-Account"]',
     '[data-testid="plugin-suggested-prompt-row"]', '[data-testid="file-title-name"]',
     '[data-testid="permission-app-header"]', '[data-testid="hover-card-title"]',
@@ -48,6 +50,9 @@ function installChineseUI(dictionary, bridge, config) {
     '[data-testid="delete-sidecar-modal"] strong',
     '[data-testid="model-selector-effort-group"]',
     '[data-testid="model-selector-item"] span.truncate',
+    '[data-testid="browser-autocomplete-option"] span.truncate',
+    '[data-testid^="new-tab-result-"] span.truncate',
+    '[data-testid="automation-instructions-markdown"]', '[data-testid="automation-run"] span.truncate',
     'button.-ml-1.min-w-0 > span.min-w-0.truncate.whitespace-nowrap',
     '.font-mono'
   ].join(',');
@@ -64,6 +69,9 @@ function installChineseUI(dictionary, bridge, config) {
     '[data-testid="cloud-trigger-editor-panel"]',
     '[data-testid="side-question-history-counter"]',
     '[data-testid^="onboarding-capability-"]',
+    '[data-testid="post-onboarding-welcome-modal"]', '[data-testid="webview-downloads-empty"]',
+    '[data-testid="automation-runs"] p.m-0.px-3.py-2\\.5',
+    '[data-testid="automation-instructions"] p.m-0.text-muted-foreground',
     '.max-w-2xl.mx-auto',
     '.max-w-2xl.mx-auto div.text-sm.text-muted-foreground.bg-transparent',
     '.max-w-2xl.mx-auto .flex.items-center.gap-1.text-xs.text-muted-foreground',
@@ -104,7 +112,11 @@ function installChineseUI(dictionary, bridge, config) {
   function translate(value, element, attributeName) {
     const key = value.trim();
     let next;
-    if (key === 'Type' && element.closest('[data-testid="plan-command-fyi-alert"]')) next = '输入';
+    const greetingName = !attributeName && element.closest('[data-testid="home-greeting"] h1')
+      ? /^Hi (\S+), what can we get done today\?$/.exec(key)?.[1] : undefined;
+    if (greetingName) next = `你好，${greetingName}，今天想做些什么？`;
+    else if (key === 'Press' && element.closest('[data-testid="post-onboarding-welcome-tip"]')) next = '按';
+    else if (key === 'Type' && element.closest('[data-testid="plan-command-fyi-alert"]')) next = '输入';
     else if (historyNotice(element) && key === '(') next = '（';
     else if (historyNotice(element) && key === '.') next = '。';
     else if (Object.prototype.hasOwnProperty.call(dictionary, key)) next = dictionary[key];

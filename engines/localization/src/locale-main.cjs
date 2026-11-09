@@ -14,6 +14,7 @@ function getLanguage() {
 const startupLanguage = getLanguage();
 let installed = false;
 let originalSetMenu;
+let getHubWindowApi;
 function refreshMenu(menu = Menu.getApplicationMenu()) {
   if (!menu) return;
   let entry = menu.items.find(item => item.id === 'antigravity-language');
@@ -39,19 +40,28 @@ function setLanguage(language) {
   fs.writeFileSync(temporary, JSON.stringify({ language }, null, 2));
   try { fs.renameSync(temporary, configPath); }
   catch (error) { fs.unlinkSync(temporary); throw error; }
-  for (const window of BrowserWindow.getAllWindows()) window.webContents.send('antigravity-locale:changed', language);
+  const hub = getHubWindowApi?.();
+  const receivers = hub ? hub.getHubWindows().map(window => hub.getHubWebContents(window)) : BrowserWindow.getAllWindows().map(window => window.webContents);
+  for (const contents of new Set(receivers)) {
+    if (contents && !contents.isDestroyed?.()) contents.send('antigravity-locale:changed', language);
+  }
   refreshMenu();
   return language;
 }
 function authorize(event) {
-  const window = BrowserWindow.fromWebContents(event.sender);
-  if (!window || event.senderFrame !== event.sender.mainFrame) throw Error('Language setting is only available to the main application window');
+  const hub = getHubWindowApi?.();
+  const window = hub ? hub.resolveHubWindowFromWebContents(event.sender) : BrowserWindow.fromWebContents(event.sender);
+  // 浏览器访客也可能关联到同一宿主；语言设置仅信任宿主的主界面内容。
+  if (!window || (hub && hub.getHubWebContents(window) !== event.sender) || event.senderFrame !== event.sender.mainFrame) {
+    throw Error('Language setting is only available to the main application window');
+  }
   const url = new URL(event.senderFrame.url);
   if (!['http:', 'https:'].includes(url.protocol) || !['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)) throw Error('Invalid language setting origin');
 }
-function setup() {
+function setup(windowApi) {
   if (installed) return;
   installed = true;
+  getHubWindowApi = windowApi;
   ipcMain.handle('antigravity-locale:get', event => { authorize(event); return getLanguage(); });
   ipcMain.handle('antigravity-locale:set', (event, language) => { authorize(event); return setLanguage(language); });
   originalSetMenu = Menu.setApplicationMenu.bind(Menu);

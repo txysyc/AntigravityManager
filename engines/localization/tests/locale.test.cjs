@@ -49,6 +49,27 @@ test('foreign origins, guest contents and child frames cannot change language', 
   assert.throws(() => set({ sender: f.sender, senderFrame: f.frame }, 'zh-CN'), /origin/);
   assert.equal(f.locale.getLanguage(), 'en');
 });
+test('WebContentsView language changes use the trusted Hub content only', () => {
+  const f = fixture();
+  const hub = {}, guest = { mainFrame: f.frame };
+  const destroyed = { isDestroyed: () => true, send: () => assert.fail('已关闭窗口不应接收语言事件') };
+  const closedHub = {};
+  f.sender.send = (...args) => f.sent.push(args);
+  f.electron.BrowserWindow.fromWebContents = () => null;
+  f.locale.setup(() => ({
+    resolveHubWindowFromWebContents: contents => contents === f.sender || contents === guest ? hub : null,
+    getHubWebContents: window => window === hub ? f.sender : destroyed,
+    getHubWindows: () => [hub, hub, closedHub]
+  }));
+  const read = f.handlers.get('antigravity-locale:get');
+  const set = f.handlers.get('antigravity-locale:set');
+  const event = { sender: f.sender, senderFrame: f.frame };
+  assert.equal(read(event), 'zh-CN');
+  assert.throws(() => set({ sender: guest, senderFrame: f.frame }, 'en'), /main application/);
+  assert.equal(set(event, 'en'), 'en');
+  assert.equal(read(event), 'en');
+  assert.deepEqual(f.sent, [['antigravity-locale:changed', 'en']]);
+});
 test('packaged native module selects exact original English behavior or Chinese branch', async () => {
   const archive = readAsar(fs.readFileSync(path.join(__dirname, '../../../artifacts/fixtures/2.23.0/patched-0.4.1.asar')));
   const source = archive.files.get('dist/menu.js').data.toString();

@@ -23,12 +23,21 @@ function isolatedDirectory(value) {
 const portable = isolatedDirectory(option('portable', 'artifacts/adaptation/2.23.1/portable'));
 const output = isolatedDirectory(option('output', 'artifacts/adaptation/2.23.1/runtime'));
 const launcherPath = option('launcher');
+const wcv = process.argv.includes('--wcv');
+const checkModernUi = process.argv.includes('--check-modern-ui');
+const windowArguments = wcv ? ['--enable-wcv-browser'] : [];
 const home = path.join(output, 'home');
 const profile = path.join(output, 'profile');
 const asarPath = path.join(portable, 'resources/app.asar');
 const originalBytes = fs.readFileSync(asarPath);
 const archive = readAsar(originalBytes);
 const applicationVersion = JSON.parse(archive.files.get('package.json').data.toString()).version;
+if (process.platform === 'win32') {
+  const mainSource = archive.files.get('dist/main.js')?.data.toString() || '';
+  assert.equal(mainSource.split('/* isolated runtime: preserve protocol association */').length - 1, 2,
+    '先使用 prepare-runtime-asar.cjs 制作不会登记系统协议关联的运行样本');
+  assert.ok(!mainSource.includes('.app.setAsDefaultProtocolClient(PROTOCOL'), '隔离样本不得修改系统协议关联');
+}
 const constants = archive.files.get('dist/ideInstall/constants.js').data.toString();
 const wizardKey = constants.match(/exports\.WIZARD_SHOWN_KEY = '([^']+)'/)[1];
 for (const directory of [output, home, profile, path.join(home, 'AppData/Roaming'), path.join(home, 'AppData/Local')]) fs.mkdirSync(directory, { recursive: true });
@@ -55,7 +64,7 @@ async function launch(language) {
     await new Promise(resolve => reservation.close(resolve));
     const reportPath = path.join(output, 'launcher-' + language + '.json');
     const executablePath = path.join(portable, 'Antigravity.exe');
-    const child = spawn(path.resolve(launcherPath), ['--executable', executablePath, '--report', reportPath, '--', '--user-data-dir=' + profile, '--wsl-distro=', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=' + port, '--enable-automation', '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows'], { cwd: portable, env, windowsHide: true, stdio: 'ignore' });
+    const child = spawn(path.resolve(launcherPath), ['--executable', executablePath, '--report', reportPath, '--', '--user-data-dir=' + profile, '--wsl-distro=', ...windowArguments, '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=' + port, '--enable-automation', '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows'], { cwd: portable, env, windowsHide: true, stdio: 'ignore' });
     await new Promise((resolve, reject) => { child.once('error', reject); child.once('exit', code => code === 0 ? resolve() : reject(Error('启动器失败，退出码：' + code))); });
     const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
     assert.equal(report.action, 'started', '启动器必须创建隔离进程，不能复用真实实例');
@@ -68,6 +77,7 @@ async function launch(language) {
     const session = await browser.newBrowserCDPSession();
     const commandLine = await session.send('Browser.getBrowserCommandLine');
     assert.ok(commandLine.arguments.includes('--user-data-dir=' + profile), '调试端口必须属于测试用户目录');
+    assert.equal(commandLine.arguments.includes('--enable-wcv-browser'), wcv, '启动器必须透传窗口模式参数');
     fs.writeFileSync(path.join(output, 'command-line-' + language + '.json'), JSON.stringify(commandLine, null, 2) + '\n');
     return {
       report,
@@ -87,7 +97,7 @@ async function launch(language) {
   }
   return electron.launch({
     executablePath: path.join(portable, 'Antigravity.exe'),
-    args: ['--user-data-dir=' + profile, '--wsl-distro='],
+    args: ['--user-data-dir=' + profile, '--wsl-distro=', ...windowArguments],
     cwd: portable,
     env,
     timeout: 60000
@@ -101,6 +111,27 @@ async function readMenus(application) {
     }
     return items(Menu.getApplicationMenu());
   });
+}
+
+async function verifyModernUi(page) {
+  await page.evaluate(() => {
+    const sample = document.createElement('section');
+    sample.id = 'localization-scope-check';
+    sample.hidden = true;
+    sample.innerHTML = '<div data-testid="home-greeting"><h1>Hi Downloads, what can we get done today?</h1></div>' +
+      '<button>Downloads</button>' +
+      '<div data-testid="browser-autocomplete-option"><span class="truncate">Downloads</span></div>' +
+      '<div data-testid="conversation-row-sample"><span class="truncate text-left w-full">Downloads</span></div>' +
+      '<div data-testid="automation-run"><span class="truncate">Downloads</span></div>';
+    document.body.append(sample);
+  });
+  const sample = page.locator('#localization-scope-check');
+  await page.waitForFunction(() => document.querySelector('#localization-scope-check h1')?.textContent === '你好，Downloads，今天想做些什么？');
+  assert.equal(await sample.locator('button').textContent(), '下载内容');
+  assert.deepEqual(await sample.locator('span').allTextContents(), ['Downloads', 'Downloads', 'Downloads']);
+  await sample.locator('h1').evaluate(heading => { heading.firstChild.nodeValue = 'Hi Release, what can we get done today?'; });
+  await page.waitForFunction(() => document.querySelector('#localization-scope-check h1')?.textContent === '你好，Release，今天想做些什么？');
+  return sample;
 }
 
 async function verify(language) {
@@ -128,20 +159,36 @@ async function verify(language) {
     const mainAssetSha256 = sha(Buffer.from(mainAsset.text));
     const expectedAsset = fs.readdirSync(path.join(root, 'artifacts/adaptation', applicationVersion, 'embedded')).find(name => name.endsWith('-main.js'));
     assert.equal(mainAssetSha256, sha(fs.readFileSync(path.join(root, 'artifacts/adaptation', applicationVersion, 'embedded', expectedAsset))), '实际服务必须提供新版本原始前端资源');
-    const text = await page.locator('body').innerText();
     const dictionary = require('../../engines/localization/translations/zh-CN.json');
     const welcome = ['Build new features', 'Hand off a feature and come back to working code.', 'Debug and fix', 'Automatically reproduce bugs, trace causes, test fixes.', 'Research anything', 'Ask about your code or any topic, get clear answers.', 'Write and edit docs', 'Draft documents, emails, and notes that sound like you.'];
-    for (const key of welcome) assert.ok(text.includes(language === 'zh-CN' ? dictionary[key] : key), '欢迎页文案：' + key);
+    const introScreens = [
+      { id: 'welcome', keys: welcome },
+      { id: 'privacy', keys: ['Security Notice & Data Use', 'Get started'] },
+      { id: 'terms', keys: ['Terms of Service & Data Use', 'Terms and Privacy:'] }
+    ];
+    const expectedScreens = introScreens.map(screen => screen.keys.map(key => language === 'zh-CN' ? dictionary[key] : key));
+    await page.waitForFunction(screens => screens.some(keys => keys.every(key => document.body.innerText.includes(key))), expectedScreens);
+    const text = await page.locator('body').innerText();
+    const screen = introScreens[expectedScreens.findIndex(keys => keys.every(key => text.includes(key)))];
+    assert.ok(screen, '未找到已知的欢迎或数据使用提示页面');
     fs.writeFileSync(path.join(output, 'page-' + language + '.txt'), text);
     await page.screenshot({ path: path.join(output, 'product-' + language + '.png'), fullPage: true, animations: 'disabled', timeout: 30000 });
-    const evidence = { language, url: page.url(), state, menus, text, errors, mainAssetSha256 };
+    const evidence = { language, screen: screen.id, url: page.url(), state, menus, text, errors, mainAssetSha256 };
     if (language === 'zh-CN') {
+      const sample = checkModernUi ? await verifyModernUi(page) : null;
       await page.locator('#antigravity-language-switcher summary').click();
       await page.locator('#antigravity-language-switcher select').selectOption('en');
       await page.waitForFunction(() => document.documentElement.lang === 'en');
       assert.equal(JSON.parse(fs.readFileSync(path.join(profile, 'ui-language.json'))).language, 'en');
       evidence.switchedEnglishText = await page.locator('body').innerText();
-      for (const key of welcome) assert.ok(evidence.switchedEnglishText.includes(key), '切回原文：' + key);
+      for (const key of screen.keys) assert.ok(evidence.switchedEnglishText.includes(key), '切回原文：' + key);
+      if (sample) {
+        assert.equal(await sample.locator('h1').textContent(), 'Hi Release, what can we get done today?');
+        assert.equal(await sample.locator('button').textContent(), 'Downloads');
+        assert.deepEqual(await sample.locator('span').allTextContents(), ['Downloads', 'Downloads', 'Downloads']);
+        await sample.evaluate(element => element.remove());
+        evidence.modernUiScopeVerified = true;
+      }
       await page.locator('#antigravity-language-switcher summary').click();
       await page.screenshot({ path: path.join(output, 'product-switched-en.png'), fullPage: true, animations: 'disabled', timeout: 30000 });
     }
@@ -171,6 +218,7 @@ async function main() {
     success: true,
     scope: '真实 Electron 和语言服务页面；全新隔离用户目录，未登录',
     applicationVersion,
+    wcvRequested: wcv,
     asarSha256: sha(originalBytes),
     chinese,
     english,

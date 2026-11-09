@@ -82,6 +82,35 @@ test('another installation record cannot change a historical patch version', () 
   } finally { fs.rmSync(f.directory, { recursive: true, force: true }); }
 });
 
+test('2.29.0 requires its matching language server and restores the verified original', () => {
+  const f = fixture('2.29.0');
+  try {
+    const fixtureRoot = path.resolve(__dirname, '../../../artifacts/fixtures/2.29.0');
+    const profile = require('../profiles/2.29.0.json');
+    fs.copyFileSync(path.join(fixtureRoot, 'app.asar'), f.file);
+    assert.equal(inspect(f.app, f.data).canInstall, false);
+    assert.throws(() => mutate('install', f.app, f.data, () => {}), /尚未适配/);
+    assert.equal(sha(fs.readFileSync(f.file)), profile.originalSha256);
+    const server = path.join(f.app, 'resources/bin/language_server.exe');
+    fs.mkdirSync(path.dirname(server), { recursive: true });
+    fs.copyFileSync(path.join(fixtureRoot, 'language_server.exe'), server);
+    assert.equal(inspect(f.app, f.data).canInstall, true);
+    const installed = mutate('install', f.app, f.data, () => {});
+    assert.equal(installed.patchVersion, require('../package.json').version);
+    assert.equal(installed.canRestore, true);
+    fs.unlinkSync(path.join(f.data, 'localization/installed.json'));
+    assert.equal(inspect(f.app, f.data).patchVersion, require('../package.json').version);
+    assert.equal(mutate('restore', f.app, f.data, () => {}).status, 'unpatched');
+    assert.equal(sha(fs.readFileSync(f.file)), profile.originalSha256);
+    assert.equal(sha(fs.readFileSync(server)), profile.languageServerSha256);
+  } finally {
+    const testRoot = fs.realpathSync(path.resolve(__dirname, '../../../artifacts/tests'));
+    const target = fs.realpathSync(f.directory);
+    assert.ok(target.startsWith(testRoot + path.sep));
+    fs.rmSync(target, { recursive: true, force: true });
+  }
+});
+
 test('application updates retain both original backups and refuse unknown language servers without blocking restore', () => {
   const f = fixture();
   try {

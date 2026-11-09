@@ -6,12 +6,13 @@
 
 ## 准备汉化测试资料
 
-完整引擎测试需要 2.23.0 原始资源、真实历史 0.4.1 补丁，以及 2.23.1 的完整原版资源。这些第三方程序文件不随 Git 分发。输入必须匹配已验证指纹：
+完整引擎测试需要 2.23.0 原始资源、真实历史 0.4.1 补丁，以及 2.23.1、2.29.0 的完整原版资源。这些第三方程序文件不随 Git 分发。输入必须匹配已验证指纹：
 
 ```powershell
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\supported\app.asar'
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\0.4.1\app.asar'
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\2.23.1\resources\app.asar'
+node tools/verification/prepare-fixtures.cjs 'C:\path\to\2.29.0\resources\app.asar'
 ```
 
 新版输入需保留 `resources/bin/language_server.exe` 的相对位置。脚本校验 ASAR，按版本写入 `artifacts/fixtures/<应用版本>/`；新版还校验并复制语言服务。历史样本保存为 `2.23.0/patched-0.4.1.asar`，不能将新产物改名冒充旧版。
@@ -89,12 +90,14 @@ AST 扫描依赖外部 Babel parser，也可通过 `BABEL_PARSER_MODULE` 指定�
 
 ### 真实语言服务
 
-真实页面验证必须同时隔离 `USERPROFILE`、`HOME`、`APPDATA`、`LOCALAPPDATA` 和 `--user-data-dir`，因为语言服务还会使用用户主目录下的 `.gemini`。需要代理时沿用已有启动器及回环排除规则，不修改系统代理。
+真实页面验证必须同时隔离 `USERPROFILE`、`HOME`、`APPDATA`、`LOCALAPPDATA` 和 `--user-data-dir`，因为语言服务还会使用用户主目录下的 `.gemini`。Windows 另用 `prepare-runtime-asar.cjs` 生成只去掉协议注册调用的测试 ASAR，避免便携副本接管 `antigravity://`。需要代理时沿用已有启动器及回环排除规则，不修改系统代理。
 
 ```powershell
-node tools/verification/verify-version-runtime.cjs --launcher 'C:\path\to\AntigravityLauncher.exe' --output artifacts/adaptation/2.23.1/runtime-final
+node tools/verification/prepare-runtime-asar.cjs artifacts/localization/2.29.0/0.2.0/app.asar artifacts/adaptation/2.29.0/runtime-sample.asar
+Copy-Item -LiteralPath artifacts/adaptation/2.29.0/runtime-sample.asar -Destination artifacts/adaptation/2.29.0/portable/resources/app.asar
+node tools/verification/verify-version-runtime.cjs --launcher 'C:\path\to\AntigravityLauncher.exe' --portable artifacts/adaptation/2.29.0/portable --output artifacts/adaptation/2.29.0/runtime-final
 ```
 
-该入口验证 2.23.1 未登录欢迎页、资源指纹和语言持久化；运行前需将候选放入独立的 `artifacts/adaptation/2.23.1/portable/resources/app.asar` 并准备 `embedded/`。启动器需支持 `--executable`、`--report` 与 `--` 参数透传。
+该入口验证未登录欢迎页、资源指纹和语言持久化；运行前准备对应版本的 `portable/` 与 `embedded/`。测试 ASAR 仅用于隔离运行，不登记为兼容补丁，不可安装到真实应用。启动器需支持 `--executable`、`--report` 与 `--` 参数透传。适配包含可选 WebContentsView 模式时，另传 `--wcv` 和新的 `--output` 路径验证该模式。`--check-modern-ui` 额外在隔离页面插入样本，核对问候节点复用、浏览器建议及自动化摘要保护，以及切换英文后恢复原文。
 
 验证只写工作区 `artifacts/` 或 `output/`，不使用真实用户目录。启动器模式不读取原生菜单；登录后页面和系统集成的未覆盖范围见 [历史报告](reports/README.md)。
