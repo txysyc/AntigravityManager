@@ -70,7 +70,7 @@ test('WebContentsView language changes use the trusted Hub content only', () => 
   assert.equal(read(event), 'en');
   assert.deepEqual(f.sent, [['antigravity-locale:changed', 'en']]);
 });
-test('packaged native module selects exact original English behavior or Chinese branch', async () => {
+test('fixture: packaged native module selects exact original English behavior or Chinese branch', async () => {
   const archive = readAsar(fs.readFileSync(path.join(__dirname, '../../../artifacts/fixtures/2.23.0/patched-0.4.1.asar')));
   const source = archive.files.get('dist/menu.js').data.toString();
   for (const language of ['en', 'zh-CN']) {

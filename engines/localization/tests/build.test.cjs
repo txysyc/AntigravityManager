@@ -12,21 +12,27 @@ const oldOriginal = path.join(fixtureRoot, 'app.asar');
 const oldPatch = path.resolve(__dirname, '../../../artifacts/fixtures/2.23.0/patched-0.4.1.asar');
 const testRoot = path.resolve(__dirname, '../../../artifacts/tests');
 
-function fixture(callback) {
+function withTempDirectory(callback) {
   fs.mkdirSync(testRoot, { recursive: true });
   const directory = fs.mkdtempSync(path.join(testRoot, 'release-build-'));
-  const appDir = path.join(directory, 'App 含空格'), outputDirectory = path.join(directory, 'release');
-  fs.mkdirSync(path.join(appDir, 'resources'), { recursive: true });
-  const file = path.join(appDir, 'resources/app.asar');
-  fs.copyFileSync(oldOriginal, file);
-  try { callback({ directory, appDir, outputDirectory, file }); } finally {
+  try { callback(directory); } finally {
     assert.ok(path.resolve(directory).startsWith(testRoot + path.sep));
     fs.rmSync(directory, { recursive: true, force: true });
   }
 }
 
+function fixture(callback) {
+  withTempDirectory(directory => {
+    const appDir = path.join(directory, 'App 含空格'), outputDirectory = path.join(directory, 'release');
+    fs.mkdirSync(path.join(appDir, 'resources'), { recursive: true });
+    const file = path.join(appDir, 'resources/app.asar');
+    fs.copyFileSync(oldOriginal, file);
+    callback({ directory, appDir, outputDirectory, file });
+  });
+}
+
 test('profile ordering follows numeric versions and release directories isolate application and patch versions', () => {
-  fixture(({ directory }) => {
+  withTempDirectory(directory => {
     const profileDirectory = path.join(directory, 'profiles');
     fs.mkdirSync(profileDirectory);
     for (const version of ['2.9.0', '2.10.0', '2.23.1', '2.23.1-beta.2', '2.23.1-beta.10']) {
@@ -40,7 +46,7 @@ test('profile ordering follows numeric versions and release directories isolate 
   });
 });
 
-test('build automatically recognizes the verified original and preserves English and untouched source bytes', () => {
+test('fixture: build automatically recognizes the verified original and preserves English and untouched source bytes', () => {
   fixture(({ appDir, outputDirectory, file }) => {
     const before = fs.readFileSync(file), original = readAsar(before);
     assert.equal(sha(before), oldProfile.originalSha256);
@@ -65,7 +71,7 @@ test('build automatically recognizes the verified original and preserves English
   });
 });
 
-test('unknown fingerprints fail without changing source or creating a release', () => {
+test('fixture: unknown fingerprints fail without changing source or creating a release', () => {
   fixture(({ appDir, outputDirectory, file }) => {
     const archive = readAsar(fs.readFileSync(file));
     const packageInfo = JSON.parse(archive.files.get('package.json').data);
@@ -77,7 +83,7 @@ test('unknown fingerprints fail without changing source or creating a release', 
   });
 });
 
-test('known historical patches rebuild only from an intact matching original backup', () => {
+test('fixture: known historical patches rebuild only from an intact matching original backup', () => {
   fixture(({ directory, appDir, outputDirectory, file }) => {
     const historical = fs.readFileSync(oldPatch), backupPath = path.join(directory, 'original.asar');
     assert.equal(sha(historical), oldProfile.patchedSha256);
@@ -92,7 +98,7 @@ test('known historical patches rebuild only from an intact matching original bac
   });
 });
 
-test('release conflicts and incomplete output cannot overwrite an existing archive or manifest', () => {
+test('fixture: release conflicts and incomplete output cannot overwrite an existing archive or manifest', () => {
   fixture(({ directory, appDir, outputDirectory }) => {
     buildPatch({ appDir, outputDirectory });
     const manifestPath = path.join(outputDirectory, 'manifest.json');
@@ -117,7 +123,7 @@ test('release conflicts and incomplete output cannot overwrite an existing archi
   });
 });
 
-test('verified application releases build independently and require their matching language server', () => {
+test('fixture: verified application releases build independently and require their matching language server', () => {
   fixture(({ directory, appDir, outputDirectory }) => {
     const profile = loadProfiles().find(candidate => candidate.version === '2.23.1');
     assert.ok(profile, '新版兼容性配置必须在独立验证后提供');

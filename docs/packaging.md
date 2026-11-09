@@ -62,36 +62,21 @@ AntigravityManager/
 
 ## 制作 ZIP
 
-先按 [版本与发行规范](../spec/releases.md) 定版。以下从根 `package.json` 读取管理器版本，以此命名目录和附件，不手写第二套版本号。只为尚未公开发行的新版本制作发行包。
+先按 [版本与发行规范](../spec/releases.md) 定版。用 PowerShell 7 在仓库根目录构建本地发行包：
 
 ```powershell
-$managerVersion = (Get-Content -LiteralPath package.json -Raw | ConvertFrom-Json).version
-$publishDirectory = "artifacts/app/AntigravityManager-$managerVersion"
-$archivePath = "artifacts/releases/AntigravityManager-$managerVersion-win-x64.zip"
-if (Test-Path -LiteralPath $archivePath) { throw '该发行包已存在，不能覆盖。' }
-if (Test-Path -LiteralPath $publishDirectory) { throw '发布目录已存在，请使用空的新目录，或先校验已有产物。' }
-./scripts/publish.ps1 -OutputDirectory $publishDirectory
-New-Item -ItemType Directory -Path artifacts/releases -Force | Out-Null
-Compress-Archive -LiteralPath $publishDirectory -DestinationPath $archivePath -CompressionLevel Optimal
+pwsh -File scripts/package.ps1
 ```
 
-文件名包含管理器版本和目标平台。ZIP 内保留一个顶层程序目录，包含全部依赖及许可文件；不打包管理器用户数据、原始备份、开发缓存或本地验证结果。
+脚本调用 `publish.ps1`，从版本配置生成 `artifacts/releases/AntigravityManager-<版本>-win-x64.zip` 与同名 `.zip.sha256`。可用 `-OutputDirectory` 指定其他输出位置。ZIP 保留一个顶层程序目录，包含全部依赖及许可文件；脚本核对可执行文件版本，以及 ZIP 和暂存发布目录中的文件路径、数量及内容。不打包管理器用户数据、原始备份、开发缓存或本地验证结果。
 
-已有产物经核对与本次待发行版本及提交一致后，可以直接压缩，不需要再次编译。在同一 PowerShell 会话中生成 SHA-256 校验文件：
-
-```powershell
-$zip = Get-Item -LiteralPath $archivePath
-$hash = (Get-FileHash -LiteralPath $zip.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-[IO.File]::WriteAllText($zip.FullName + '.sha256', $hash + '  ' + $zip.Name + "`n", [Text.UTF8Encoding]::new($false))
-```
-
-正式分发前校验 ZIP 条目、数量和文件内容与源发布目录一致。已有正式归档不覆盖；原始备份保留规则见 [汉化规范](../spec/modules/localization.md)。
+本地脚本只生成文件，不上传。已有归档和校验文件不会覆盖；`staging-*` 中的程序目录可在验证后清理。原始备份保留规则见 [汉化规范](../spec/modules/localization.md)。
 
 ## GitHub 发行
 
-1. 完成相关检查并提交源码，按 [版本与发行规范](../spec/releases.md) 创建对应组件的标签。
-2. 上传标签，在 GitHub 使用 `manager-v<版本>` 创建管理器 Release，标题为 `Antigravity Manager v<版本>`。
-3. 上传 ZIP 和同名 `.zip.sha256`，在说明中另列内置补丁版本与已验证的目标应用版本。
+1. 完成相关本地验证。按[发行说明格式](../spec/releases.md#发行说明)编辑 [CHANGELOG.md](../CHANGELOG.md) 中的当前版本章节，例如 `## 0.2.0`。运行 `node tools/verification/release-notes.cjs` 可在终端预览正文；`npm run check:guidelines` 同样会检查章节与兼容版本。确认后再提交源码。
+2. 确认待发行提交包含两个工作流和打包脚本，按 [版本与发行规范](../spec/releases.md) 创建带附注的 `manager-v<版本>` 标签，然后单独推送该标签。早于工作流的标签不会触发自动发行。
+3. [发行工作流](../.github/workflows/release.yml) 从标签检出源码，复用测试工作流；通过后核对标签版本和发行说明，构建 ZIP 与 SHA-256 文件，再自动创建 `Antigravity Manager v<版本>` Release。发布正文使用更新记录中的对应章节。`localization-v<版本>` 不触发管理器发行。
 
 GitHub 自动提供的源码归档不包含编译程序。运行文件通过 Release 附件分发，`artifacts/` 始终被 Git 忽略；不要把程序二进制或测试原始资源提交进仓库。
 

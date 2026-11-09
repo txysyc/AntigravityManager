@@ -1,0 +1,40 @@
+name: 测试
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Windows 构建与检查
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - name: 检出源码
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: 配置 .NET
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: 配置 Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.x'
+          package-manager-cache: false
+      - name: 检查项目规范
+        run: npm run check:guidelines
+      - name: 构建管理器
+        run: npm run build
+      - name: 测试汉化引擎（无第三方程序样本）
+        run: npm run test:ci
+      - name: 运行管理器集成检查
+        run: npm run test:manager

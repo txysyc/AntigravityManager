@@ -1,0 +1,71 @@
+name: 发行管理器
+
+on:
+  push:
+    tags:
+      - 'manager-v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: manager-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    if: github.event.created && !github.event.deleted
+    uses: ./.github/workflows/test.yml
+
+  release:
+    name: 打包并创建 GitHub Release
+    needs: test
+    runs-on: windows-2025
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - name: 检出标签源码
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: 配置 .NET
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: 配置 Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.x'
+          architecture: x64
+          package-manager-cache: false
+      - name: 核对标签并生成发行说明
+        id: metadata
+        shell: pwsh
+        run: |
+          $version = (Get-Content -LiteralPath package.json -Raw | ConvertFrom-Json).version
+          if ($env:GITHUB_REF_NAME -cne "manager-v$version") {
+            throw "标签 $env:GITHUB_REF_NAME 与管理器版本 $version 不一致。"
+          }
+          $commit = git rev-parse HEAD
+          if ($LASTEXITCODE -ne 0) { throw '无法确定发行提交。' }
+          $blob = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/blob/$commit"
+          $notesPath = Join-Path $env:RUNNER_TEMP 'antigravity-release-notes.md'
+          node tools/verification/release-notes.cjs $notesPath $blob
+          if ($LASTEXITCODE -ne 0) { throw '发行说明检查失败。' }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "notes=$notesPath" >> $env:GITHUB_OUTPUT
+      - name: 构建并校验 Windows x64 ZIP
+        shell: pwsh
+        run: ./scripts/package.ps1
+      - name: 创建发行并上传附件
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.metadata.outputs.version }}
+          RELEASE_NOTES: ${{ steps.metadata.outputs.notes }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $version = $env:RELEASE_VERSION
+          $archive = "artifacts/releases/AntigravityManager-$version-win-x64.zip"
+          gh release create $tag $archive "$archive.sha256" --repo $env:GITHUB_REPOSITORY --verify-tag --title "Antigravity Manager v$version" --notes-file $env:RELEASE_NOTES

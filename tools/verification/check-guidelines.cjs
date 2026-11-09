@@ -2,6 +2,7 @@
 // 只检查可机械验证的约定，规范是否符合需求仍需人工或协作者审查。
 const fs = require('node:fs');
 const path = require('node:path');
+const { readReleaseNotes } = require('./release-notes.cjs');
 const root = path.resolve(__dirname, '../..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const failures = [];
@@ -41,6 +42,12 @@ check(read('LICENSE').startsWith('MIT License\n') && /Copyright \(c\) \d{4} \S/.
 check(read('Directory.Build.props').includes('<PackageLicenseExpression>MIT</PackageLicenseExpression>'), 'C# 项目应同步声明 MIT 许可');
 const configured = read('Directory.Build.props').match(/<Version>([^<]+)<\/Version>/)?.[1];
 check(manager.version === configured, '管理器的 package.json 与 Directory.Build.props 版本不一致');
+try {
+  readReleaseNotes(root);
+  check(true);
+} catch (error) {
+  check(false, error.message);
+}
 for (const file of files('src/AntigravityManager.Desktop', '.xaml')) {
   for (const match of read(file).matchAll(/\b(?:Text|Content|Header|Title|ToolTip)="([A-Za-z][A-Za-z0-9 .&/+\-]{2,})"/g)) {
     check(/^(?:Antigravity(?: Manager)?|MANAGER)$/.test(match[1]), `${file} 存在待核对的英文界面文案：${match[1]}`);

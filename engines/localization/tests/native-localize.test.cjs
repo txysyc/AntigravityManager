@@ -7,7 +7,7 @@ const vm = require('node:vm');
 const { patchNativeSource, nativeManifest } = require('../src/native-localize.cjs');
 const originals = path.join(__dirname, '..', '..', '..', 'analysis', 'original');
 
-test('verified native fixtures retain valid JavaScript and all display anchors match', () => {
+test('fixture: verified native fixtures retain valid JavaScript and all display anchors match', () => {
   for (const [file, anchors] of Object.entries(nativeManifest)) {
     if (file.includes('/ideInstall/')) continue;
     const source = fs.readFileSync(path.join(originals, path.basename(file)), 'utf8');
@@ -18,7 +18,7 @@ test('verified native fixtures retain valid JavaScript and all display anchors m
   }
 });
 
-test('updater action keys, menu lookup names, and renderer/user context labels survive', () => {
+test('fixture: updater action keys, menu lookup names, and renderer/user context labels survive', () => {
   const updater = patchNativeSource('dist/updater.js', fs.readFileSync(path.join(originals, 'updater.js'), 'utf8')).source;
   assert.ok(updater.includes('MenuUpdateStep["CheckForUpdates"] = "Check for Updates"'));
   assert.ok(updater.includes('[MenuUpdateStep.RestartToUpdate]: () => quitAndInstall()'));
@@ -28,7 +28,7 @@ test('updater action keys, menu lookup names, and renderer/user context labels s
   assert.ok(context.includes("ipcMain.handle('dialog:open-workspace'"));
 });
 
-test('translated File menu still accepts delayed WSL items and menu callbacks work', async () => {
+test('fixture: translated File menu still accepts delayed WSL items and menu callbacks work', async () => {
   const source = fs.readFileSync(path.join(originals, 'menu.js'), 'utf8');
   const submenu = () => ({ items: [], insert(i, item) { this.items.splice(i, 0, item); } });
   const file = { label: 'File', submenu: submenu() };

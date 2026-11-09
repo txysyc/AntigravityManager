@@ -53,6 +53,8 @@ dotnet run --project tests/AntigravityManager.Checks -- 'C:\path\to\antigravity'
 
 引擎使用 `node:test`，C# 使用轻量控制台检查程序，没有独立覆盖率百分比门槛。规范检查不能代替实现与 spec 的语义核对。
 
+[GitHub Actions 测试工作流](../.github/workflows/test.yml) 在推送到 `main`、向 `main` 提交 PR 时运行，也可手动启动。它检查规范、构建管理器、运行 C# 集成检查，以及通过 `npm run test:ci` 运行不需要第三方原始资源的引擎测试。依赖已验证原版或历史补丁的用例以 `fixture:` 命名；这些用例仍由本地 `npm test` 完整执行。发行工作流复用同一套 CI 检查；涉及汉化适配时，打标签前仍应完成本地完整测试和相应的隔离验证。
+
 ## 管理器 GUI
 
 开发入口使用独立数据目录，自动遍历三个主页面、汉化模块四个页签及明暗主题，生成 PNG 后退出：

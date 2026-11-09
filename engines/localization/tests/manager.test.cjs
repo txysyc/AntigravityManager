@@ -40,7 +40,7 @@ test('replacement refuses concurrent application updates and removes its tempora
     assert.equal(fs.existsSync(f.file + '.zh-manager-new'), false);
   } finally { fs.rmSync(f.directory, { recursive: true, force: true }); }
 });
-test('restore rejects damaged backups and keeps a known patch unchanged', () => {
+test('fixture: restore rejects damaged backups and keeps a known patch unchanged', () => {
   const f = fixture();
   try {
     const patch = fs.readFileSync(path.resolve(__dirname, '../../../artifacts/fixtures/2.23.0/patched-0.4.1.asar'));
@@ -52,7 +52,7 @@ test('restore rejects damaged backups and keeps a known patch unchanged', () => 
   } finally { fs.rmSync(f.directory, { recursive: true, force: true }); }
 });
 
-test('verified release installs, survives repeat installation, and restores from external versioned backup', () => {
+test('fixture: verified release installs, survives repeat installation, and restores from external versioned backup', () => {
   const f = fixture();
   try {
     const original = fs.readFileSync(path.resolve(__dirname, '../../../artifacts/fixtures/app.asar'));
@@ -71,7 +71,7 @@ test('verified release installs, survives repeat installation, and restores from
   } finally { fs.rmSync(f.directory, { recursive: true, force: true }); }
 });
 
-test('another installation record cannot change a historical patch version', () => {
+test('fixture: another installation record cannot change a historical patch version', () => {
   const f = fixture();
   try {
     fs.copyFileSync(path.resolve(__dirname, '../../../artifacts/fixtures/2.23.0/patched-0.4.1.asar'), f.file);
@@ -82,7 +82,7 @@ test('another installation record cannot change a historical patch version', () 
   } finally { fs.rmSync(f.directory, { recursive: true, force: true }); }
 });
 
-test('2.29.0 requires its matching language server and restores the verified original', () => {
+test('fixture: 2.29.0 requires its matching language server and restores the verified original', () => {
   const f = fixture('2.29.0');
   try {
     const fixtureRoot = path.resolve(__dirname, '../../../artifacts/fixtures/2.29.0');
@@ -111,7 +111,7 @@ test('2.29.0 requires its matching language server and restores the verified ori
   }
 });
 
-test('application updates retain both original backups and refuse unknown language servers without blocking restore', () => {
+test('fixture: application updates retain both original backups and refuse unknown language servers without blocking restore', () => {
   const f = fixture();
   try {
     const oldProfile = require('../profiles/2.23.0.json'), newProfile = require('../profiles/2.23.1.json');

@@ -26,9 +26,11 @@
 npm run build           # 构建解决方案
 ./scripts/run.ps1       # 启动桌面管理器
 npm test                # 执行引擎测试
+npm run test:ci         # 执行不依赖第三方程序样本的引擎测试
 npm run test:manager    # 执行 C# 集成检查
 npm run check:guidelines # 检查规范链接、版本与部分中文提示
 ./scripts/publish.ps1   # 发布 Windows x64 自包含程序目录
+pwsh -File scripts/package.ps1 # 生成并校验发行 ZIP 与 SHA-256 文件
 ```
 
 完整引擎测试依赖已验证的原始资源及已构建补丁，准备步骤见 `docs/testing.md`；构建入口见 `docs/development.md`，发行与 ZIP 分发见 `docs/packaging.md`。
