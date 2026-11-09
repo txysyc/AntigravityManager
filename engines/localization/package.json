@@ -1,6 +1,6 @@
 {
   "name": "antigravity-zh-cn-patch",
-  "version": "0.5.1",
+  "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "description": "Reversible Chinese UI patch for verified Google Antigravity versions",

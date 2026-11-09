@@ -62,21 +62,25 @@ AntigravityManager/
 
 ## 制作 ZIP
 
-已有完整发布目录可以直接压缩，不需要再次编译。以下以 0.1.3 的带版本目录为例；如果尚未生成，先运行 `./scripts/publish.ps1 -OutputDirectory artifacts/app/AntigravityManager-0.1.3`：
+先按 [版本与发行规范](../spec/releases.md) 定版。以下从根 `package.json` 读取管理器版本，以此命名目录和附件，不手写第二套版本号。只为尚未公开发行的新版本制作发行包。
 
 ```powershell
+$managerVersion = (Get-Content -LiteralPath package.json -Raw | ConvertFrom-Json).version
+$publishDirectory = "artifacts/app/AntigravityManager-$managerVersion"
+$archivePath = "artifacts/releases/AntigravityManager-$managerVersion-win-x64.zip"
+if (Test-Path -LiteralPath $archivePath) { throw '该发行包已存在，不能覆盖。' }
+if (Test-Path -LiteralPath $publishDirectory) { throw '发布目录已存在，请使用空的新目录，或先校验已有产物。' }
+./scripts/publish.ps1 -OutputDirectory $publishDirectory
 New-Item -ItemType Directory -Path artifacts/releases -Force | Out-Null
-Compress-Archive -LiteralPath artifacts/app/AntigravityManager-0.1.3 `
-  -DestinationPath artifacts/releases/AntigravityManager-0.1.3-win-x64.zip `
-  -CompressionLevel Optimal
+Compress-Archive -LiteralPath $publishDirectory -DestinationPath $archivePath -CompressionLevel Optimal
 ```
 
 文件名包含管理器版本和目标平台。ZIP 内保留一个顶层程序目录，包含全部依赖及许可文件；不打包管理器用户数据、原始备份、开发缓存或本地验证结果。
 
-生成 SHA-256 校验文件：
+已有产物经核对与本次待发行版本及提交一致后，可以直接压缩，不需要再次编译。在同一 PowerShell 会话中生成 SHA-256 校验文件：
 
 ```powershell
-$zip = Get-Item artifacts/releases/AntigravityManager-0.1.3-win-x64.zip
+$zip = Get-Item -LiteralPath $archivePath
 $hash = (Get-FileHash -LiteralPath $zip.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
 [IO.File]::WriteAllText($zip.FullName + '.sha256', $hash + '  ' + $zip.Name + "`n", [Text.UTF8Encoding]::new($false))
 ```
@@ -85,10 +89,10 @@ $hash = (Get-FileHash -LiteralPath $zip.FullName -Algorithm SHA256).Hash.ToLower
 
 ## GitHub 发行
 
-1. 完成相关检查并提交源码，按 [Git 规范](../AGENTS.md) 创建对应发行标签。
-2. 将标签上传到远程仓库，在 GitHub 为该标签创建 Release。
-3. 上传 ZIP 和同名 `.zip.sha256`，填写对应管理器、补丁与目标应用版本。
+1. 完成相关检查并提交源码，按 [版本与发行规范](../spec/releases.md) 创建对应组件的标签。
+2. 上传标签，在 GitHub 使用 `manager-v<版本>` 创建管理器 Release，标题为 `Antigravity Manager v<版本>`。
+3. 上传 ZIP 和同名 `.zip.sha256`，在说明中另列内置补丁版本与已验证的目标应用版本。
 
 GitHub 自动提供的源码归档不包含编译程序。运行文件通过 Release 附件分发，`artifacts/` 始终被 Git 忽略；不要把程序二进制或测试原始资源提交进仓库。
 
-管理器与补丁独立编号，可在同一提交上分别标记发行版本。发行摘要见 [更新记录](../CHANGELOG.md)，测试与覆盖边界见 [测试指南](testing.md) 和 [历史报告](reports/README.md)。
+发行摘要见 [更新记录](../CHANGELOG.md)，测试与覆盖边界见 [测试指南](testing.md) 和 [历史报告](reports/README.md)。

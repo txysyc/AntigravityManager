@@ -318,6 +318,7 @@
   },
   "patchedVersions": {
     "3ce4eb2d2a6a4f784139e427d764458ef56be01c7d26afac6891e1131aa3c734": "0.5.0",
-    "5177c602efec29ac1eb8e5ffab52930c23aefc7871c67f2c6a9839fe0b7dcdd0": "0.5.1"
+    "5177c602efec29ac1eb8e5ffab52930c23aefc7871c67f2c6a9839fe0b7dcdd0": "0.5.1",
+    "5a2b5c52fcb747f764a1a700aa83e5d97c9be71a9e070159b38685715c4c478f": "0.1.0"
   }
 }

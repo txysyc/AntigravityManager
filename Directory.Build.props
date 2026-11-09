@@ -3,7 +3,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
-    <Version>0.1.3</Version>
+    <Version>0.1.0</Version>
     <Company>Antigravity Manager contributors</Company>
     <Product>Antigravity Manager</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

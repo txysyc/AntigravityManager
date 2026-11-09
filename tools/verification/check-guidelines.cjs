@@ -32,7 +32,11 @@ for (const file of documents) {
   }
 }
 const manager = JSON.parse(read('package.json'));
-check(manager.license === 'MIT' && JSON.parse(read('engines/localization/package.json')).license === 'MIT', '项目与引擎应同步声明 MIT 许可');
+const localization = JSON.parse(read('engines/localization/package.json'));
+const releaseVersionPattern = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
+check(typeof manager.version === 'string' && releaseVersionPattern.test(manager.version), '管理器版本应使用三段数字，例如 0.1.0');
+check(typeof localization.version === 'string' && releaseVersionPattern.test(localization.version), '汉化补丁版本应使用三段数字，例如 0.1.0');
+check(manager.license === 'MIT' && localization.license === 'MIT', '项目与引擎应同步声明 MIT 许可');
 check(read('LICENSE').startsWith('MIT License\n') && /Copyright \(c\) \d{4} \S/.test(read('LICENSE')), '项目缺少 MIT 许可原文或版权声明');
 check(read('Directory.Build.props').includes('<PackageLicenseExpression>MIT</PackageLicenseExpression>'), 'C# 项目应同步声明 MIT 许可');
 const configured = read('Directory.Build.props').match(/<Version>([^<]+)<\/Version>/)?.[1];

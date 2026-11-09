@@ -24,7 +24,7 @@ Windows 桌面管理器 · 模块化功能 · 简体中文汉化
   <img src="docs/assets/screenshots/overview-light.png" alt="Antigravity Manager 工作台，支持明暗主题" width="1120">
 </picture>
 
-<p align="center"><sub>独立的维护工作台，支持明暗主题；截图使用隔离数据目录。</sub></p>
+<p align="center"><sub>支持明暗主题的维护工作台；截图来自历史发行版的隔离环境。</sub></p>
 
 ## 功能一览
 
@@ -40,20 +40,20 @@ Antigravity Manager 将维护操作集中在独立模块中。当前提供简体
 
 **Windows x64 · ZIP 解压即用 · 无需另装 .NET 或 Node.js**
 
-1. 获取 `AntigravityManager-<版本>-win-x64.zip`，完整解压。
+1. 从 [GitHub Releases](https://github.com/txysyc/AntigravityManager/releases) 选择管理器版本，下载 Windows x64 ZIP 附件并完整解压。
 2. 运行 `AntigravityManager.exe`，在“设置”中确认 Antigravity 安装目录。
 3. 打开“界面汉化”检查兼容性，完全退出 Antigravity 后执行“安装／修复汉化”。
 4. 按原有方式启动 Antigravity。需要撤销时，在“备份与恢复”中恢复原版。
 
 源码下载不包含已编译程序。自行构建 ZIP 见 [打包与分发](docs/packaging.md)；首次配置和数据迁移见 [使用指南](docs/user-guide.md)。
 
-### 当前支持
+### 本地源码版本与兼容范围
 
-| 管理器 | 汉化补丁 | 已适配的 Antigravity |
+| 管理器 | 内置汉化补丁 | 已适配的 Antigravity |
 | --- | --- | --- |
-| **0.1.3** 预览版 | **0.5.1** | Windows **2.23.0 / 2.23.1** |
+| **0.1.0** 本地预览 | **0.1.0** | Windows **2.23.0 / 2.23.1** |
 
-安装资格以已验证的文件指纹为准。应用更新后重新检查支持状态，具体范围见 [汉化模块指南](docs/modules/localization.md)。
+上表对应当前源码构建，已有发行包的版本以各自的发行说明为准。安装资格以已验证的文件指纹为准，具体范围见 [汉化模块指南](docs/modules/localization.md)。
 
 ## 开发
 

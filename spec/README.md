@@ -17,6 +17,7 @@
 | 所有开发任务 | 本索引与根目录 `AGENTS.md` |
 | 调整目录、依赖、模块、导航、配置或存储 | [架构规范](architecture.md) |
 | 修改汉化界面、引擎、词库、兼容性、安装或恢复 | [汉化模块规范](modules/localization.md) |
+| 决定版本号、发行范围或标签 | [版本与发行规范](releases.md) |
 | 构建、测试、发布或准备原始资源 | [开发指南](../docs/development.md)、[测试与验证](../docs/testing.md)、[打包与分发](../docs/packaging.md) |
 | 较大功能的实现 | `spec/changes/<feature-name>.md` 中对应的变更规格（存在时） |
 

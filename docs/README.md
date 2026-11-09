@@ -27,6 +27,8 @@
 
 [协作与 Git 规范](../AGENTS.md) → [规范索引](../spec/README.md) → 按任务阅读 [架构规范](../spec/architecture.md) 或 [汉化规范](../spec/modules/localization.md)。
 
+定版、打标签和发行前阅读 [版本与发行规范](../spec/releases.md)。
+
 `spec/` 保存当前生效的长期约定；本目录提供操作步骤，不重复维护另一套约束。
 
 ## 分析与验证报告

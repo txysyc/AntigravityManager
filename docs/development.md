@@ -58,4 +58,4 @@ npm run test:manager
 - [资源与工作区维护](maintenance.md)：图标生成、缓存与验证记录归档。
 - [协作规范](../AGENTS.md)：中文沟通、编码风格与提交要求。
 
-管理器版本同步维护于 `Directory.Build.props` 和根 `package.json`；补丁版本独立维护于 `engines/localization/package.json`。
+版本配置位置、递增条件与发行标签见 [版本与发行规范](../spec/releases.md)。
