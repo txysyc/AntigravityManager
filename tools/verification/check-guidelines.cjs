@@ -38,7 +38,8 @@ const releaseVersionPattern = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/
 check(typeof manager.version === 'string' && releaseVersionPattern.test(manager.version), '管理器版本应使用三段数字，例如 0.1.0');
 check(typeof localization.version === 'string' && releaseVersionPattern.test(localization.version), '汉化补丁版本应使用三段数字，例如 0.1.0');
 check(manager.license === 'MIT' && localization.license === 'MIT', '项目与引擎应同步声明 MIT 许可');
-check(read('LICENSE').startsWith('MIT License\n') && /Copyright \(c\) \d{4} \S/.test(read('LICENSE')), '项目缺少 MIT 许可原文或版权声明');
+const license = read('LICENSE');
+check(/^MIT License\r?\n/.test(license) && /^Copyright \(c\) \d{4} \S/m.test(license), '项目缺少 MIT 许可原文或版权声明');
 check(read('Directory.Build.props').includes('<PackageLicenseExpression>MIT</PackageLicenseExpression>'), 'C# 项目应同步声明 MIT 许可');
 const configured = read('Directory.Build.props').match(/<Version>([^<]+)<\/Version>/)?.[1];
 check(manager.version === configured, '管理器的 package.json 与 Directory.Build.props 版本不一致');
