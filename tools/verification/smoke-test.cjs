@@ -16,14 +16,14 @@ function option(name, fallback) {
 function isolatedDirectory(value) {
   const resolved = path.resolve(root, value);
   const relative = path.relative(root, resolved);
-  if (relative.startsWith('..') || path.isAbsolute(relative) || !/^(artifacts|output)[\\/]/.test(relative)) {
-    throw Error('验证目录必须位于工作区 artifacts/ 或 output/ 中：' + resolved);
+  if (relative.startsWith('..') || path.isAbsolute(relative) || !/^artifacts[\\/]/.test(relative)) {
+    throw Error('验证目录必须位于工作区 artifacts/ 中：' + resolved);
   }
   return resolved;
 }
-const portable = isolatedDirectory(option('portable', process.env.SMOKE_PORTABLE || 'output/portable'));
-const profile = isolatedDirectory(option('profile', process.env.SMOKE_PROFILE || 'output/smoke-profile'));
-const output = isolatedDirectory(option('output', process.env.SMOKE_OUTPUT || 'output/playwright'));
+const portable = isolatedDirectory(option('portable', process.env.SMOKE_PORTABLE || 'artifacts/playwright/portable'));
+const profile = isolatedDirectory(option('profile', process.env.SMOKE_PROFILE || 'artifacts/playwright/profile'));
+const output = isolatedDirectory(option('output', process.env.SMOKE_OUTPUT || 'artifacts/playwright/results'));
 const embedded = path.resolve(root, option('embedded', process.env.SMOKE_EMBEDDED || 'analysis/embedded'));
 const checkEnglish = process.argv.includes('--check-english');
 fs.mkdirSync(profile, { recursive: true });

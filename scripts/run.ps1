@@ -1,8 +1,14 @@
+param([string]$AppDirectory, [string]$DataDirectory)
 $ErrorActionPreference = 'Stop'
-$projectRoot = Split-Path -Parent $PSScriptRoot
-$env:DOTNET_CLI_HOME = Join-Path $projectRoot 'artifacts/dotnet-home'
-$env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
-$env:DOTNET_GENERATE_ASPNET_CERTIFICATE = 'false'
-$env:NUGET_PACKAGES = Join-Path $projectRoot 'artifacts/nuget/packages'
-dotnet run --project (Join-Path $projectRoot 'src/AntigravityManager.Desktop/AntigravityManager.Desktop.csproj')
-exit $LASTEXITCODE
+$env:CGO_ENABLED = '0'
+$env:GOTOOLCHAIN = 'local'
+$arguments = @()
+if ($AppDirectory) { $arguments += @('--app-dir', $AppDirectory) }
+if ($DataDirectory) { $arguments += @('--data-dir', $DataDirectory) }
+Push-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
+try {
+    go run ./src @arguments
+    if ($LASTEXITCODE -ne 0) { throw '无法运行 Go 管理器。' }
+} finally {
+    Pop-Location
+}

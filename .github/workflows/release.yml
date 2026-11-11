@@ -29,10 +29,10 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - name: 配置 .NET
-        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+      - name: 配置 Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          dotnet-version: '10.0.x'
+          go-version-file: go.mod
       - name: 配置 Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
@@ -51,13 +51,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw '无法确定发行提交。' }
           $blob = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/blob/$commit"
           $notesPath = Join-Path $env:RUNNER_TEMP 'antigravity-release-notes.md'
-          node tools/verification/release-notes.cjs $notesPath $blob
+          node scripts/release-notes.cjs $notesPath $blob
           if ($LASTEXITCODE -ne 0) { throw '发行说明检查失败。' }
           "version=$version" >> $env:GITHUB_OUTPUT
           "notes=$notesPath" >> $env:GITHUB_OUTPUT
-      - name: 构建并校验 Windows x64 ZIP
+      - name: 构建并校验 Windows x64 单文件
         shell: pwsh
-        run: ./scripts/package.ps1
+        run: ./scripts/publish.ps1
       - name: 创建发行并上传附件
         shell: pwsh
         env:
@@ -67,5 +67,5 @@ jobs:
         run: |
           $tag = $env:GITHUB_REF_NAME
           $version = $env:RELEASE_VERSION
-          $archive = "artifacts/releases/AntigravityManager-$version-win-x64.zip"
-          gh release create $tag $archive "$archive.sha256" --repo $env:GITHUB_REPOSITORY --verify-tag --title "Antigravity Manager v$version" --notes-file $env:RELEASE_NOTES
+          $exe = "output/AntigravityManager-$version-win-x64.exe"
+          gh release create $tag $exe "$exe.sha256" --repo $env:GITHUB_REPOSITORY --verify-tag --title "Antigravity Manager v$version" --notes-file $env:RELEASE_NOTES

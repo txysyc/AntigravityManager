@@ -5,9 +5,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { readAsar } = require('../src/asar.cjs');
-function fixture(saved) {
+function fixture(t, saved) {
   const directory = path.join(__dirname, '../../../artifacts/tests'); fs.mkdirSync(directory, { recursive: true });
   const profile = fs.mkdtempSync(path.join(directory, 'locale-'));
+  t.after(() => {
+    fs.rmSync(path.join(profile, 'ui-language.json'), { force: true });
+    fs.rmdirSync(profile);
+  });
   if (saved) fs.writeFileSync(path.join(profile, 'ui-language.json'), JSON.stringify({ language: saved }));
   const handlers = new Map(), sent = [];
   const frame = { url: 'https://127.0.0.1:2345/' }, sender = { mainFrame: frame };
@@ -25,8 +29,8 @@ function fixture(saved) {
   });
   return { locale: module.exports, profile, handlers, sender, frame, sent, appMenu, electron };
 }
-test('language persists, broadcasts to windows, updates menu checks and keeps native startup snapshot', () => {
-  const f = fixture(); f.locale.setup(); f.locale.setup();
+test('language persists, broadcasts to windows, updates menu checks and keeps native startup snapshot', t => {
+  const f = fixture(t); f.locale.setup(); f.locale.setup();
   assert.equal(f.handlers.size, 2);
   assert.equal(f.locale.startupLanguage, 'zh-CN');
   f.electron.Menu.setApplicationMenu(f.appMenu);
@@ -40,8 +44,8 @@ test('language persists, broadcasts to windows, updates menu checks and keeps na
   assert.equal(entries.find(item => item.id === 'antigravity-language-zh').checked, false);
   assert.throws(() => f.locale.setLanguage('xx'), /Unsupported/);
 });
-test('foreign origins, guest contents and child frames cannot change language', () => {
-  const f = fixture('en'); f.locale.setup(); const set = f.handlers.get('antigravity-locale:set');
+test('foreign origins, guest contents and child frames cannot change language', t => {
+  const f = fixture(t, 'en'); f.locale.setup(); const set = f.handlers.get('antigravity-locale:set');
   assert.equal(f.locale.startupLanguage, 'en');
   assert.throws(() => set({ sender: {}, senderFrame: f.frame }, 'zh-CN'), /main application/);
   assert.throws(() => set({ sender: f.sender, senderFrame: { url: f.frame.url } }, 'zh-CN'), /main application/);
@@ -49,8 +53,8 @@ test('foreign origins, guest contents and child frames cannot change language', 
   assert.throws(() => set({ sender: f.sender, senderFrame: f.frame }, 'zh-CN'), /origin/);
   assert.equal(f.locale.getLanguage(), 'en');
 });
-test('WebContentsView language changes use the trusted Hub content only', () => {
-  const f = fixture();
+test('WebContentsView language changes use the trusted Hub content only', t => {
+  const f = fixture(t);
   const hub = {}, guest = { mainFrame: f.frame };
   const destroyed = { isDestroyed: () => true, send: () => assert.fail('已关闭窗口不应接收语言事件') };
   const closedHub = {};

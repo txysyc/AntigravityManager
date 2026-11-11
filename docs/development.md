@@ -1,61 +1,40 @@
 # 开发指南
 
-[文档中心](README.md) / 开发
+[项目首页](../README.md) · [测试与验证](testing.md) · [项目规范](../spec/README.md)
 
-从源码运行管理器只需要准备环境并启动程序。测试资源、分发打包和资源维护各自有独立指南。
+## 启动与打包
 
-## 环境要求
+开发需要 Windows x64、Go 1.27.3 或更新版本、PowerShell 7 和 Node.js 24。Go 编译桌面程序；Node.js 用于检查和维护内置汉化资源。首次获取 Go 模块需要联网。
 
-| 依赖 | 用途 |
+```powershell
+pwsh -File scripts/run.ps1       # 启动开发版
+go test ./...                    # 测试 Go 管理器
+pwsh -File scripts/publish.ps1   # 打包可分发的 Windows x64 单 EXE
+```
+
+打包生成 `output/AntigravityManager-<版本>-win-x64.exe` 和同名 `.sha256`。脚本嵌入实际依赖的许可原文，可在“许可”页查看。已有成品不会被覆盖，验证构建可用 `-OutputDirectory artifacts/verify-build`。本地打包不上传文件；使用者仅需要 EXE。
+
+开发验证时，用独立的应用副本和数据目录：
+
+```powershell
+./scripts/run.ps1 -AppDirectory 'C:\path\to\test-app' -DataDirectory "$PWD/artifacts/dev-data"
+```
+
+## 目录
+
+| 位置 | 用途 |
 | --- | --- |
-| Windows | 运行 WPF 桌面程序 |
-| .NET 10 SDK | 编译 C# 主程序；SDK 选择见 `global.json` |
-| Node.js（含 npm） | 运行汉化引擎及其检查 |
+| `src/` | Go 程序入口和 MyGo 界面，业务和测试在 `src/internal/` |
+| `engines/localization/` | 词库、版本指纹、注入脚本与 Node.js 参考引擎 |
+| `assets/branding/` | SVG 图标源与程序内嵌的 512 像素 PNG |
+| `scripts/`、`tools/` | 启动、打包、发行说明；分析、样本准备和验证 |
+| `output/`、`artifacts/` | 可分发成品；本地缓存和验证结果 |
+| `docs/`、`spec/`、`analysis/` | 操作指南、现行约定、适配证据 |
 
-WPF UI 4.3.0 通过 NuGet 自动还原，无需单独安装控件库。Visual Studio 可选；首次还原依赖需要联网。
+根目录的 `resources.go` 内嵌共享资源；Go 的嵌入规则不允许子目录直接引用上级文件。新增业务放入 `src/internal/<模块>/`，再从 `src/` 接入界面。详细约定见 [架构规范](../spec/architecture.md)。
 
-## 启动开发程序
+修改词库、原生规则或补丁版本后，运行 `node engines/localization/scripts/generate-go-payload.cjs`，把生成资源与源文件一同更新。修改界面后，按 [GUI 验证](testing.md#管理器-gui) 检查明暗主题。
 
-在仓库根目录执行：
+## 发布
 
-```powershell
-./scripts/run.ps1
-```
-
-脚本调用 `dotnet run --project src/AntigravityManager.Desktop`，按需编译并启动窗口，同时将 .NET CLI 缓存和 NuGet 包放在 `artifacts/`。
-
-管理器优先使用 `runtime/node.exe`，不存在时从 PATH 查找 Node.js。资源按工作区或发布目录发现，不依赖仓库根目录的名称。
-
-## 编译、运行与发布的区别
-
-这三个操作可以单独执行，无需依次运行。
-
-| 目标 | 命令 | 结果 |
-| --- | --- | --- |
-| 只编译 | `dotnet build AntigravityManager.slnx` | 各 C# 项目的开发产物，不打开窗口 |
-| 边开发边运行 | `./scripts/run.ps1` | 按需编译桌面程序并启动窗口 |
-| 给其他人使用 | `./scripts/publish.ps1` | 完整自包含程序目录，不启动窗口 |
-
-`npm run build` 是第一条命令的别名：根 `package.json` 将 `build` 映射为 `dotnet build AntigravityManager.slnx`，实际编译仍由 .NET 执行。
-
-桌面开发产物在 `src/AntigravityManager.Desktop/bin/Debug/net10.0-windows/`，其他 C# 项目有各自的 `bin/` 与 `obj/`。它们用于本地开发；完整运行时与汉化资源的分发方式见 [打包与分发](packaging.md)。
-
-## 开发检查
-
-```powershell
-npm run check:guidelines
-npm test
-npm run test:manager
-```
-
-规范检查不需要原始程序资源。完整引擎测试需要本地已验证的原始文件和历史补丁，先按 [测试与验证](testing.md) 准备，不能跳过指纹校验或用其他版本冒充测试样本。
-
-## 下一步
-
-- [测试与验证](testing.md)：资源准备、引擎检查、GUI 与前端验证。
-- [打包与分发](packaging.md)：发布参数、目录产物、ZIP 和发行标签。
-- [项目架构](architecture.md)：源码导航、C# → Node.js 执行链路与模块接入。
-- [资源与工作区维护](maintenance.md)：图标生成、缓存与验证记录归档。
-- [协作规范](../AGENTS.md)：中文沟通、编码风格与提交要求。
-
-版本配置位置、递增条件与发行标签见 [版本与发行规范](../spec/releases.md)。
+按 [发行规范](../spec/releases.md) 更新版本和 [CHANGELOG.md](../CHANGELOG.md)，运行 `node scripts/release-notes.cjs` 预览。首次发布 Go 版前需要完成 [真实样本验证](testing.md)。由获授权的维护者创建并推送 `manager-v<版本>`；[发行工作流](../.github/workflows/release.yml) 校验标签和构建结果后，上传 EXE 和校验文件。

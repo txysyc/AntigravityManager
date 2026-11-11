@@ -2,16 +2,13 @@
 analysis/original/
 analysis/embedded/
 
-# Generated patches, test profiles and runtime copies
-dist/*.asar
+# Release binaries and checksums
 output/
+
+# Local build and verification artifacts
+dist/*.asar
 artifacts/
-**/bin/
-**/obj/
-.vs/
 .idea/
-*.user
-runtime/node.exe
 
 # Dependencies and language caches
 node_modules/

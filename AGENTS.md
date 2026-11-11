@@ -16,32 +16,30 @@
 
 ## 项目结构与模块边界
 
-`src/` 按 Desktop、Core、Infrastructure 和具体模块分层；模块 UI 放在 `Desktop/Modules/<Feature>/`，汉化引擎在 `engines/localization/`，C# 检查在 `tests/AntigravityManager.Checks/`。依赖方向和通用模块规则以架构规范为准；生成产物统一放入已忽略的 `artifacts/`。
+`src/` 是桌面和 CLI 入口，业务模块和测试位于 `src/internal/`，汉化源及参考引擎在 `engines/localization/`。依赖方向以架构规范为准；发行成品放入 `output/`，开发和验证产物放入 `artifacts/`，两者均不提交。
 
 ## 构建、运行与发布
 
-开发环境为 Windows、.NET 10 SDK 和 Node.js；WPF UI 通过 NuGet 还原。
+开发环境为 Windows、Go 1.27.3 或更新版本、Node.js 24 和 PowerShell 7。
 
 ```powershell
-npm run build           # 构建解决方案
 ./scripts/run.ps1       # 启动桌面管理器
 npm test                # 执行引擎测试
 npm run test:ci         # 执行不依赖第三方程序样本的引擎测试
-npm run test:manager    # 执行 C# 集成检查
+go test ./...           # 执行 Go 管理器测试
 npm run check:guidelines # 检查规范链接、版本与部分中文提示
-./scripts/publish.ps1   # 发布 Windows x64 自包含程序目录
-pwsh -File scripts/package.ps1 # 生成并校验发行 ZIP 与 SHA-256 文件
+./scripts/publish.ps1   # 构建可分发的单文件
 ```
 
-完整引擎测试依赖已验证的原始资源及已构建补丁，准备步骤见 `docs/testing.md`；构建入口见 `docs/development.md`，发行与 ZIP 分发见 `docs/packaging.md`。
+完整引擎测试依赖已验证的原始资源及已构建补丁，准备步骤见 `docs/testing.md`；构建和发行见 `docs/development.md`。
 
 ## 编码风格与命名
 
-遵循 `.editorconfig`：UTF-8、LF、文件末尾换行、空格缩进；C# 使用四空格，JSON、JavaScript、XAML 和项目文件使用两空格。C# 类型及公开成员用 PascalCase，私有字段和 JavaScript 函数用 camelCase，异步方法加 `Async` 后缀。沿用 `*View.xaml`、`*ViewModel.cs`、`*.test.cjs` 命名。当前无独立格式化或 lint 工具，使用 `git diff --check` 检查空白问题。
+遵循 `.editorconfig`：UTF-8、LF，保留末尾换行；Go 使用 `gofmt`，JSON、JavaScript 和 YAML 使用两空格。使用 `git diff --check` 检查空白问题。
 
 ## 测试要求
 
-引擎使用 `node:test` 与严格断言，C# 使用控制台检查程序，未设置覆盖率百分比门槛。行为变更应覆盖相关正常和失败路径，尤其是未知指纹、损坏备份、并发操作及迁移完整性。UI 改动使用独立 `--data-dir` 和 `--smoke-output`，检查明暗主题截图。仅修改文档时检查格式、路径和命令即可。
+参考引擎使用 `node:test` 与严格断言，管理器使用 `go test`，未设置覆盖率百分比门槛。行为变更应覆盖相关正常和失败路径，尤其是未知指纹、损坏备份、并发操作及迁移完整性。UI 改动使用独立 `--data-dir` 和 `--smoke-output`，检查明暗主题截图。仅修改文档时检查格式、路径和命令即可。
 
 ## Git 提交与合并规范
 
@@ -57,4 +55,4 @@ pwsh -File scripts/package.ps1 # 生成并校验发行 ZIP 与 SHA-256 文件
 
 ## 配置与安全边界
 
-禁止绕过兼容性配置或文件指纹检查；安装和恢复测试使用隔离副本，不用未适配版本冒充测试原版。不要提交应用二进制、提取资源、凭据或用户数据。管理器版本同步维护于 `Directory.Build.props` 和根 `package.json`；补丁版本独立维护于 `engines/localization/package.json`。
+禁止绕过兼容性配置或文件指纹检查；安装和恢复测试使用隔离副本，不用未适配版本冒充测试原版。不要提交应用二进制、提取资源、凭据或用户数据。管理器版本维护于根 `package.json`；补丁版本独立维护于 `engines/localization/package.json`。

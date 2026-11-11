@@ -2,7 +2,7 @@
 // 只检查可机械验证的约定，规范是否符合需求仍需人工或协作者审查。
 const fs = require('node:fs');
 const path = require('node:path');
-const { readReleaseNotes } = require('./release-notes.cjs');
+const { readReleaseNotes } = require('../../scripts/release-notes.cjs');
 const root = path.resolve(__dirname, '../..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const failures = [];
@@ -18,7 +18,7 @@ function files(directory, extension) {
     return file.endsWith(extension) ? [file] : [];
   });
 }
-const documents = ['AGENTS.md', 'README.md', 'CHANGELOG.md', 'THIRD_PARTY_NOTICES.md', 'licenses/README.md', ...files('docs', '.md'), ...files('spec', '.md')];
+const documents = ['AGENTS.md', 'README.md', 'CHANGELOG.md', 'THIRD_PARTY_NOTICES.md', 'licenses/README.md', 'analysis/README.md', ...files('analysis/reports', '.md'), ...files('docs', '.md'), ...files('spec', '.md')];
 for (const file of documents) {
   const source = read(file);
   check(source.endsWith('\n') && !source.includes('\r'), `${file} 应使用 LF 并保留末尾换行`);
@@ -40,22 +40,11 @@ check(typeof localization.version === 'string' && releaseVersionPattern.test(loc
 check(manager.license === 'MIT' && localization.license === 'MIT', '项目与引擎应同步声明 MIT 许可');
 const license = read('LICENSE');
 check(/^MIT License\r?\n/.test(license) && /^Copyright \(c\) \d{4} \S/m.test(license), '项目缺少 MIT 许可原文或版权声明');
-check(read('Directory.Build.props').includes('<PackageLicenseExpression>MIT</PackageLicenseExpression>'), 'C# 项目应同步声明 MIT 许可');
-const configured = read('Directory.Build.props').match(/<Version>([^<]+)<\/Version>/)?.[1];
-check(manager.version === configured, '管理器的 package.json 与 Directory.Build.props 版本不一致');
 try {
   readReleaseNotes(root);
   check(true);
 } catch (error) {
   check(false, error.message);
-}
-for (const file of files('src/AntigravityManager.Desktop', '.xaml')) {
-  for (const match of read(file).matchAll(/\b(?:Text|Content|Header|Title|ToolTip)="([A-Za-z][A-Za-z0-9 .&/+\-]{2,})"/g)) {
-    check(/^(?:Antigravity(?: Manager)?|MANAGER)$/.test(match[1]), `${file} 存在待核对的英文界面文案：${match[1]}`);
-  }
-}
-for (const file of files('src/AntigravityManager.Desktop', '.cs')) {
-  check(!/(?:publishStatus|SetStatus|MessageBox\.Show)\(error\.Message\b/.test(read(file)), `${file} 直接展示异常，缺少中文说明`);
 }
 for (const match of read('scripts/publish.ps1').matchAll(/\bthrow '([^']+)'/g)) {
   check(/[\u3400-\u9fff]/.test(match[1]), `发布脚本存在待核对的英文提示：${match[1]}`);

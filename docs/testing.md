@@ -1,6 +1,10 @@
 # 测试与验证
 
-[文档中心](README.md) / [开发指南](development.md) / 测试
+Go 版在 Windows 上执行 `go test ./...`，使用隔离样本验证安装、重复安装、恢复、损坏备份、未知指纹、并发更新和数据迁移。已安装 Node.js 时还会比较 Go 与 Node 的 ASAR 写入结果。准备全部真实版本样本后，将 `ANTIGRAVITY_FIXTURES_DIRECTORY` 设为包含各版本子目录的绝对路径，再运行 `go test ./src/internal/localization -run TestVerifiedFixtures -v`；该检查使用 Node 参考构建逐字节比较完整补丁。
+
+启动 Go 版时可用 `--app-dir <隔离应用> --data-dir <隔离数据> --smoke-output <结果文件.json>` 检查原生窗口、保存初始检查结果，并在结果文件旁渲染汉化页和设置页的明暗截图。不要使用真实安装或用户数据执行写操作测试。
+
+[项目首页](../README.md) · [开发指南](development.md)
 
 本页区分引擎检查、管理器 GUI、组件样本和真实产品页面。仅修改文档时检查格式、路径与命令即可；行为变更按对应范围执行验证。
 
@@ -31,44 +35,26 @@ node engines/localization/scripts/build.cjs artifacts/test-app
 
 ## 自动检查
 
-在仓库根目录运行：
-
 ```powershell
 npm run check:guidelines
-npm test
-npm run test:manager
+npm run test:ci
+go test ./...
 ```
 
-| 检查 | 覆盖范围 |
-| --- | --- |
-| 规范检查 | 文档链接、换行、版本同步、部分中文提示与异常展示 |
-| Node.js 引擎 | ASAR、原生菜单、语言设置、未知指纹拒绝、损坏备份、文件变化、不可变产物及跨版本安装恢复 |
-| C# 控制台检查 | 模块注册、路径与设置、JSON 子进程协议、数据迁移、并发与链接保护 |
-
-C# 检查可额外传入应用目录，验证只读元数据链路：
-
-```powershell
-dotnet run --project tests/AntigravityManager.Checks -- 'C:\path\to\antigravity'
-```
-
-引擎使用 `node:test`，C# 使用轻量控制台检查程序，没有独立覆盖率百分比门槛。规范检查不能代替实现与 spec 的语义核对。
-
-[GitHub Actions 测试工作流](../.github/workflows/test.yml) 在推送到 `main`、向 `main` 提交 PR 时运行，也可手动启动。它检查规范、构建管理器、运行 C# 集成检查，以及通过 `npm run test:ci` 运行不需要第三方原始资源的引擎测试。依赖已验证原版或历史补丁的用例以 `fixture:` 命名；这些用例仍由本地 `npm test` 完整执行。发行工作流复用同一套 CI 检查；涉及汉化适配时，打标签前仍应完成本地完整测试和相应的隔离验证。
+CI 检查规范、运行 Go 和 Node.js 测试并构建单文件。带 `fixture:` 前缀的测试需要真实资料，准备后用 `npm test` 运行。首次发布 Go 版前必须完成 `TestVerifiedFixtures` 逐字节对照。
 
 ## 管理器 GUI
 
-开发入口使用独立数据目录，自动遍历三个主页面、汉化模块四个页签及明暗主题，生成 PNG 后退出：
+构建单文件后，传入隔离应用和数据目录。以下用 PowerShell 7 等待验证程序退出：
 
 ```powershell
-./src/AntigravityManager.Desktop/bin/Debug/net10.0-windows/AntigravityManager.exe `
+& ./output/AntigravityManager-0.3.0-win-x64.exe `
   --data-dir "$PWD/artifacts/gui-smoke/profile" `
-  --app-dir 'C:\path\to\antigravity' `
-  --smoke-output "$PWD/artifacts/gui-smoke/screenshots"
+  --app-dir 'C:\path\to\test-app' `
+  --smoke-output "$PWD/artifacts/gui-smoke/result.json" | Out-Null
 ```
 
-成功标记为截图目录中的 `result.json`，包含版本、状态、页面和页签数量；失败时保存 `error.txt`。该入口不安装或恢复补丁，不修改目标应用。
-
-`--smoke-migrate <新的隔离目录>` 可测试设置页的真实迁移命令及迁移后的备份读取，必须配合 `--data-dir`。截图属于管理器窗口，不是 Antigravity 产品页面。
+查看 `result.json` 的 `success` 和 `nativeWindow`，并检查同目录的明暗 PNG。此入口不写目标应用。迁移完整性由 Go 的隔离测试验证。
 
 ## 前端与组件审查
 
@@ -88,7 +74,7 @@ AST 扫描依赖外部 Babel parser，也可通过 `BABEL_PARSER_MODULE` 指定�
 
 `tools/verification/smoke-test.cjs` 依赖完整便携应用副本、对应提取资源及外部 Playwright。通过 `PLAYWRIGHT_MODULE` 指定模块，通过 `--portable`、`--profile`、`--output`、`--embedded` 指定隔离目录。`--check-english` 在新进程中检查英文偏好持久化。
 
-旧默认目录仅为兼容历史工具；版本适配应显式传参，避免资源混用。组件样本与真实页面、WPF GUI 检查互不替代。
+旧默认目录仅为兼容历史工具；版本适配应显式传参，避免资源混用。组件样本与真实页面、管理器 GUI 检查互不替代。
 
 ### 真实语言服务
 
@@ -102,4 +88,4 @@ node tools/verification/verify-version-runtime.cjs --launcher 'C:\path\to\Antigr
 
 该入口验证未登录欢迎页、资源指纹和语言持久化；运行前准备对应版本的 `portable/` 与 `embedded/`。测试 ASAR 仅用于隔离运行，不登记为兼容补丁，不可安装到真实应用。启动器需支持 `--executable`、`--report` 与 `--` 参数透传。适配包含可选 WebContentsView 模式时，另传 `--wcv` 和新的 `--output` 路径验证该模式。`--check-modern-ui` 额外在隔离页面插入样本，核对问候节点复用、浏览器建议及自动化摘要保护，以及切换英文后恢复原文。
 
-验证只写工作区 `artifacts/` 或 `output/`，不使用真实用户目录。启动器模式不读取原生菜单；登录后页面和系统集成的未覆盖范围见 [历史报告](reports/README.md)。
+验证资料和临时结果放在工作区 `artifacts/`，不使用真实用户目录。`output/` 仅用于发行成品。启动器模式不读取原生菜单；登录后页面和系统集成的未覆盖范围见 [历史适配摘要](../analysis/reports/README.md)。

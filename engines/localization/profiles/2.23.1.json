@@ -305,7 +305,7 @@
     "dist/preload.js": "81d220de63447d27db95adf67d9711b59ee317b2338ba538f419b354a54b1f60"
   },
   "validation": {
-    "report": "docs/reports/adaptation-2.23.1.md",
+    "report": "analysis/reports/README.md",
     "frontendSha256": "ad12ecf66061edab6a3835d1360e1bad50787bc7b2f2c9d86568281360864696",
     "runtimeScope": "隔离真实欢迎页与组件回归；登录后服务内容未穷尽验证"
   },

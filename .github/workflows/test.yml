@@ -21,10 +21,6 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - name: 配置 .NET
-        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
-        with:
-          dotnet-version: '10.0.x'
       - name: 配置 Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
@@ -32,9 +28,15 @@ jobs:
           package-manager-cache: false
       - name: 检查项目规范
         run: npm run check:guidelines
-      - name: 构建管理器
-        run: npm run build
       - name: 测试汉化引擎（无第三方程序样本）
         run: npm run test:ci
-      - name: 运行管理器集成检查
-        run: npm run test:manager
+      - name: 配置 Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - name: 测试 Go 管理器
+        env:
+          CGO_ENABLED: '0'
+        run: go test ./...
+      - name: 构建并检查 Go 单文件
+        run: ./scripts/publish.ps1

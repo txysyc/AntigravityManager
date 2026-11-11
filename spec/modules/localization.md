@@ -4,7 +4,8 @@
 
 ## 范围与入口
 
-- 后端适配位于 `src/AntigravityManager.Modules.Localization/`，界面位于 `Desktop/Modules/Localization/`，引擎位于 `engines/localization/`。
+- 界面和 CLI 位于 `src/`，Go 模块位于 `src/internal/localization/`。汉化源和 Node 参考引擎位于 `engines/localization/`。
+- 管理器使用内置的兼容配置、词库和注入代码构建补丁。派生的 `payload.json` 由开发工具从源文件生成，发布前检查同步。当前补丁已有已验证哈希时，构建结果必须匹配该哈希。
 - 汉化概况、版本检查、备份恢复和操作记录集中于模块；可用补丁版本持续显示，已安装版本单独呈现。未完成检查时不能显示为已确认的安装状态。
 - 引擎提供 `inspect`、`compare`、`install`、`restore`、`backups`。CLI 输出 JSON，失败退出码非零；面向用户的消息优先中文，原始诊断可单独保留。
 - 启动时应用检查失败应保留失败提示，不得随后用备份检查成功覆盖；未识别应用时安装能力保持禁用。
@@ -33,12 +34,13 @@
 
 Windows 隔离运行验证还须禁止测试副本登记 `antigravity://` 协议关联。仅在隔离样本移除这一步，正式补丁保留上游协议行为；方法见 [测试与验证](../../docs/testing.md)。
 
-补丁版本以 `engines/localization/package.json` 为准；操作记录位于 `localization/tasks.json`，缺失时兼容读取旧根目录 `tasks.json`。命令及资源准备见 [汉化操作说明](../../docs/modules/localization.md) 与 [开发指南](../../docs/development.md)。
+补丁版本以 `engines/localization/package.json` 为准；操作记录位于 `localization/tasks.json`，缺失时兼容读取旧根目录 `tasks.json`。命令见 [使用指南](../../docs/user-guide.md#命令行)，资源准备见 [测试与验证](../../docs/testing.md)。
 
 ## 版本与保留策略
 
 - 管理器与汉化补丁的定版、递增及标签规则统一见 [版本与发行规范](../releases.md)。目标应用的版本和指纹仅用于确定兼容范围。
 - 新引擎可继续为已验证的旧应用构建当前补丁；历史补丁不等于必须保留多套运行引擎。旧版源码标签、兼容配置、已知补丁指纹和对应原始备份持续保留，不把旧补丁直接套用到新应用。
-- 构建输出为 `artifacts/localization/<应用版本>/<补丁版本>/`，管理器缓存为 `cache/localization/<应用版本>/<补丁版本>/`。同目录只接受字节与清单完全一致的重建，冲突必须使用新版本或独立输出目录。
+- 参考构建输出为 `artifacts/localization/<应用版本>/<补丁版本>/`。同目录只接受字节与清单完全一致的重建，冲突必须使用新版本或独立输出目录。
+- 管理器在内存生成和校验补丁，通过同目录临时文件提交替换，不额外写入补丁缓存。保留既有原始备份布局。
 - 补丁携带版本身份；已知历史哈希的版本映射与当前发行哈希分开维护。未知具体版本的历史补丁不得显示为当前版本，也不能误报为未安装。
 - 原始备份按应用版本与原始指纹保存，不自动清理。工作区历史发布产物可归档；仅在不再需要重装时手动清理可重建缓存，不能连带删除原始备份。

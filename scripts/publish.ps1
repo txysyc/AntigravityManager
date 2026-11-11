@@ -1,83 +1,78 @@
-param(
-    [string]$RuntimeIdentifier = 'win-x64',
-    [switch]$FrameworkDependent,
-    [string]$NodeExecutable,
-    [string]$OutputDirectory
-)
+param([string]$OutputDirectory)
 $ErrorActionPreference = 'Stop'
-$projectRoot = Split-Path -Parent $PSScriptRoot
-$publishDirectory = if ($OutputDirectory) { [System.IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $projectRoot 'artifacts/app/AntigravityManager' }
-$env:DOTNET_CLI_HOME = Join-Path $projectRoot 'artifacts/dotnet-home'
-$env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
-$env:DOTNET_GENERATE_ASPNET_CERTIFICATE = 'false'
-$env:NUGET_PACKAGES = Join-Path $projectRoot 'artifacts/nuget/packages'
-$selfContained = if ($FrameworkDependent) { 'false' } else { 'true' }
-if (!$NodeExecutable) { $NodeExecutable = (Get-Command node.exe -ErrorAction Stop).Source }
-$NodeExecutable = (Resolve-Path -LiteralPath $NodeExecutable).Path
-if ((Split-Path -Leaf $NodeExecutable) -ne 'node.exe') { throw 'NodeExecutable 必须指向 node.exe。' }
-$nodeArchitecture = & $NodeExecutable --print process.arch
-if ($RuntimeIdentifier -ne "win-$nodeArchitecture") { throw 'Node.js 架构必须与 RuntimeIdentifier 一致。' }
-dotnet publish (Join-Path $projectRoot 'src/AntigravityManager.Desktop/AntigravityManager.Desktop.csproj') -c Release -r $RuntimeIdentifier --self-contained $selfContained --disable-build-servers -m:1 -o $publishDirectory --nologo
-if ($LASTEXITCODE -ne 0) { throw '桌面程序发布失败，请检查构建输出。' }
-$engineDestination = Join-Path $publishDirectory 'engines/localization'
-New-Item -ItemType Directory -Path $engineDestination -Force | Out-Null
-foreach ($directory in @('src','scripts','translations','profiles')) {
-    $destination = Join-Path $engineDestination $directory
-    New-Item -ItemType Directory -Path $destination -Force | Out-Null
-    Copy-Item -Path (Join-Path $projectRoot "engines/localization/$directory/*") -Destination $destination -Recurse -Force
-}
-foreach ($file in @('cli.cjs','package.json')) { Copy-Item -LiteralPath (Join-Path $projectRoot "engines/localization/$file") -Destination $engineDestination -Force }
-$runtimeDirectory = Join-Path $publishDirectory 'runtime'
-New-Item -ItemType Directory -Path $runtimeDirectory -Force | Out-Null
-Copy-Item -LiteralPath $NodeExecutable -Destination (Join-Path $runtimeDirectory 'node.exe') -Force
-foreach ($projectNotice in @('LICENSE', 'THIRD_PARTY_NOTICES.md')) {
-    Copy-Item -LiteralPath (Join-Path $projectRoot $projectNotice) -Destination $publishDirectory -Force
-}
-$licenseDirectory = Join-Path $publishDirectory 'licenses'
-New-Item -ItemType Directory -Path $licenseDirectory -Force | Out-Null
-Copy-Item -Path (Join-Path $projectRoot 'licenses/*') -Destination $licenseDirectory -Recurse -Force
-$nodeVersion = & $NodeExecutable --version
-if ($nodeVersion -notmatch '^v\d+\.\d+\.\d+$') { throw '无法确定 Node.js 版本，不能获取对应许可证。' }
-$nodeNotice = @(
-    (Join-Path (Split-Path -Parent $NodeExecutable) 'LICENSE'),
-    (Join-Path (Split-Path -Parent $NodeExecutable) 'LICENSE.txt'),
-    (Join-Path $projectRoot ('licenses/Node.js/' + $nodeVersion.Substring(1) + '/LICENSE'))
-) | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
-if ($nodeNotice) {
-    Copy-Item -LiteralPath $nodeNotice -Destination (Join-Path $runtimeDirectory 'LICENSE') -Force
-} else {
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/nodejs/node/$nodeVersion/LICENSE" -OutFile (Join-Path $runtimeDirectory 'LICENSE')
-}
-function Copy-PackageNotices {
-    param([string]$PackageId, [string]$Version, [string]$DirectoryName, [string]$LicenseName, [string]$NoticeName)
-    $packageDirectory = Join-Path $env:NUGET_PACKAGES ($PackageId.ToLowerInvariant() + '/' + $Version)
-    $destination = Join-Path $licenseDirectory ($DirectoryName + '/' + $Version)
-    New-Item -ItemType Directory -Path $destination -Force | Out-Null
-    foreach ($name in @($LicenseName, $NoticeName) | Where-Object { $_ }) {
-        $source = Join-Path $packageDirectory $name
-        if (!(Test-Path -LiteralPath $source -PathType Leaf)) { throw "缺少依赖许可文件：$PackageId/$Version/$name，发布未完成。" }
-        Copy-Item -LiteralPath $source -Destination $destination -Force
+$root = Split-Path -Parent $PSScriptRoot
+$stage = $null
+$env:CGO_ENABLED = '0'
+$env:GOOS = 'windows'
+$env:GOARCH = 'amd64'
+$env:GOTOOLCHAIN = 'local'
+Push-Location -LiteralPath $root
+try {
+    $version = (Get-Content -Raw -LiteralPath 'package.json' | ConvertFrom-Json).version
+    if ($version -notmatch '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$') { throw '管理器版本无效。' }
+    $output = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $root 'output' }
+    $null = New-Item -ItemType Directory -Path $output -Force
+    $exe = Join-Path $output "AntigravityManager-$version-win-x64.exe"
+    $checksum = "$exe.sha256"
+    if ((Test-Path -LiteralPath $exe) -or (Test-Path -LiteralPath $checksum)) { throw '发行文件已存在，请指定新的输出目录。' }
+    # go test ./... 会跳过点号目录，打包和测试可并行运行。
+    $stage = Join-Path $root ('artifacts/.go-package-' + [Guid]::NewGuid().ToString('N'))
+    $null = New-Item -ItemType Directory -Path $stage -Force
+
+    node engines/localization/scripts/generate-go-payload.cjs --check
+    if ($LASTEXITCODE -ne 0) { throw '内置汉化资源检查失败。' }
+    $modules = @(go list -mod=readonly -deps -f '{{with .Module}}{{if not .Main}}{{.Path}}|{{.Version}}|{{.Dir}}{{end}}{{end}}' ./src | Where-Object { $_ } | Sort-Object -Unique)
+    if ($LASTEXITCODE -ne 0 -or !$modules) { throw '无法确定实际链接的 Go 模块。' }
+    $goRoot = go env GOROOT
+    if ($LASTEXITCODE -ne 0 -or !$goRoot) { throw '无法确定 Go 工具链。' }
+    $noticeFile = Join-Path $stage 'notices.txt'
+    $notices = [IO.File]::Create($noticeFile)
+    function Add-Text([string]$Value) {
+        $bytes = [Text.Encoding]::UTF8.GetBytes($Value)
+        $notices.Write($bytes, 0, $bytes.Length)
     }
-}
-# 使用发布后的依赖与运行时版本，避免把 SDK 许可当成程序运行时许可。
-$dependencies = Get-Content -LiteralPath (Join-Path $publishDirectory 'AntigravityManager.deps.json') -Raw | ConvertFrom-Json
-foreach ($package in $dependencies.libraries.PSObject.Properties) {
-    $identity = $package.Name.Split('/')
-    if ($identity[0] -in @('WPF-UI', 'WPF-UI.Abstractions')) {
-        Copy-PackageNotices -PackageId $identity[0] -Version $identity[1] -DirectoryName $identity[0] -LicenseName 'LICENSE.md' -NoticeName 'ThirdPartyNotices.txt'
-    }
-}
-if (!$FrameworkDependent) {
-    $runtimeConfig = Get-Content -LiteralPath (Join-Path $publishDirectory 'AntigravityManager.runtimeconfig.json') -Raw | ConvertFrom-Json
-    foreach ($framework in $runtimeConfig.runtimeOptions.includedFrameworks) {
-        switch ($framework.name) {
-            'Microsoft.NETCore.App' {
-                Copy-PackageNotices -PackageId "Microsoft.NETCore.App.Runtime.$RuntimeIdentifier" -Version $framework.version -DirectoryName 'dotnet-runtime' -LicenseName 'LICENSE.TXT' -NoticeName 'THIRD-PARTY-NOTICES.TXT'
-            }
-            'Microsoft.WindowsDesktop.App' {
-                Copy-PackageNotices -PackageId "Microsoft.WindowsDesktop.App.Runtime.$RuntimeIdentifier" -Version $framework.version -DirectoryName 'windowsdesktop' -LicenseName 'LICENSE'
-            }
+    function Add-Licenses([string]$Label, [string]$Directory) {
+        $items = @(Get-ChildItem -LiteralPath $Directory -File | Where-Object { $_.Name -match '^(LICENSE|COPYING|NOTICE|PATENTS)([._-].*)?$' } | Sort-Object Name)
+        if (!($items | Where-Object { $_.Name -match '^(LICENSE|COPYING)([._-].*)?$' })) { throw "缺少许可原文：$Label" }
+        foreach ($file in $items) {
+            Add-Text "`n===== $Label / $($file.Name) =====`n"
+            $bytes = [IO.File]::ReadAllBytes($file.FullName)
+            $notices.Write($bytes, 0, $bytes.Length)
+            Add-Text "`n"
         }
     }
+    try {
+        Add-Text "Antigravity Manager $version — project and third-party notices`n"
+        Add-Licenses 'Antigravity Manager (MIT)' $root
+        Add-Licenses (go version) $goRoot
+        foreach ($row in $modules) {
+            $name, $release, $path = $row -split '\|', 3
+            Add-Licenses "$name $release" $path
+        }
+    } finally {
+        $notices.Dispose()
+    }
+    $replacement = @{}
+    $replacement[(Join-Path $root 'src/notices.txt')] = $noticeFile
+    $overlay = Join-Path $stage 'overlay.json'
+    @{ Replace = $replacement } | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $overlay -Encoding utf8NoBOM
+    $binary = Join-Path $stage 'AntigravityManager.exe'
+    go build -mod=readonly -overlay $overlay -trimpath -ldflags '-s -w -H windowsgui' -o $binary ./src
+    if ($LASTEXITCODE -ne 0) { throw 'Windows x64 单文件构建失败。' }
+    $text = & $binary --operation notices | Out-String
+    if ($LASTEXITCODE -ne 0 -or $text -notmatch 'github.com/egoist/mygo' -or $text -notmatch 'Go Authors') {
+        throw '单文件缺少嵌入的许可原文。'
+    }
+    [IO.File]::Copy($binary, $exe, $false)
+    $hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+    [IO.File]::WriteAllText($checksum, "$hash  $([IO.Path]::GetFileName($exe))`n")
+    Get-Item -LiteralPath $exe, $checksum
+} finally {
+    if ($stage -and (Test-Path -LiteralPath $stage -PathType Container)) {
+        foreach ($name in 'notices.txt', 'overlay.json', 'AntigravityManager.exe') {
+            [IO.File]::Delete((Join-Path $stage $name))
+        }
+        [IO.Directory]::Delete($stage)
+    }
+    Pop-Location
 }
-Write-Output "发布完成：$publishDirectory"

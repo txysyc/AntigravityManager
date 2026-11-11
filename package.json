@@ -1,14 +1,12 @@
 {
   "name": "antigravity-manager",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "license": "MIT",
   "description": "Modular Windows desktop manager for Antigravity",
   "scripts": {
-    "build": "dotnet build AntigravityManager.slnx",
     "test": "node --test engines/localization/tests/*.test.cjs",
     "test:ci": "node --test --test-skip-pattern=^fixture: engines/localization/tests/*.test.cjs",
-    "test:manager": "dotnet run --project tests/AntigravityManager.Checks",
     "check:guidelines": "node tools/verification/check-guidelines.cjs",
     "localization:build": "node engines/localization/scripts/build.cjs",
     "localization:inspect": "node engines/localization/cli.cjs inspect",

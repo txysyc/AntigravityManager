@@ -1,0 +1,2 @@
+Antigravity Manager is distributed under the MIT license.
+Official single-file builds embed the complete project and dependency notices.

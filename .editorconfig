@@ -7,10 +7,10 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = space
 
-[*.cs]
-indent_size = 4
+[*.go]
+indent_style = tab
 
-[*.{json,cjs,js,xaml,csproj,props,slnx}]
+[*.{json,cjs,js,yml,yaml}]
 indent_size = 2
 
 [*.md]
