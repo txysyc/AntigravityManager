@@ -11,6 +11,11 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  # 普通 CI 按 main 或 PR 编号分组，手动与发行调用按运行编号隔离。
+  group: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'antigravity-test-main') || (github.event_name == 'pull_request' && format('antigravity-test-pr-{0}', github.event.pull_request.number)) || format('antigravity-test-run-{0}', github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+
 jobs:
   test:
     name: Windows 构建与检查
