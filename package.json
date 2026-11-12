@@ -1,6 +1,6 @@
 {
   "name": "antigravity-manager",
-  "version": "0.3.0",
+  "version": "0.4.2",
   "private": true,
   "license": "MIT",
   "description": "Modular Windows desktop manager for Antigravity",

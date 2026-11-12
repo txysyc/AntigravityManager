@@ -28,6 +28,24 @@
 <div class="font-medium text-sm text-foreground truncate"><a id="audit-market-name" href="/customizations/plugins/private">New</a></div>
 </div></div>
 <div data-testid="planner-response-text"><p id="audit-generated">Read, draft, and edit docs.</p></div>
+<!-- 2.31.2 设置：使用真实布局卡片、模型额度行和开关控件的结构。 -->
+<div class="max-w-2xl mx-auto">
+  <div id="project4kMode" role="radiogroup">
+    <button id="audit-layout-knowledge" data-testid="mode-option-non-technical" value="2" aria-label="Knowledge Work" aria-describedby="audit-mode-description-non-technical"><span id="audit-knowledge-label">Knowledge Work</span><div id="audit-mode-description-non-technical">Simplified interface for research, writing, and everyday tasks.</div></button>
+    <button id="audit-layout-engineering" data-testid="mode-option-developer" value="1" aria-label="Software Engineering" aria-describedby="audit-mode-description-developer"><span id="audit-engineering-label">Software Engineering</span><div id="audit-mode-description-developer">Full interface for coding, developer tools, and managing agents.</div></button>
+  </div>
+  <h3 class="m-0 font-medium" id="audit-chat-section">Chat</h3>
+  <button id="audit-verbose" value="true">Verbose</button>
+  <button id="audit-external-browser" value="external">External Browser</button>
+  <div class="flex-1 flex flex-col gap-0.5">
+    <div class="font-medium" id="audit-starter-plan">Your Plan: <span id="audit-starter-name">Antigravity Starter Quota</span></div>
+    <span class="text-sm text-muted-foreground whitespace-pre-wrap" id="audit-starter-description">Free users and Google AI Plus users receive the minimum base limits on Antigravity. You can upgrade to Google AI Pro or above to receive higher rate limits.</span>
+  </div>
+  <div class="flex-1 flex flex-col gap-0.5"><div class="font-medium">Your Plan: <span id="audit-unknown-plan">Custom Business Plan</span></div></div>
+  <button id="audit-unrelated-knowledge">Knowledge Work</button>
+  <button id="audit-unrelated-quota">Antigravity Starter Quota</button>
+</div>
+<div data-testid="planner-response-text"><h3 class="m-0 font-medium" id="audit-user-chat">Chat</h3><button id="audit-user-verbose">Verbose</button></div>
 <!-- Appearance labels and string-keyed presets from the late bundle module. -->
 <div class="max-w-2xl mx-auto">
   <h2 id="audit-theme-light">Light Theme</h2><h2 id="audit-theme-dark">Dark Theme</h2>
@@ -42,6 +60,31 @@
 <ul><li data-testid="onboarding-capability-build"><span id="audit-onboarding-title">Build new features</span><span id="audit-onboarding-description">Hand off a feature and come back to working code.</span></li></ul>
 <div data-testid="planner-response-text"><span id="audit-onboarding-user-content">Build new features</span></div>
 <div id="audit-onboarding-unrelated">Build new features</div>
+<!-- 登录与首次设置控件按 2.31.2 内嵌前端的结构验证。 -->
+<div class="entrance-title" id="audit-sign-in-heading">Welcome to Antigravity!</div>
+<div class="entrance-auth-panel">
+  <div class="text-lg font-medium text-foreground text-center mb-1" id="audit-business-sign-in-heading">Business Account Sign In</div>
+  <button id="audit-sign-in-google" title="Continue with Google">Continue with Google</button>
+  <button id="audit-sign-in-business">Use Business Account</button>
+  <button id="audit-sign-in-help">Having trouble signing in?</button>
+  <div data-testid="onboarding-auth-code-panel">
+    <p id="audit-auth-code-hint">Sign in in your browser, then paste the authorization code shown on the callback page.</p>
+    <label for="audit-auth-code">Authorization code</label>
+    <input id="audit-auth-code" type="password" value="Test-value-not-a-credential" placeholder="Paste authorization code">
+    <button id="audit-auth-code-submit">Submit code</button>
+  </div>
+</div>
+<div>
+  <p class="entrance-step text-xl" id="audit-persona-greeting">Hey Alex!</p>
+  <p class="entrance-step" id="audit-persona-title">Let's tailor the experience for you. What best describes your work?</p>
+  <div role="radiogroup" aria-labelledby="audit-persona-title">
+    <button role="radio" data-testid="persona-option-science" aria-checked="false"><span class="line-clamp-2" id="audit-persona-option">Science</span></button>
+  </div>
+</div>
+<div data-testid="conversation-title"><div class="entrance-title" id="audit-sign-in-user-content">Welcome to Antigravity!</div></div>
+<div data-testid="project-header"><span class="truncate text-sm" id="audit-persona-user-content">Science</span></div>
+<div id="audit-persona-unrelated">Hey Alex!</div>
+<div id="audit-sign-in-reparenting"></div>
 <!-- 实机确认的 portal 下拉结构；功能值与显示文本保持独立。 -->
 <div id="dropdown-fixture-host"></div>
 <div data-testid="project-selector-item"><span class="truncate" id="audit-dropdown-project">Machine</span></div>

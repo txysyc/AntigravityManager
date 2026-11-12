@@ -122,12 +122,19 @@ async function verifyModernUi(page) {
       '<button>Downloads</button>' +
       '<div data-testid="browser-autocomplete-option"><span class="truncate">Downloads</span></div>' +
       '<div data-testid="conversation-row-sample"><span class="truncate text-left w-full">Downloads</span></div>' +
-      '<div data-testid="automation-run"><span class="truncate">Downloads</span></div>';
+      '<div data-testid="automation-run"><span class="truncate">Downloads</span></div>' +
+      '<div class="entrance-title">Welcome to Antigravity!</div>' +
+      '<div class="entrance-auth-panel"><button>Continue with Google</button><button>Use Business Account</button></div>' +
+      '<div data-localization-sample="sign-in-help"><button>Having trouble signing in?</button></div>';
     document.body.append(sample);
   });
   const sample = page.locator('#localization-scope-check');
   await page.waitForFunction(() => document.querySelector('#localization-scope-check h1')?.textContent === '你好，Downloads，今天想做些什么？');
-  assert.equal(await sample.locator('button').textContent(), '下载内容');
+  assert.equal(await sample.locator(':scope > button').textContent(), '下载内容');
+  assert.equal(await sample.locator('.entrance-title').textContent(), '欢迎使用 Antigravity！');
+  const dictionary = require('../../engines/localization/translations/zh-CN.json');
+  assert.deepEqual(await sample.locator('.entrance-auth-panel button, [data-localization-sample="sign-in-help"] button').allTextContents(),
+    ['Continue with Google', 'Use Business Account', 'Having trouble signing in?'].map(key => dictionary[key]));
   assert.deepEqual(await sample.locator('span').allTextContents(), ['Downloads', 'Downloads', 'Downloads']);
   await sample.locator('h1').evaluate(heading => { heading.firstChild.nodeValue = 'Hi Release, what can we get done today?'; });
   await page.waitForFunction(() => document.querySelector('#localization-scope-check h1')?.textContent === '你好，Release，今天想做些什么？');
@@ -144,7 +151,6 @@ async function verify(language) {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.waitForURL(/https?:\/\/(127\.0\.0\.1|localhost):\d+\//, { timeout: 65000, waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('#antigravity-language-switcher');
     await page.waitForFunction(expected => document.documentElement.lang === expected, language);
     await page.waitForTimeout(2000);
     const state = launcherPath ? { version: applicationVersion, userData: profile, home, processId: application.report.processId, proxy: application.report.httpProxy, sources: { version: 'ASAR package.json', userData: 'verified CDP process arguments', home: 'declared isolated environment' } } : await application.evaluate(({ app }) => ({ version: app.getVersion(), userData: app.getPath('userData'), home: app.getPath('home') }));
@@ -161,35 +167,52 @@ async function verify(language) {
     assert.equal(mainAssetSha256, sha(fs.readFileSync(path.join(root, 'artifacts/adaptation', applicationVersion, 'embedded', expectedAsset))), '实际服务必须提供新版本原始前端资源');
     const dictionary = require('../../engines/localization/translations/zh-CN.json');
     const welcome = ['Build new features', 'Hand off a feature and come back to working code.', 'Debug and fix', 'Automatically reproduce bugs, trace causes, test fixes.', 'Research anything', 'Ask about your code or any topic, get clear answers.', 'Write and edit docs', 'Draft documents, emails, and notes that sound like you.'];
+    const signInTitle = 'Welcome to Antigravity!';
     const introScreens = [
+      { id: 'sign-in', keys: [signInTitle, 'Continue with Google', 'Use Business Account', 'Having trouble signing in?'] },
+      {
+        id: 'persona',
+        keys: ["Let's tailor the experience for you. What best describes your work?", 'Software Engineering', 'Knowledge Work', 'Data & Analytics', 'Science', 'Design'],
+        chinese: ['我们来为你定制使用体验。以下哪项最符合你的工作？', '软件工程', '知识工作', '数据与分析', '科学', '设计']
+      },
       { id: 'welcome', keys: welcome },
       { id: 'privacy', keys: ['Security Notice & Data Use', 'Get started'] },
       { id: 'terms', keys: ['Terms of Service & Data Use', 'Terms and Privacy:'] }
     ];
-    const expectedScreens = introScreens.map(screen => screen.keys.map(key => language === 'zh-CN' ? dictionary[key] : key));
+    const expectedScreens = introScreens.map(screen => language === 'en' ? screen.keys :
+      screen.chinese ?? screen.keys.map(key => key === signInTitle ? '欢迎使用 Antigravity！' : dictionary[key]));
+    assert.ok(expectedScreens.flat().every(key => typeof key === 'string' && key), '欢迎页的预期文案不得为空');
     await page.waitForFunction(screens => screens.some(keys => keys.every(key => document.body.innerText.includes(key))), expectedScreens);
     const text = await page.locator('body').innerText();
     const screen = introScreens[expectedScreens.findIndex(keys => keys.every(key => text.includes(key)))];
-    assert.ok(screen, '未找到已知的欢迎或数据使用提示页面');
+    assert.ok(screen, '未找到已知的登录、欢迎、首次设置或数据使用提示页面');
     fs.writeFileSync(path.join(output, 'page-' + language + '.txt'), text);
     await page.screenshot({ path: path.join(output, 'product-' + language + '.png'), fullPage: true, animations: 'disabled', timeout: 30000 });
     const evidence = { language, screen: screen.id, url: page.url(), state, menus, text, errors, mainAssetSha256 };
     if (language === 'zh-CN') {
+      const audit = require('./verify-audit.cjs');
       const sample = checkModernUi ? await verifyModernUi(page) : null;
-      await page.locator('#antigravity-language-switcher summary').click();
-      await page.locator('#antigravity-language-switcher select').selectOption('en');
+      if (checkModernUi) {
+        await audit.verifyComposerWithoutLanguageOverlay(page);
+        await audit.verifySettingsLanguageEntry(page);
+      }
+      const settings = await audit.mountLanguageSettingsFixture(page);
+      await audit.switchLanguageFromSettings(settings, 'en');
       await page.waitForFunction(() => document.documentElement.lang === 'en');
       assert.equal(JSON.parse(fs.readFileSync(path.join(profile, 'ui-language.json'))).language, 'en');
+      await settings.evaluate(element => element.remove());
       evidence.switchedEnglishText = await page.locator('body').innerText();
       for (const key of screen.keys) assert.ok(evidence.switchedEnglishText.includes(key), '切回原文：' + key);
       if (sample) {
         assert.equal(await sample.locator('h1').textContent(), 'Hi Release, what can we get done today?');
-        assert.equal(await sample.locator('button').textContent(), 'Downloads');
+        assert.equal(await sample.locator(':scope > button').textContent(), 'Downloads');
+        assert.equal(await sample.locator('.entrance-title').textContent(), signInTitle);
+        assert.deepEqual(await sample.locator('.entrance-auth-panel button, [data-localization-sample="sign-in-help"] button').allTextContents(),
+          ['Continue with Google', 'Use Business Account', 'Having trouble signing in?']);
         assert.deepEqual(await sample.locator('span').allTextContents(), ['Downloads', 'Downloads', 'Downloads']);
         await sample.evaluate(element => element.remove());
         evidence.modernUiScopeVerified = true;
       }
-      await page.locator('#antigravity-language-switcher summary').click();
       await page.screenshot({ path: path.join(output, 'product-switched-en.png'), fullPage: true, animations: 'disabled', timeout: 30000 });
     }
     return evidence;

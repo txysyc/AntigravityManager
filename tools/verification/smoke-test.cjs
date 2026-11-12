@@ -90,13 +90,15 @@ async function main() {
       await new Promise(resolve => setTimeout(resolve, 400));
     }
     if (!page) throw Error('Main window did not load verification fixture');
+    const audit = require('./verify-audit.cjs');
     if (checkEnglish) {
-      await page.waitForSelector('#antigravity-language-switcher');
+      const settings = await audit.mountLanguageSettingsFixture(page);
+      const select = settings.getByRole('combobox', { name: 'Interface Language' });
+      await select.waitFor();
       assert.equal(await page.locator('html').getAttribute('lang'), 'en');
       assert.equal(await page.locator('#settings').textContent(), 'Settings');
       assert.equal(await page.locator('#input').getAttribute('placeholder'), 'Search conversations...');
-      await page.locator('#antigravity-language-switcher summary').click();
-      assert.equal(await page.locator('#antigravity-language-switcher select').inputValue(), 'en');
+      assert.equal(await select.textContent(), 'English');
       console.log('PASS: new Electron process restores the persisted English preference.');
       return;
     }
@@ -172,9 +174,10 @@ async function main() {
     fs.mkdirSync(output, { recursive: true });
     await page.screenshot({ path: path.join(output, 'preload-smoke.png') });
     console.log('PASS: packaged preload, context isolation, dynamic changes, control events, protected chat/code/input.');
-    await page.locator('#antigravity-language-switcher summary').click();
-    const languageSelect = page.locator('#antigravity-language-switcher select');
-    await languageSelect.selectOption('en');
+    await audit.verifyComposerWithoutLanguageOverlay(page);
+    await audit.verifySettingsLanguageEntry(page);
+    const settings = await audit.mountLanguageSettingsFixture(page);
+    await audit.switchLanguageFromSettings(settings, 'en');
     await page.waitForFunction(() => document.querySelector('#settings')?.textContent === 'Settings');
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
     assert.equal(await page.locator('#new').textContent(), 'Cancel');
@@ -190,20 +193,19 @@ async function main() {
     assert.equal(await page.locator('#modified-many').textContent(), 'Modified in 5 projects');
     assert.equal(await page.locator('#modified').textContent(), 'Modified in Models');
     await page.evaluate(() => document.querySelector('#new').firstChild.nodeValue = 'Settings');
-    await languageSelect.selectOption('zh-CN');
+    await audit.switchLanguageFromSettings(settings, 'zh-CN');
     await page.waitForFunction(() => document.querySelector('#new')?.textContent === '设置');
     assert.equal(await page.locator('#plan-help').textContent(), '输入 / 并选择 plan ，让代理生成计划。');
     // Application changes after translation must survive a later switch back.
     await page.evaluate(() => { document.querySelector('#new').firstChild.nodeValue = 'Custom value'; document.querySelector('#input').setAttribute('placeholder', 'Custom hint'); });
-    await languageSelect.selectOption('en');
+    await audit.switchLanguageFromSettings(settings, 'en');
     await page.waitForFunction(() => document.documentElement.lang === 'en');
     assert.equal(await page.locator('#new').textContent(), 'Custom value');
     assert.equal(await page.locator('#input').getAttribute('placeholder'), 'Custom hint');
     assert.equal(await page.locator('#input').inputValue(), 'Settings');
     assert.equal(JSON.parse(fs.readFileSync(path.join(profile, 'ui-language.json'))).language, 'en');
     await page.reload();
-    await page.waitForSelector('#antigravity-language-switcher');
-    assert.equal(await page.locator('html').getAttribute('lang'), 'en');
+    await page.waitForFunction(() => document.documentElement.lang === 'en');
     assert.equal(await page.locator('#settings').textContent(), 'Settings');
     await page.screenshot({ path: path.join(output, 'language-switch-en.png') });
     console.log('PASS: Chinese ↔ English, original text/attributes, application updates, persisted setting and reload.');

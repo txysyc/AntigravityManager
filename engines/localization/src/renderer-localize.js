@@ -8,11 +8,23 @@ function installChineseUI(dictionary, bridge, config) {
   config = config || {};
   window.__antigravityChineseUI = { version: config.patchVersion || 'unknown' };
   const remoteDictionary = config.remote || {};
+  const layoutLabels = new Set(['Knowledge Work', 'Software Engineering']);
+  const layoutDescriptions = new Set([
+    'Simplified interface for research, writing, and everyday tasks.',
+    'Full interface for coding, developer tools, and managing agents.'
+  ]);
+  const starterQuota = 'Antigravity Starter Quota';
+  const starterDescription = 'Free users and Google AI Plus users receive the minimum base limits on Antigravity. You can upgrade to Google AI Pro or above to receive higher rate limits.';
+  const scopedRemoteKeys = new Set([...layoutLabels, ...layoutDescriptions, starterQuota, starterDescription]);
   const dynamicRules = (config.rules || []).map(rule => ({ ...rule, regex: new RegExp(rule.pattern) }));
   let language = 'en';
   let observer;
   let selector;
   let status;
+  let settingsEntry;
+  let settingsLabel;
+  let updateLanguageChoice;
+  let closeLanguageChoices;
   let started = false;
   let latestEvent = 0;
   const textRecords = new Map();
@@ -94,6 +106,47 @@ function installChineseUI(dictionary, bridge, config) {
     const title = notice?.querySelector('span.font-medium.text-foreground');
     return title && originalText(title) === 'This page is going away soon';
   }
+  const personaLabels = {
+    'Software Engineering': '软件工程', 'Knowledge Work': '知识工作',
+    'Data & Analytics': '数据与分析', Science: '科学', Design: '设计'
+  };
+  function onboardingTranslation(element, key) {
+    if (key === 'Welcome to Antigravity!' && element.matches('div.entrance-title')) return '欢迎使用 Antigravity！';
+    if (key === 'Business Account Sign In' &&
+      element.matches('.entrance-auth-panel div.text-lg.font-medium.text-center')) return dictionary[key];
+    if (element.matches('p.entrance-step.text-xl') &&
+      element.parentElement?.querySelector('[role="radiogroup"] [role="radio"][data-testid^="persona-option-"]')) {
+      const name = /^Hey (\S+)!$/.exec(key)?.[1];
+      if (name) return name === 'there' ? '你好！' : `你好，${name}！`;
+    }
+    if (element.matches('[role="radiogroup"] [role="radio"][data-testid^="persona-option-"] > span.line-clamp-2') &&
+      Object.prototype.hasOwnProperty.call(personaLabels, key)) return personaLabels[key];
+  }
+  function settingsTranslation(element, key, attributeName) {
+    const isLayoutLabel = layoutLabels.has(key);
+    if (isLayoutLabel || layoutDescriptions.has(key)) {
+      const layoutCard = element.closest('#project4kMode [data-testid^="mode-option-"]');
+      if (layoutCard && (attributeName === 'aria-label' && element === layoutCard && isLayoutLabel ||
+        !attributeName && (isLayoutLabel || element.id.includes('-mode-description-')))) return remoteDictionary[key];
+      return;
+    }
+    if (!['Chat', 'Verbose', 'External Browser', starterQuota, starterDescription, 'Your Plan: ' + starterQuota].includes(key)) return;
+    if (attributeName || !settingsElement(element)) return;
+    if (key === 'Chat' && element.matches('h3.m-0.font-medium')) return '对话';
+    if (element.closest('button,[role="button"],[role="radio"]')) {
+      if (key === 'Verbose') return '详细';
+      if (key === 'External Browser') return '外部浏览器';
+    }
+    // 套餐名称和说明由服务返回，仅翻译套餐行中已核对的固定文本。
+    if (key === 'Your Plan: ' + starterQuota && element.matches('div.font-medium')) return '当前方案：' + remoteDictionary[starterQuota];
+    if (key !== starterQuota && key !== starterDescription) return;
+    const row = element.closest('.flex-1.flex.flex-col.gap-0\\.5');
+    const plan = row?.querySelector('div.font-medium');
+    if (plan?.firstChild?.nodeType !== 3 || !originalText(plan).startsWith('Your Plan:')) return;
+    if (key === starterQuota && plan.contains(element)) return remoteDictionary[key];
+    if (key === starterDescription &&
+      element.matches('span.text-sm.text-muted-foreground.whitespace-pre-wrap')) return remoteDictionary[key];
+  }
   function uiElement(element, key) {
     if (element.closest(controlSelector) || historyNotice(element) || marketplaceElement(element) || toolPrefix(element)) return true;
     // Exact, reviewed full UI sentences can occur in otherwise unmarked empty
@@ -109,18 +162,20 @@ function installChineseUI(dictionary, bridge, config) {
     if (!/^(?:\d+(?:\.\d+)?\s+(?:days?|hours?|minutes?|seconds?)(?:,\s*|\s+and\s+|\s*)?)+$/.test(value)) return null;
     return value.replace(/(\d+(?:\.\d+)?)\s+(days?|hours?|minutes?|seconds?)/g, (_, n, unit) => n + (unit.startsWith('day')?'天':unit.startsWith('hour')?'小时':unit.startsWith('minute')?'分钟':'秒')).replace(/,\s*|\s+and\s+/g, '');
   }
-  function translate(value, element, attributeName) {
+  function translate(value, element, attributeName, scopedTranslation) {
     const key = value.trim();
     let next;
     const greetingName = !attributeName && element.closest('[data-testid="home-greeting"] h1')
       ? /^Hi (\S+), what can we get done today\?$/.exec(key)?.[1] : undefined;
-    if (greetingName) next = `你好，${greetingName}，今天想做些什么？`;
+    if (scopedTranslation !== undefined) next = scopedTranslation;
+    else if (greetingName) next = `你好，${greetingName}，今天想做些什么？`;
     else if (key === 'Press' && element.closest('[data-testid="post-onboarding-welcome-tip"]')) next = '按';
     else if (key === 'Type' && element.closest('[data-testid="plan-command-fyi-alert"]')) next = '输入';
     else if (historyNotice(element) && key === '(') next = '（';
     else if (historyNotice(element) && key === '.') next = '。';
     else if (Object.prototype.hasOwnProperty.call(dictionary, key)) next = dictionary[key];
-    else if ((settingsElement(element) || marketplaceElement(element)) && Object.prototype.hasOwnProperty.call(remoteDictionary, key)) next = remoteDictionary[key];
+    else if (!scopedRemoteKeys.has(key) && (settingsElement(element) || marketplaceElement(element)) &&
+      Object.prototype.hasOwnProperty.call(remoteDictionary, key)) next = remoteDictionary[key];
     else for (const rule of dynamicRules) {
       if (rule.scope === 'attribute' ? !attributeName : attributeName ||
         (rule.scope === 'settings' ? !settingsElement(element) : rule.scope === 'title-menu' ? !element.closest('[data-testid="title-menu-bar"]') : rule.scope === 'marketplace' ? !marketplaceElement(element) : !uiElement(element, key))) continue;
@@ -203,19 +258,22 @@ function installChineseUI(dictionary, bridge, config) {
     const original = node.nodeValue;
     const key = original.trim();
     const sourceKey = previous && original === previous.applied ? previous.original.trim() : key;
+    const scopedTranslation = onboardingTranslation(element, sourceKey) ?? settingsTranslation(element, sourceKey);
     // Only the count suffix inside the override trigger is UI; its project names
     // stay untouched. A named project "projects" is not a numeric count suffix.
     const countSuffix = sourceKey === 'projects' && fragmentAllowed(node, sourceKey) &&
       /^\d+\s*$/.test(node.previousSibling?.nodeValue || '');
-    if (protectedElement(element) && !(countSuffix && !element.closest(protectedSelector))) {
+    if ((protectedElement(element) && !(countSuffix && !element.closest(protectedSelector))) ||
+      (previous?.scoped && original === previous.applied && scopedTranslation === undefined)) {
       if (previous && original === previous.applied) node.nodeValue = previous.original;
       textRecords.delete(node);
       return;
     }
     if (previous && original === previous.applied) return;
-    if (fragments.has(key) || grammarFragments.has(key) || countFragments.has(key) ? !fragmentAllowed(node, key) : !uiElement(element, key)) return;
-    const next = translate(original, element);
-    if (next !== original) { node.nodeValue = next; textRecords.set(node, { original, applied: next }); translated++; }
+    if (scopedTranslation === undefined &&
+      (fragments.has(key) || grammarFragments.has(key) || countFragments.has(key) ? !fragmentAllowed(node, key) : !uiElement(element, key))) return;
+    const next = translate(original, element, undefined, scopedTranslation);
+    if (next !== original) { node.nodeValue = next; textRecords.set(node, { original, applied: next, scoped: scopedTranslation !== undefined }); translated++; }
     else textRecords.delete(node);
   }
   const attributes = ['title', 'aria-label', 'placeholder', 'alt'];
@@ -232,13 +290,21 @@ function installChineseUI(dictionary, bridge, config) {
     for (const name of attributes) {
       const current = element.getAttribute(name);
       const previous = attributeRecords.get(element)?.get(name);
-      if (previous && current === previous.applied) continue;
       if (current === null) { attributeRecords.get(element)?.delete(name); continue; }
-      const next = fragments.has(current?.trim()) ? current : translate(current, element, name);
+      const source = previous && current === previous.applied ? previous.original : current;
+      const scopedTranslation = settingsTranslation(element, source.trim(), name);
+      if (previous && current === previous.applied) {
+        if (previous.scoped && scopedTranslation === undefined) {
+          element.setAttribute(name, previous.original);
+          attributeRecords.get(element).delete(name);
+        }
+        continue;
+      }
+      const next = fragments.has(current.trim()) ? current : translate(current, element, name, scopedTranslation);
       if (current !== next) {
         element.setAttribute(name, next);
         if (!attributeRecords.has(element)) attributeRecords.set(element, new Map());
-        attributeRecords.get(element).set(name, { original: current, applied: next });
+        attributeRecords.get(element).set(name, { original: current, applied: next, scoped: scopedTranslation !== undefined });
         translated++;
       } else attributeRecords.get(element)?.delete(name);
     }
@@ -325,48 +391,169 @@ function installChineseUI(dictionary, bridge, config) {
     prefixRecords.clear();
     document.documentElement.lang = language;
     if (language === 'zh-CN') scan(document.body);
-    selector.value = language;
-    status.textContent = language === 'zh-CN' ? '网页立即生效；原生菜单下次启动生效' : 'Page applies now; native menus apply after restart';
+    updateLanguageChoice();
+    status.hidden = true;
+    settingsLabel.textContent = language === 'zh-CN' ? '界面语言' : 'Interface Language';
+    mountSettingsEntry();
     observe();
   }
-  function addSwitcher() {
+  function mountSettingsEntry() {
+    const headers = document.querySelectorAll('.max-w-2xl.mx-auto > :first-child');
+    for (const header of headers) {
+      const title = header.querySelector('h2');
+      const description = title?.nextElementSibling;
+      // 同名的项目设置或聊天标题不能作为入口挂载点。
+      if (!description || protectedElement(title) || originalText(title) !== 'General' ||
+        originalText(description) !== 'Configure agent execution, queued message delivery, and permissions.') continue;
+      if (header.nextElementSibling !== settingsEntry) header.after(settingsEntry);
+      return;
+    }
+    closeLanguageChoices();
+    settingsEntry.remove();
+  }
+  function createLanguageSetting() {
     const prefixStyle = document.createElement('style');
     prefixStyle.textContent = '[data-antigravity-zh-prefix]>*{display:none!important}[data-antigravity-zh-prefix]::after{content:attr(data-antigravity-zh-prefix)}';
     document.head.append(prefixStyle);
-    const host = document.createElement('div');
-    host.id = 'antigravity-language-switcher';
-    host.setAttribute('data-no-translate', '');
-    host.setAttribute('translate', 'no');
-    Object.assign(host.style, { position: 'fixed', right: '16px', bottom: '16px', zIndex: '2147483647' });
-    const shadow = host.attachShadow({ mode: 'open' });
-    const style = document.createElement('style');
-    style.textContent = ':host{font:12px system-ui;color:#eee}details{background:#24262b;border:1px solid #62666f;border-radius:8px;padding:8px;box-shadow:0 2px 10px #0005}summary{cursor:pointer;user-select:none}label{display:flex;align-items:center;gap:8px;padding-top:10px}select{font:inherit;padding:4px;border-radius:4px;background:#17191d;color:#eee;border:1px solid #62666f}p{max-width:240px;margin:8px 0 0;line-height:1.5}';
-    const details = document.createElement('details');
-    const summary = document.createElement('summary'); summary.textContent = 'Language / 语言';
-    const label = document.createElement('label'); label.textContent = 'Language / 语言';
-    selector = document.createElement('select'); selector.setAttribute('aria-label', 'Language / 语言');
-    for (const [value, caption] of [['zh-CN', '简体中文'], ['en', 'English']]) {
-      const option = document.createElement('option'); option.value = value; option.textContent = caption; selector.append(option);
+    settingsEntry = document.createElement('div');
+    settingsEntry.id = 'antigravity-language-setting';
+    settingsEntry.setAttribute('data-no-translate', '');
+    const settingsShadow = settingsEntry.attachShadow({ mode: 'open' });
+    const settingsStyle = document.createElement('style');
+    settingsStyle.textContent = `
+      :host{display:block}
+      .row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem 1rem;padding:.625rem .75rem;border:1px solid var(--color-border,#80808055);border-radius:.75rem}
+      button{appearance:none;cursor:pointer;font:inherit}
+      .trigger{display:flex;align-items:center;justify-content:space-between;gap:.5rem;min-width:min(120px,100%);max-width:100%;padding:.25rem .625rem;border:0;border-radius:999px;background:var(--color-secondary,#80808024);color:var(--color-secondary-foreground,inherit)}
+      .trigger:hover{color:var(--color-foreground,inherit)}
+      .trigger:focus-visible{outline:2px solid var(--color-ring,#3b82f6);outline-offset:2px}
+      .arrow{width:.75rem;height:.75rem;opacity:.7;flex-shrink:0}
+      .panel{box-sizing:border-box;position:fixed;inset:auto;margin:0;z-index:6000;padding:.25rem;border:1px solid var(--glass-border,var(--color-border,#80808040));border-radius:.75rem;background:var(--glass,var(--color-card,#fff));color:var(--color-foreground,#18181b);backdrop-filter:blur(20px) saturate(1.6);box-shadow:var(--glass-shadow,0 4px 10px #0002);overflow:auto;overscroll-behavior:contain}
+      :host-context(.dark) .panel{background:var(--glass,var(--color-card,#24262b));color:var(--color-foreground,#eee)}
+      .option{width:100%;display:flex;align-items:center;justify-content:space-between;gap:.5rem;text-align:left;padding:.375rem .5rem;border:0;border-radius:.375rem;background:transparent;color:inherit}
+      .option[data-active],.option:hover{background:var(--color-secondary,#80808024)}
+      .check{width:1rem;height:1rem;flex-shrink:0;visibility:hidden}
+      .option[aria-selected="true"] .check{visibility:visible}
+      .status{flex-basis:100%;font-size:.875em}
+    `;
+    const row = document.createElement('div'); row.className = 'row';
+    settingsLabel = document.createElement('label');
+    settingsLabel.id = 'interface-language-label'; settingsLabel.htmlFor = 'interface-language';
+    selector = document.createElement('button'); selector.id = 'interface-language'; selector.type = 'button'; selector.className = 'trigger';
+    selector.setAttribute('role', 'combobox'); selector.setAttribute('aria-haspopup', 'listbox');
+    selector.setAttribute('aria-labelledby', settingsLabel.id); selector.setAttribute('aria-expanded', 'false');
+    const caption = document.createElement('span');
+    function icon(className, path) {
+      const ns = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(ns, 'svg'); const line = document.createElementNS(ns, 'path');
+      svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('class', className); svg.setAttribute('aria-hidden', 'true');
+      line.setAttribute('d', path); line.setAttribute('fill', 'none'); line.setAttribute('stroke', 'currentColor');
+      line.setAttribute('stroke-width', '1.5'); line.setAttribute('stroke-linecap', 'round'); line.setAttribute('stroke-linejoin', 'round');
+      svg.append(line); return svg;
     }
-    selector.addEventListener('change', async () => {
-      const requested = selector.value;
+    selector.append(caption, icon('arrow', 'M4 6l4 4 4-4'));
+    const panel = document.createElement('div'); panel.id = 'interface-language-options'; panel.className = 'panel'; panel.hidden = true;
+    panel.setAttribute('role', 'listbox'); panel.setAttribute('aria-labelledby', settingsLabel.id);
+    selector.setAttribute('aria-controls', panel.id);
+    const topLayer = typeof panel.showPopover === 'function';
+    if (topLayer) panel.setAttribute('popover', 'manual');
+    const choices = [['zh-CN', '简体中文'], ['en', 'English']].map(([value, text]) => {
+      const option = document.createElement('button'); option.id = 'interface-language-' + value;
+      option.type = 'button'; option.className = 'option'; option.tabIndex = -1; option.setAttribute('role', 'option');
+      option.append(text, icon('check', 'M2.5 8l3.5 3.5 7-7'));
+      option.addEventListener('pointerdown', event => event.preventDefault());
+      option.addEventListener('click', () => chooseLanguage(value));
+      panel.append(option); return { value, text, option };
+    });
+    let activeChoice = 0;
+    let open = false;
+    function highlight(index) {
+      activeChoice = index;
+      for (const [i, { option }] of choices.entries()) option.toggleAttribute('data-active', i === index);
+      selector.setAttribute('aria-activedescendant', choices[index].option.id);
+    }
+    updateLanguageChoice = () => {
+      caption.textContent = choices.find(choice => choice.value === language).text;
+      for (const { value, option } of choices) option.setAttribute('aria-selected', String(value === language));
+    };
+    closeLanguageChoices = () => {
+      if (!open) return;
+      open = false;
+      if (topLayer && panel.matches(':popover-open')) panel.hidePopover();
+      panel.hidden = true;
+      selector.setAttribute('aria-expanded', 'false');
+      selector.removeAttribute('aria-activedescendant');
+    };
+    function openLanguageChoices(index = choices.findIndex(choice => choice.value === language)) {
+      if (open || pendingLanguage) return;
+      panel.hidden = false;
+      if (topLayer) panel.showPopover();
+      const rect = selector.getBoundingClientRect(), gutter = 8, gap = 4;
+      const width = Math.max(0, Math.min(Math.max(144, rect.width), innerWidth - gutter * 2));
+      panel.style.width = width + 'px';
+      panel.style.left = Math.max(gutter, Math.min(rect.right - width, innerWidth - gutter - width)) + 'px';
+      panel.style.maxHeight = '';
+      const height = panel.offsetHeight, below = innerHeight - rect.bottom - gap - gutter, above = rect.top - gap - gutter;
+      const flip = below < height && above > below;
+      const available = Math.max(0, flip ? above : below);
+      panel.style.maxHeight = available + 'px';
+      panel.style.top = (flip ? rect.top - gap - Math.min(height, available) : rect.bottom + gap) + 'px';
+      open = true;
+      selector.setAttribute('aria-expanded', 'true');
+      highlight(index);
+    }
+    selector.addEventListener('click', () => open ? closeLanguageChoices() : openLanguageChoices());
+    selector.addEventListener('keydown', event => {
+      const key = event.key;
+      if (key === 'Tab') { closeLanguageChoices(); return; }
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(key) && !(open && ['Escape', 'Enter', ' '].includes(key))) return;
+      event.preventDefault(); event.stopPropagation();
+      if (key === 'Escape') closeLanguageChoices();
+      else if (key === 'Enter' || key === ' ') chooseLanguage(choices[activeChoice].value);
+      else if (!open) openLanguageChoices(key === 'Home' ? 0 : key === 'End' ? choices.length - 1 : undefined);
+      else highlight(key === 'Home' ? 0 : key === 'End' ? choices.length - 1 :
+        Math.max(0, Math.min(choices.length - 1, activeChoice + (key === 'ArrowDown' ? 1 : -1))));
+    });
+    for (const type of ['pointerdown', 'focusin']) document.addEventListener(type, event => {
+      if (!event.composedPath().includes(settingsEntry)) closeLanguageChoices();
+    }, true);
+    window.addEventListener('resize', closeLanguageChoices);
+    window.addEventListener('scroll', event => {
+      if (!event.composedPath().includes(panel)) closeLanguageChoices();
+    }, true);
+    status = document.createElement('span'); status.className = 'status'; status.setAttribute('role', 'status'); status.hidden = true;
+    let pendingLanguage;
+    async function chooseLanguage(requested) {
+      closeLanguageChoices();
+      if (pendingLanguage || requested === language) return;
       const eventAtRequest = latestEvent;
-      selector.disabled = true;
+      pendingLanguage = requested;
+      selector.setAttribute('aria-busy', 'true');
+      status.hidden = true;
       try {
         const saved = await bridge.setLanguage(requested);
         if (latestEvent === eventAtRequest) applyLanguage(saved);
       }
-      catch { selector.value = language; status.textContent = '保存失败，请重试 / Could not save. Please retry.'; }
-      finally { selector.disabled = false; }
-    });
-    status = document.createElement('p'); status.setAttribute('role', 'status');
-    label.append(selector); details.append(summary, label, status); shadow.append(style, details); document.body.append(host);
+      catch {
+        status.textContent = language === 'zh-CN' ? '保存语言失败，请重试。' : 'Could not save the language. Try again.';
+        status.hidden = false;
+      }
+      finally {
+        pendingLanguage = undefined;
+        selector.removeAttribute('aria-busy');
+      }
+    }
+    row.append(settingsLabel, selector, panel, status); settingsShadow.append(settingsStyle, row);
     document.addEventListener('keydown', event => {
-      if (event.ctrlKey && event.altKey && event.code === 'KeyL') { event.preventDefault(); details.open = true; selector.focus(); }
-    });
+      if (event.isComposing || !event.ctrlKey || !event.altKey || event.shiftKey || event.metaKey || event.code !== 'KeyL') return;
+      if (selector.getClientRects().length === 0) return;
+      event.preventDefault();
+      event.stopPropagation();
+      selector.focus();
+    }, true);
   }
   function start() {
-    addSwitcher();
+    createLanguageSetting();
     observer = new MutationObserver(records => {
       const roots = new Set();
       for (const record of records) {
@@ -376,6 +563,9 @@ function installChineseUI(dictionary, bridge, config) {
       }
       for (const root of roots) scan(root);
       for (const record of records) if (record.type === 'childList' && record.target.nodeType === 1) animatedPrefixes(record.target);
+      const settingsSelector = '.max-w-2xl.mx-auto';
+      if ([...roots].some(node => node.nodeType === 1 && (node.matches(settingsSelector) || node.querySelector(settingsSelector))) ||
+        records.some(record => record.type !== 'attributes' && (record.target.nodeType === 1 ? record.target : record.target.parentElement)?.closest(settingsSelector))) mountSettingsEntry();
       if (records.some(record => record.removedNodes?.length)) {
         for (const node of textRecords.keys()) if (!node.isConnected) textRecords.delete(node);
         for (const element of attributeRecords.keys()) if (!element.isConnected) attributeRecords.delete(element);

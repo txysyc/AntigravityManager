@@ -22,7 +22,7 @@
 
 应用更新后重新检查支持状态，不要手动将旧补丁文件复制到新版本。“版本比较”用于查看 Electron 模块和原生文案锚点差异，结果不会自动批准新版本。具体检查条件见 [汉化规范](../spec/modules/localization.md)。
 
-在 Antigravity 里可用右下角 **Language / 语言**、`Ctrl+Alt+L` 或原生语言菜单切换中英文。网页即时切换，原生界面下次启动生效。语言偏好保存在目标应用用户目录的 `ui-language.json`。
+在 Antigravity 里打开 **设置 → 常规 → 界面语言**，直接从右侧下拉框选择“简体中文”或“English”。在该页面按 `Ctrl+Alt+L` 可聚焦下拉框。若窗口显示原生 **Language / 语言** 菜单，也可从菜单切换。网页即时切换，原生界面下次启动生效。语言偏好保存在目标应用用户目录的 `ui-language.json`。
 
 ### 命令行
 
@@ -30,7 +30,7 @@
 
 ```powershell
 $appDir = Join-Path $env:LOCALAPPDATA 'Programs/antigravity'
-& ./output/AntigravityManager-0.3.0-win-x64.exe --operation inspect --app-dir $appDir | Out-String
+& ./output/AntigravityManager-0.4.2-win-x64.exe --operation inspect --app-dir $appDir | Out-String
 ```
 
 可用操作：`inspect`、`compare`、`install`、`restore`、`backups`、`history`。输出为 JSON，失败返回非零退出码。安装或恢复前先退出 Antigravity；开发验证用隔离副本和 `--data-dir`。

@@ -1,0 +1,322 @@
+{
+  "product": "Antigravity",
+  "version": "2.31.2",
+  "patchVersion": "0.3.2",
+  "originalSha256": "94452cf0ce71bb4c21cfbdd51b31c0c6404e7aeb99539bdecce8954175b9dbaf",
+  "patchedSha256": "055413d27693b7da52f7c8ff77441f9c385d5c270d918866937dec20f39185d5",
+  "languageServerSha256": "e40f0447109c43ece15e7025ca0864a138e0e16cb8864d4ccf64a00512a99e1a",
+  "acceptedPatchedSha256": [
+    "3b2bf693107aaf0fb59fac5e77a1b383ba71a371793c60a3c5a6dd15b5c565c2",
+    "49df3eb9af01662e3f33afca9e402cf7b10e59c59d4f4b699f2fd7bf594b71f9",
+    "ac9e32fab8d90b32d232a1fbc5df5a0bae9be1673f2cd83e9f24bca31ffb23e3",
+    "39ff4c4e1599a5289a53d2460df82c697f3ef4ec2f0ede726af0902f04d3b0c0"
+  ],
+  "dictionaryEntries": 3150,
+  "remoteDictionaryEntries": 20,
+  "dynamicRules": 35,
+  "changedFiles": [
+    "dist/menu.js",
+    "dist/main.js",
+    "dist/tray.js",
+    "dist/ipcHandlers.js",
+    "dist/updater.js",
+    "dist/wsl.js",
+    "dist/provisionSplash.js",
+    "dist/ideInstall/wizardHtml.js",
+    "dist/preload.js",
+    "dist/locale.cjs"
+  ],
+  "nativeChanges": [
+    {
+      "path": "dist/menu.js",
+      "from": "label: 'New Window'",
+      "to": "label: '新建窗口'",
+      "count": 1
+    },
+    {
+      "path": "dist/menu.js",
+      "from": "label: 'Docs'",
+      "to": "label: '文档'",
+      "count": 1
+    },
+    {
+      "path": "dist/menu.js",
+      "from": "label: 'Connect to WSL'",
+      "to": "label: '连接到 WSL'",
+      "count": 1
+    },
+    {
+      "path": "dist/menu.js",
+      "from": "label: 'Reopen Locally'",
+      "to": "label: '在本地重新打开'",
+      "count": 1
+    },
+    {
+      "path": "dist/menu.js",
+      "from": "const electron_1 = require(\"electron\");",
+      "to": "const electron_1 = require(\"electron\");\n// Antigravity Chinese localization: preserve updater labels used as action keys.\nfunction localizeDisplayMenu(menuInstance) {\n    const translations = {\"File\":\"文件\",\"Edit\":\"编辑\",\"View\":\"视图\",\"Window\":\"窗口\",\"Help\":\"帮助\",\"Undo\":\"撤销\",\"Redo\":\"重做\",\"Cut\":\"剪切\",\"Copy\":\"复制\",\"Paste\":\"粘贴\",\"Paste and Match Style\":\"粘贴并匹配样式\",\"Select All\":\"全选\",\"Delete\":\"删除\",\"Reload\":\"重新加载\",\"Force Reload\":\"强制重新加载\",\"Toggle Developer Tools\":\"切换开发者工具\",\"Actual Size\":\"实际大小\",\"Zoom In\":\"放大\",\"Zoom Out\":\"缩小\",\"Toggle Full Screen\":\"切换全屏\",\"Minimize\":\"最小化\",\"Zoom\":\"缩放\",\"Bring All to Front\":\"将所有窗口前置\",\"Close\":\"关闭\",\"Quit\":\"退出\",\"Services\":\"服务\",\"Show All\":\"显示全部\"};\n    for (const item of menuInstance.items || []) {\n        if (item.id !== 'check-for-updates') {\n            const display = translations[item.label];\n            if (display) item.label = display;\n            else if (item.role?.toLowerCase() === 'about') item.label = '关于 ' + electron_1.app.getName();\n            else if (item.role?.toLowerCase() === 'hide') item.label = '隐藏 ' + electron_1.app.getName();\n            else if (item.role?.toLowerCase() === 'hideothers') item.label = '隐藏其他应用';\n            else if (item.role?.toLowerCase() === 'quit') item.label = '退出';\n        }\n        if (item.submenu) localizeDisplayMenu(item.submenu);\n    }\n}\n",
+      "count": 1
+    },
+    {
+      "path": "dist/menu.js",
+      "from": "electron_1.Menu.setApplicationMenu(menu);",
+      "to": "localizeDisplayMenu(menu);\n    electron_1.Menu.setApplicationMenu(menu);",
+      "count": 2
+    },
+    {
+      "path": "dist/menu.js",
+      "from": "item.label === submenuLabel",
+      "to": "(item.label === submenuLabel || item.label === ({ File: '文件', Help: '帮助' })[submenuLabel])",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "showErrorBox('Binary not found', msg)",
+      "to": "showErrorBox('未找到程序文件', msg)",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "const msg = `language_server binary not found at:\\n${languageServer_1.LS_BINARY}\\n\\nPlease build set a valid location.`;",
+      "to": "const msg = `未在以下位置找到 language_server 程序：\\n${languageServer_1.LS_BINARY}\\n\\n请构建程序并设置有效的位置。`;",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "title: 'WSL distro not found'",
+      "to": "title: '未找到 WSL 发行版'",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "message: `The WSL distro \"${WSL_DISTRO}\" is no longer installed.`",
+      "to": "message: `WSL 发行版“${WSL_DISTRO}”已不再安装。`",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "detail: 'Antigravity opened on Windows instead.'",
+      "to": "detail: 'Antigravity 已在 Windows 中打开。'",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "showErrorBox('WSL setup failed', msg)",
+      "to": "showErrorBox('WSL 设置失败', msg)",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "const msg = `Failed to install the server into WSL distro \"${WSL_DISTRO}\":\\n${err.message}`;",
+      "to": "const msg = `无法将服务程序安装到 WSL 发行版“${WSL_DISTRO}”：\\n${err.message}`;",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "showErrorBox('Startup failed', msg)",
+      "to": "showErrorBox('启动失败', msg)",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "label: 'New Window'",
+      "to": "label: '新建窗口'",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "label: 'No agents running'",
+      "to": "label: '没有正在运行的智能体'",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "label: `Open ${electron_1.app.getName()}`",
+      "to": "label: `打开 ${electron_1.app.getName()}`",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "label: 'Quit'",
+      "to": "label: '退出'",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "buttons: ['Cancel', 'Quit']",
+      "to": "buttons: ['取消', '退出']",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "title: 'Confirm Quit'",
+      "to": "title: '确认退出'",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "message: 'Are you sure you want to quit?'",
+      "to": "message: '确定要退出吗？'",
+      "count": 1
+    },
+    {
+      "path": "dist/main.js",
+      "from": "detail: 'There may be agents or background tasks running.'",
+      "to": "detail: '可能仍有智能体或后台任务正在运行。'",
+      "count": 1
+    },
+    {
+      "path": "dist/tray.js",
+      "from": "(count > 0 ? `${count}` : 'No') +\n                    ' agent' +\n                    (count === 1 ? '' : 's') +\n                    ' running'",
+      "to": "(count > 0 ? `${count} 个智能体正在运行` : '没有正在运行的智能体')",
+      "count": 1
+    },
+    {
+      "path": "dist/ipcHandlers.js",
+      "from": "showErrorBox('Cannot open folder', t.error)",
+      "to": "showErrorBox('无法打开文件夹', t.error)",
+      "count": 1
+    },
+    {
+      "path": "dist/ipcHandlers.js",
+      "from": "message: 'Folder is on the Windows filesystem'",
+      "to": "message: '文件夹位于 Windows 文件系统中'",
+      "count": 1
+    },
+    {
+      "path": "dist/ipcHandlers.js",
+      "from": "title: 'Open workspace'",
+      "to": "title: '打开工作区'",
+      "count": 1
+    },
+    {
+      "path": "dist/ipcHandlers.js",
+      "from": "title: 'Open workspaces'",
+      "to": "title: '打开多个工作区'",
+      "count": 1
+    },
+    {
+      "path": "dist/updater.js",
+      "from": "title: 'Check for Updates'",
+      "to": "title: '检查更新'",
+      "count": 1
+    },
+    {
+      "path": "dist/updater.js",
+      "from": "message: 'No updates available'",
+      "to": "message: '当前没有可用更新'",
+      "count": 1
+    },
+    {
+      "path": "dist/updater.js",
+      "from": "buttons: ['OK']",
+      "to": "buttons: ['确定']",
+      "count": 1
+    },
+    {
+      "path": "dist/wsl.js",
+      "from": "error: `This folder belongs to the WSL distro \"${unc[1]}\", but this window is connected to \"${distro}\".`",
+      "to": "error: `此文件夹属于 WSL 发行版“${unc[1]}”，但此窗口连接的是“${distro}”。`",
+      "count": 1
+    },
+    {
+      "path": "dist/wsl.js",
+      "from": "warning: 'This folder is on the Windows filesystem. Accessing it from WSL (via /mnt) can be slow — for best performance keep projects inside the WSL filesystem.'",
+      "to": "warning: '此文件夹位于 Windows 文件系统中。从 WSL（通过 /mnt）访问可能较慢。为获得最佳性能，请将项目保存在 WSL 文件系统中。'",
+      "count": 1
+    },
+    {
+      "path": "dist/wsl.js",
+      "from": "error: `This location cannot be opened in WSL: ${winPath}`",
+      "to": "error: `无法在 WSL 中打开此位置：${winPath}`",
+      "count": 1
+    },
+    {
+      "path": "dist/wsl.js",
+      "from": "onStatus?.('Downloading the Antigravity binary\\u2026')",
+      "to": "onStatus?.('正在下载 Antigravity 程序…')",
+      "count": 1
+    },
+    {
+      "path": "dist/wsl.js",
+      "from": "onStatus?.(`Installing into ${distro}\\u2026`)",
+      "to": "onStatus?.(`正在安装到 ${distro}…`)",
+      "count": 1
+    },
+    {
+      "path": "dist/provisionSplash.js",
+      "from": "<div>Setting up WSL: ${escapeHtml(distro)}</div>",
+      "to": "<div>正在设置 WSL：${escapeHtml(distro)}</div>",
+      "count": 1
+    },
+    {
+      "path": "dist/ideInstall/wizardHtml.js",
+      "from": "<html lang=\"en\">",
+      "to": "<html lang=\"zh-CN\">",
+      "count": 1
+    },
+    {
+      "path": "dist/ideInstall/wizardHtml.js",
+      "from": "<title>Welcome to Antigravity</title>",
+      "to": "<title>欢迎使用 Antigravity</title>",
+      "count": 1
+    },
+    {
+      "path": "dist/ideInstall/wizardHtml.js",
+      "from": ">Setting up…</div>",
+      "to": ">正在设置…</div>",
+      "count": 1
+    },
+    {
+      "path": "dist/ideInstall/wizardHtml.js",
+      "from": "alt=\"Antigravity Icon\"",
+      "to": "alt=\"Antigravity 图标\"",
+      "count": 1
+    },
+    {
+      "path": "dist/ideInstall/wizardHtml.js",
+      "from": "<h1>Welcome to the new Antigravity!</h1>",
+      "to": "<h1>欢迎使用全新的 Antigravity！</h1>",
+      "count": 1
+    },
+    {
+      "path": "dist/ideInstall/wizardHtml.js",
+      "from": "<p>Antigravity has been redesigned to put agents first with new capabilities. If you'd still like a code editor, you can download it as a separate app named <b>Antigravity IDE</b>.</p>",
+      "to": "<p>Antigravity 经过重新设计，以智能体为核心，并提供全新功能。如果您仍然需要代码编辑器，可以下载独立的 <b>Antigravity IDE</b> 应用。</p>",
+      "count": 1
+    },
+    {
+      "path": "dist/ideInstall/wizardHtml.js",
+      "from": "<span>Download the Antigravity IDE</span>",
+      "to": "<span>下载 Antigravity IDE</span>",
+      "count": 1
+    },
+    {
+      "path": "dist/ideInstall/wizardHtml.js",
+      "from": ">Explore the new Antigravity</button>",
+      "to": ">探索全新的 Antigravity</button>",
+      "count": 1
+    }
+  ],
+  "baselineModules": {
+    "dist/menu.js": "34ce3fabe919e74eae9034fa1ee32c3202f3c40b2f5ffa642bee23a0958a5820",
+    "dist/main.js": "0d297f7b38f73777e61fdcde103f026b1ae69af91e37edc937c9b37d5fe73d6e",
+    "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+    "dist/ipcHandlers.js": "e45b442a3e8a55e521ead048bb858a1bbe8c282e1a5f9d7fab9366b843a44ead",
+    "dist/updater.js": "ef38da806d1db759ff94ec8b1181f057440150cedbab7992b633df8933951e04",
+    "dist/wsl.js": "933315c492bbb6ca3c8038cde91236c319fde00e6525553111e1d5e099805674",
+    "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35",
+    "dist/ideInstall/wizardHtml.js": "5eff5a777d5cfc26877ee1ea7889310c2afe0aa66d596f87f9bdc57ed41264b9",
+    "dist/preload.js": "8457dc1fe5fa34ff138e041923a66b852e0a6fb1623b9aedcfb80f15dd98e9d7"
+  },
+  "patchedVersions": {
+    "39ff4c4e1599a5289a53d2460df82c697f3ef4ec2f0ede726af0902f04d3b0c0": "0.3.0",
+    "ac9e32fab8d90b32d232a1fbc5df5a0bae9be1673f2cd83e9f24bca31ffb23e3": "0.3.1",
+    "49df3eb9af01662e3f33afca9e402cf7b10e59c59d4f4b699f2fd7bf594b71f9": "0.3.2",
+    "3b2bf693107aaf0fb59fac5e77a1b383ba71a371793c60a3c5a6dd15b5c565c2": "0.3.2"
+  },
+  "hubWindowApi": true,
+  "validation": {
+    "frontendSha256": "00c7aa77bcd1f0bce710f98a97be1e10c0b0fe91770d79216c94b47f2e591308"
+  }
+}

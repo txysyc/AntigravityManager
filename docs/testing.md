@@ -10,13 +10,14 @@ Go 版在 Windows 上执行 `go test ./...`，使用隔离样本验证安装、�
 
 ## 准备汉化测试资料
 
-完整引擎测试需要 2.23.0 原始资源、真实历史 0.4.1 补丁，以及 2.23.1、2.29.0 的完整原版资源。这些第三方程序文件不随 Git 分发。输入必须匹配已验证指纹：
+完整引擎测试需要 2.23.0 原始资源、真实历史 0.4.1 补丁，以及 2.23.1、2.29.0、2.31.2 的完整原版资源。这些第三方程序文件不随 Git 分发。输入必须匹配已验证指纹：
 
 ```powershell
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\supported\app.asar'
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\0.4.1\app.asar'
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\2.23.1\resources\app.asar'
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\2.29.0\resources\app.asar'
+node tools/verification/prepare-fixtures.cjs 'C:\path\to\2.31.2\resources\app.asar'
 ```
 
 新版输入需保留 `resources/bin/language_server.exe` 的相对位置。脚本校验 ASAR，按版本写入 `artifacts/fixtures/<应用版本>/`；新版还校验并复制语言服务。历史样本保存为 `2.23.0/patched-0.4.1.asar`，不能将新产物改名冒充旧版。
@@ -50,7 +51,7 @@ CI 检查规范、运行 Go 和 Node.js 测试并构建单文件。带 `fixture:
 构建单文件后，传入隔离应用和数据目录。以下用 PowerShell 7 等待验证程序退出：
 
 ```powershell
-& ./output/AntigravityManager-0.3.0-win-x64.exe `
+& ./output/AntigravityManager-0.4.2-win-x64.exe `
   --data-dir "$PWD/artifacts/gui-smoke/profile" `
   --app-dir 'C:\path\to\test-app' `
   --smoke-output "$PWD/artifacts/gui-smoke/result.json" | Out-Null
@@ -88,6 +89,8 @@ Copy-Item -LiteralPath artifacts/adaptation/2.29.0/runtime-sample.asar -Destinat
 node tools/verification/verify-version-runtime.cjs --launcher 'C:\path\to\AntigravityLauncher.exe' --portable artifacts/adaptation/2.29.0/portable --output artifacts/adaptation/2.29.0/runtime-final
 ```
 
-该入口验证未登录欢迎页、资源指纹和语言持久化；运行前准备对应版本的 `portable/` 与 `embedded/`。测试 ASAR 仅用于隔离运行，不登记为兼容补丁，不可安装到真实应用。启动器需支持 `--executable`、`--report` 与 `--` 参数透传。适配包含可选 WebContentsView 模式时，另传 `--wcv` 和新的 `--output` 路径验证该模式。`--check-modern-ui` 额外在隔离页面插入样本，核对问候节点复用、浏览器建议及自动化摘要保护，以及切换英文后恢复原文。
+该入口验证隔离启动后实际出现的登录、欢迎、首次设置或数据使用提示页面，并核对资源指纹与语言持久化；运行前准备对应版本的 `portable/` 与 `embedded/`。测试 ASAR 仅用于隔离运行，不登记为兼容补丁，不可安装到真实应用。启动器需支持 `--executable`、`--report` 与 `--` 参数透传。适配包含可选 WebContentsView 模式时，另传 `--wcv` 和新的 `--output` 路径验证该模式。`--check-modern-ui` 额外在隔离页面插入样本，核对登录文案、问候节点复用、用户内容保护，以及切换英文后恢复原文。登录文案样本不执行授权流程。
+
+语言切换回归还会验证：常规设置的下拉菜单标出当前语言，支持鼠标和方向键，按 Esc 或点到外部可关闭；快捷键只在下拉框可见时聚焦它；离开常规设置后，聊天框的输入和按钮仍可操作。独立浏览器验证使用窄窗口和明暗主题检查菜单位置与主题色。
 
 验证资料和临时结果放在工作区 `artifacts/`，不使用真实用户目录。`output/` 仅用于发行成品。启动器模式不读取原生菜单；登录后页面和系统集成的未覆盖范围见 [历史适配摘要](../analysis/reports/README.md)。
