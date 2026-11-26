@@ -328,7 +328,7 @@ func (w *window) navGroup(c *ui.Context, s style, title string, entries []navEnt
 // navItem 是 36 DIP 高的导航项：选中时浅靛蓝底加靛蓝文字，而不是满宽高饱和色块。
 func (w *window) navItem(c *ui.Context, s style, icon *ui.SVG, page string) {
 	active := w.page == page
-	item := ui.ButtonBase(c).Key(page).Padding(8, 10).Radius(controlRadius).Gap(spaceS).
+	item := ui.ButtonBase(c.Key(page)).Padding(8, 10).Radius(controlRadius).Gap(spaceS).
 		Label(page).Disabled(w.busy).DimDisabled(false)
 	fg, iconColor, weight := s.p.text, s.p.textMuted, 400
 	switch {
@@ -360,8 +360,8 @@ func (w *window) contentView(c *ui.Context, s style) {
 	ui.Column(c).Grow(1).FillHeight().Children(func() {
 		ui.Box(c).Grow(1).FillHeight().Children(func() {
 			// 每页独立的滚动容器，切换页面时回到顶部；正文滚过页头时淡出。
-			ui.Scroll(c).Key(w.page).Fill().ScrollbarInsets(contentHeaderHeight, 0, 0).Children(func() {
-				body := ui.Column(c).Key(w.page).Padding(contentHeaderHeight, spaceXL, spaceXL, spaceXL)
+			ui.Scroll(c.Key(w.page)).Fill().ScrollbarInsets(contentHeaderHeight, 0, 0).Children(func() {
+				body := ui.Column(c.Key(w.page)).Padding(contentHeaderHeight, spaceXL, spaceXL, spaceXL)
 				body.Transition(pageTransition)
 				body.Children(func() {
 					ui.Column(c).MaxWidth(contentMaxWidth).Gap(spaceXL).Children(func() {
