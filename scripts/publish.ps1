@@ -1,4 +1,4 @@
-param([string]$OutputDirectory)
+param([string]$OutputDirectory, [string]$UpdatePublicKey)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $stage = $null
@@ -10,6 +10,11 @@ Push-Location -LiteralPath $root
 try {
     $version = (Get-Content -Raw -LiteralPath 'package.json' | ConvertFrom-Json).version
     if ($version -notmatch '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$') { throw '管理器版本无效。' }
+    $linkerFlags = '-s -w -H windowsgui'
+    if ($UpdatePublicKey) {
+        if ($UpdatePublicKey -cnotmatch '^[0-9a-f]{64}$') { throw '更新公钥必须是 64 位小写十六进制。' }
+        $linkerFlags += " -X main.updatePublicKey=$UpdatePublicKey"
+    }
     $output = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $root 'output' }
     $null = New-Item -ItemType Directory -Path $output -Force
     $exe = Join-Path $output "AntigravityManager-$version-win-x64.exe"
@@ -57,7 +62,7 @@ try {
     $overlay = Join-Path $stage 'overlay.json'
     @{ Replace = $replacement } | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $overlay -Encoding utf8NoBOM
     $binary = Join-Path $stage 'AntigravityManager.exe'
-    go build -mod=readonly -overlay $overlay -trimpath -ldflags '-s -w -H windowsgui' -o $binary ./src
+    go build -mod=readonly -overlay $overlay -trimpath -ldflags $linkerFlags -o $binary ./src
     if ($LASTEXITCODE -ne 0) { throw 'Windows x64 单文件构建失败。' }
     $text = & $binary --operation notices | Out-String
     if ($LASTEXITCODE -ne 0 -or $text -notmatch 'github.com/egoist/mygo' -or $text -notmatch 'Go Authors') {

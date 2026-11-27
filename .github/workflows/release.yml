@@ -57,7 +57,24 @@ jobs:
           "notes=$notesPath" >> $env:GITHUB_OUTPUT
       - name: 构建并校验 Windows x64 单文件
         shell: pwsh
-        run: ./scripts/publish.ps1
+        env:
+          MANAGER_UPDATE_PUBLIC_KEY: ${{ vars.MANAGER_UPDATE_PUBLIC_KEY }}
+        run: ./scripts/publish.ps1 -UpdatePublicKey $env:MANAGER_UPDATE_PUBLIC_KEY
+      - name: 生成并签名更新清单
+        shell: pwsh
+        env:
+          MANAGER_UPDATE_PUBLIC_KEY: ${{ vars.MANAGER_UPDATE_PUBLIC_KEY }}
+          MANAGER_UPDATE_PRIVATE_KEY: ${{ secrets.MANAGER_UPDATE_PRIVATE_KEY }}
+          RELEASE_VERSION: ${{ steps.metadata.outputs.version }}
+          RELEASE_NOTES: ${{ steps.metadata.outputs.notes }}
+        run: |
+          if (!$env:MANAGER_UPDATE_PUBLIC_KEY -and !$env:MANAGER_UPDATE_PRIVATE_KEY) {
+            Write-Warning '尚未配置更新密钥，本次发行仅提供手动下载。'
+            return
+          }
+          $exe = "output/AntigravityManager-$env:RELEASE_VERSION-win-x64.exe"
+          node scripts/sign-update.cjs sign $exe $env:RELEASE_NOTES
+          if ($LASTEXITCODE -ne 0) { throw '更新清单签名失败。' }
       - name: 创建发行并上传附件
         shell: pwsh
         env:
@@ -68,4 +85,8 @@ jobs:
           $tag = $env:GITHUB_REF_NAME
           $version = $env:RELEASE_VERSION
           $exe = "output/AntigravityManager-$version-win-x64.exe"
-          gh release create $tag $exe "$exe.sha256" --repo $env:GITHUB_REPOSITORY --verify-tag --title "Antigravity Manager v$version" --notes-file $env:RELEASE_NOTES
+          $files = @($exe, "$exe.sha256")
+          if (Test-Path -LiteralPath 'output/update-win-x64.json.sig') {
+            $files += @('output/update-win-x64.json', 'output/update-win-x64.json.sig')
+          }
+          gh release create $tag @files --repo $env:GITHUB_REPOSITORY --verify-tag --title "Antigravity Manager v$version" --notes-file $env:RELEASE_NOTES

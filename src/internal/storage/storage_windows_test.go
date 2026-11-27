@@ -14,7 +14,7 @@ func TestMigrationPreservesExistingDataAndExcludesOtherWriters(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := s.Save(Settings{`C:\Example\Antigravity`, "Dark"}); err != nil {
+	if err := s.Save(Settings{ApplicationDirectory: `C:\Example\Antigravity`, Theme: "Dark", DisableUpdateCheck: true}); err != nil {
 		t.Fatal(err)
 	}
 	other, err := Open(old)
@@ -45,13 +45,13 @@ func TestMigrationPreservesExistingDataAndExcludesOtherWriters(t *testing.T) {
 	if err := s.Migrate(dest); err != nil {
 		t.Fatal(err)
 	}
-	if s.Data != dest || s.Load().Theme != "Dark" {
+	if loaded := s.Load(); s.Data != dest || loaded.Theme != "Dark" || !loaded.DisableUpdateCheck {
 		t.Fatal("迁移后设置丢失")
 	}
 	if _, err := os.Stat(filepath.Join(old, "settings.json")); err != nil {
 		t.Fatal(err)
 	}
-	if err := other.Save(Settings{"other", "Light"}); err == nil {
+	if err := other.Save(Settings{ApplicationDirectory: "other", Theme: "Light"}); err == nil {
 		t.Fatal("旧实例仍可写入原目录")
 	}
 	reopened, err := Open(old)

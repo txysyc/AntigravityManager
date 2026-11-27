@@ -38,3 +38,18 @@ pwsh -File scripts/publish.ps1   # 打包可分发的 Windows x64 单 EXE
 ## 发布
 
 按 [发行规范](../spec/releases.md) 更新版本和 [CHANGELOG.md](../CHANGELOG.md)，运行 `node scripts/release-notes.cjs` 预览。首次发布 Go 版前需要完成 [真实样本验证](testing.md)。由获授权的维护者创建并推送 `manager-v<版本>`；[发行工作流](../.github/workflows/release.yml) 校验标签和构建结果后，上传 EXE 和校验文件。
+
+### 配置自更新签名
+
+首次启用时，由发布维护者生成一对 Ed25519 密钥。命令在指定位置新建私钥文件，并在标准输出给出公钥十六进制。请选择仓库外、仅维护者可访问的位置保存私钥并备份。
+
+```powershell
+$signingFile = Join-Path $env:LOCALAPPDATA 'AntigravityManager-release-key.pem'
+$publicKey = node scripts/sign-update.cjs generate-key $signingFile
+gh variable set MANAGER_UPDATE_PUBLIC_KEY --repo txysyc/AntigravityManager --body $publicKey
+Get-Content -LiteralPath $signingFile -Raw | gh secret set MANAGER_UPDATE_PRIVATE_KEY --repo txysyc/AntigravityManager
+```
+
+仓库变量 `MANAGER_UPDATE_PUBLIC_KEY` 用于嵌入公钥，仓库 Secret `MANAGER_UPDATE_PRIVATE_KEY` 用于签名。两个值都配置后，后续管理器标签会同时发布签名清单。两项都未配置时仍可发布手动下载版。支持自更新的首个版本需先由用户下载。更换密钥时，旧公钥版本可通过发布页手动升级。
+
+本地构建可用 `-UpdatePublicKey` 显式嵌入测试公钥。可重复执行的自更新回归使用临时测试签名和隔离 EXE。 [管理器更新规范](../spec/modules/update.md)

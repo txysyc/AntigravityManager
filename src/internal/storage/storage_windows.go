@@ -16,7 +16,10 @@ import (
 )
 
 type Location struct{ DataDirectory string }
-type Settings struct{ ApplicationDirectory, Theme string }
+type Settings struct {
+	ApplicationDirectory, Theme string
+	DisableUpdateCheck          bool `json:",omitempty"`
+}
 type Store struct{ Bootstrap, Data string }
 
 func Open(override string) (*Store, error) {
@@ -117,6 +120,9 @@ func move(from, to string, replace bool) error {
 	return nil
 }
 
+// ReplaceFile atomically commits a prepared file on the same volume.
+func ReplaceFile(from, to string) error { return move(from, to, true) }
+
 // Write uses a sibling temp file. before runs immediately before committing.
 func Write(path string, data []byte, replace bool, before func() error) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
@@ -174,7 +180,7 @@ func DefaultApp() string {
 }
 
 func (s *Store) Load() Settings {
-	settings := Settings{DefaultApp(), "Light"}
+	settings := Settings{ApplicationDirectory: DefaultApp(), Theme: "Light"}
 	_ = ReadJSON(filepath.Join(s.Data, "settings.json"), &settings)
 	return settings
 }

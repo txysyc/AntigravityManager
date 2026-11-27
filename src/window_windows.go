@@ -15,6 +15,7 @@ import (
 	resources "github.com/txysyc/AntigravityManager"
 	"github.com/txysyc/AntigravityManager/src/internal/localization"
 	"github.com/txysyc/AntigravityManager/src/internal/storage"
+	"github.com/txysyc/AntigravityManager/src/internal/update"
 )
 
 // 窗口尺寸只影响界面呈现，启动参数与业务行为保持不变。
@@ -48,10 +49,12 @@ type window struct {
 	themeSel                            int
 	icon                                ui.ImageSource
 	helpMenu                            *mygo.MenuItem
+	updates                             updatePanel
 }
 
-func runGUI(engine *localization.Manager, settings storage.Settings, smoke string) error {
+func runGUI(engine *localization.Manager, settings storage.Settings, smoke string, args []string, startupReady func() error) error {
 	w := &window{engine: engine, settings: settings, data: engine.Store.Data, page: "界面汉化", dark: settings.Theme == "Dark", smoke: smoke, version: managerVersion(), supported: strings.Join(engine.Versions(), " / ")}
+	w.updates = updatePanel{client: update.New(updatePublicKey), args: args, autoCheck: !settings.DisableUpdateCheck}
 	if b, err := resources.Files.ReadFile("assets/branding/app-icon.png"); err == nil {
 		if icon, err := ui.DecodeImage(b); err == nil {
 			w.icon = icon
@@ -72,9 +75,20 @@ func runGUI(engine *localization.Manager, settings storage.Settings, smoke strin
 		w.win.OnClose(func(e *mygo.CloseEvent) {
 			if w.busy {
 				e.PreventDefault()
+			} else if !w.closeUpdates() {
+				e.PreventDefault()
 			}
 		})
+		if startupReady != nil {
+			if startup = startupReady(); startup != nil {
+				mygo.App.Quit()
+				return
+			}
+		}
 		w.check(false)
+		if smoke == "" && startupReady == nil && w.updates.autoCheck && w.updates.client.CanVerify() {
+			w.checkUpdates(false)
+		}
 	})
 	if err := mygo.App.Run(); err != nil {
 		return err
@@ -100,10 +114,13 @@ func (w *window) work(label string, run func() func()) {
 }
 
 func (w *window) setMenu() {
-	items := []*mygo.MenuItem{{Label: comparisonTitle, Click: func(_ *mygo.MenuItem, _ *mygo.Window) {
+	items := []*mygo.MenuItem{{Label: "检查更新", Click: func(_ *mygo.MenuItem, _ *mygo.Window) {
+		w.openUpdates()
+	}}, {Label: comparisonTitle, Click: func(_ *mygo.MenuItem, _ *mygo.Window) {
 		if w.busy {
 			return
 		}
+		w.updates.open = false
 		w.showLicense = false
 		w.showComparison = true
 		w.check(true)
@@ -114,6 +131,7 @@ func (w *window) setMenu() {
 			if w.busy {
 				return
 			}
+			w.updates.open = false
 			w.showComparison = false
 			w.showLicense = true
 			w.win.Invalidate()
@@ -275,6 +293,7 @@ func (w *window) lists(page string) {
 
 func (w *window) save() {
 	settings := w.settings
+	settings.DisableUpdateCheck = !w.updates.autoCheck
 	settings.ApplicationDirectory = strings.TrimSpace(settings.ApplicationDirectory)
 	settings.Theme = "Light"
 	if w.dark {
@@ -291,6 +310,8 @@ func (w *window) save() {
 			w.message = "设置已保存。"
 			if err != nil {
 				w.message = err.Error()
+			} else {
+				w.settings.DisableUpdateCheck = settings.DisableUpdateCheck
 			}
 		}
 	})
@@ -348,6 +369,7 @@ func (w *window) view(c *ui.Context) {
 	})
 	w.comparisonDialog(c, s, height)
 	w.licenseDialog(c, s, height)
+	w.updateDialog(c, s)
 }
 
 type navEntry struct {
@@ -467,6 +489,7 @@ func (w *window) statusTray(c *ui.Context, s style, pad float32) {
 				message = "就绪。"
 			}
 			ui.Text(c, message).FontSize(textSmall).TextColor(s.p.textMuted).Wrap().Grow(1)
+			w.updateNotice(c, s)
 			ui.Text(c, "补丁 "+w.engine.PatchVersion()).FontSize(textCaption).TextColor(s.p.textMuted).Shrink(0)
 		})
 	})
@@ -733,9 +756,10 @@ func (w *window) settingsView(c *ui.Context, s style) {
 			}
 			s.caption(c, "选择后立即预览；点击“保存设置”后写入设置文件。")
 		})
+		w.updateSettings(c, s)
 		s.card(c, func() {
 			s.cardTitle(c, "Antigravity 安装目录")
-			s.caption(c, "保存后写入设置文件，主题与应用目录一并生效。")
+			s.caption(c, "保存后主题、更新偏好与应用目录一并写入设置。")
 			ui.Row(c).Gap(spaceS).Padding(spaceM, 0, 0, 0).Children(func() {
 				ui.TextInput(c, &w.settings.ApplicationDirectory).Grow(1).Padding(8, 12).
 					Radius(controlRadius).Background(s.p.surfaceHover).Border(1, s.p.border).
