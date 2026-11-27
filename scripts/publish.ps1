@@ -64,6 +64,7 @@ try {
     $binary = Join-Path $stage 'AntigravityManager.exe'
     go build -mod=readonly -overlay $overlay -trimpath -ldflags $linkerFlags -o $binary ./src
     if ($LASTEXITCODE -ne 0) { throw 'Windows x64 单文件构建失败。' }
+    & (Join-Path $PSScriptRoot 'set-exe-icon.ps1') -Executable $binary -Png (Join-Path $root 'assets/branding/app-icon.png')
     $text = & $binary --operation notices | Out-String
     if ($LASTEXITCODE -ne 0 -or $text -notmatch 'github.com/egoist/mygo' -or $text -notmatch 'Go Authors') {
         throw '单文件缺少嵌入的许可原文。'
