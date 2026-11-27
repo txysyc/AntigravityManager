@@ -13,8 +13,32 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  test:
+  validate-tag:
+    name: 校验发行标签
     if: github.event.created && !github.event.deleted
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: 检出标签和分支历史
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: 确认标签提交已进入 main
+        shell: bash
+        run: |
+          if ! git show-ref --verify --quiet refs/remotes/origin/main; then
+            echo '::error::无法获取远端 main 分支，发行已停止。'
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor HEAD refs/remotes/origin/main; then
+            echo '::error::标签指向的提交尚未进入 main，发行已停止。'
+            exit 1
+          fi
+
+  test:
+    name: 发行前测试
+    needs: validate-tag
     uses: ./.github/workflows/test.yml
 
   release:

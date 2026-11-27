@@ -37,7 +37,7 @@ pwsh -File scripts/publish.ps1   # 打包可分发的 Windows x64 单 EXE
 
 ## 发布
 
-按 [发行规范](../spec/releases.md) 更新版本和 [CHANGELOG.md](../CHANGELOG.md)，运行 `node scripts/release-notes.cjs` 预览。首次发布 Go 版前需要完成 [真实样本验证](testing.md)。由获授权的维护者创建并推送 `manager-v<版本>`；[发行工作流](../.github/workflows/release.yml) 校验标签和构建结果后，上传 EXE 和校验文件。
+按 [发行规范](../spec/releases.md) 更新版本和 [CHANGELOG.md](../CHANGELOG.md)，运行 `node scripts/release-notes.cjs` 预览。首次发布 Go 版前需要完成 [真实样本验证](testing.md)。发版前先合入并同步远端 `main`，再由获授权的维护者将 `manager-v<版本>` 附注标签指向该分支中已定版的提交并推送。[发行工作流](../.github/workflows/release.yml) 确认标签提交已进入远端 `main`，通过测试并核对源码版本后上传 EXE 和校验文件。
 
 ### 配置自更新签名
 

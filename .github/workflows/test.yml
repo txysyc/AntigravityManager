@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   test:
-    name: Windows 构建与检查
+    name: Windows 测试
     runs-on: windows-2025
     timeout-minutes: 20
     steps:
