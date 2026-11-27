@@ -8,6 +8,14 @@ function installChineseUI(dictionary, bridge, config) {
   config = config || {};
   window.__antigravityChineseUI = { version: config.patchVersion || 'unknown' };
   const remoteDictionary = config.remote || {};
+  const layoutLabels = new Set(['Knowledge Work', 'Software Engineering']);
+  const layoutDescriptions = new Set([
+    'Simplified interface for research, writing, and everyday tasks.',
+    'Full interface for coding, developer tools, and managing agents.'
+  ]);
+  const starterQuota = 'Antigravity Starter Quota';
+  const starterDescription = 'Free users and Google AI Plus users receive the minimum base limits on Antigravity. You can upgrade to Google AI Pro or above to receive higher rate limits.';
+  const scopedRemoteKeys = new Set([...layoutLabels, ...layoutDescriptions, starterQuota, starterDescription]);
   const dynamicRules = (config.rules || []).map(rule => ({ ...rule, regex: new RegExp(rule.pattern) }));
   let language = 'en';
   let observer;
@@ -118,7 +126,7 @@ function installChineseUI(dictionary, bridge, config) {
     if (!/^(?:\d+(?:\.\d+)?\s+(?:days?|hours?|minutes?|seconds?)(?:,\s*|\s+and\s+|\s*)?)+$/.test(value)) return null;
     return value.replace(/(\d+(?:\.\d+)?)\s+(days?|hours?|minutes?|seconds?)/g, (_, n, unit) => n + (unit.startsWith('day')?'天':unit.startsWith('hour')?'小时':unit.startsWith('minute')?'分钟':'秒')).replace(/,\s*|\s+and\s+/g, '');
   }
-  function translate(value, element, attributeName) {
+  function translate(value, element, attributeName, scopedTranslation) {
     const key = value.trim();
     let next;
     const greetingName = !attributeName && element.closest('[data-testid="home-greeting"] h1')
@@ -132,7 +140,8 @@ function installChineseUI(dictionary, bridge, config) {
     else if (historyNotice(element) && key === '(') next = '（';
     else if (historyNotice(element) && key === '.') next = '。';
     else if (Object.prototype.hasOwnProperty.call(dictionary, key)) next = dictionary[key];
-    else if ((settingsElement(element) || marketplaceElement(element)) && Object.prototype.hasOwnProperty.call(remoteDictionary, key)) next = remoteDictionary[key];
+    else if (!scopedRemoteKeys.has(key) && (settingsElement(element) || marketplaceElement(element)) &&
+      Object.prototype.hasOwnProperty.call(remoteDictionary, key)) next = remoteDictionary[key];
     else for (const rule of dynamicRules) {
       if (rule.scope === 'attribute' ? !attributeName : attributeName ||
         (rule.scope === 'settings' ? !settingsElement(element) : rule.scope === 'title-menu' ? !element.closest('[data-testid="title-menu-bar"]') : rule.scope === 'marketplace' ? !marketplaceElement(element) : !uiElement(element, key))) continue;
@@ -218,19 +227,22 @@ function installChineseUI(dictionary, bridge, config) {
     const original = node.nodeValue;
     const key = original.trim();
     const sourceKey = previous && original === previous.applied ? previous.original.trim() : key;
+    const scopedTranslation = onboardingTranslation(element, sourceKey) ?? settingsTranslation(element, sourceKey);
     // Only the count suffix inside the override trigger is UI; its project names
     // stay untouched. A named project "projects" is not a numeric count suffix.
     const countSuffix = sourceKey === 'projects' && fragmentAllowed(node, sourceKey) &&
       /^\d+\s*$/.test(node.previousSibling?.nodeValue || '');
-    if (protectedElement(element) && !(countSuffix && !element.closest(protectedSelector))) {
+    if ((protectedElement(element) && !(countSuffix && !element.closest(protectedSelector))) ||
+      (previous?.scoped && original === previous.applied && scopedTranslation === undefined)) {
       if (previous && original === previous.applied) node.nodeValue = previous.original;
       textRecords.delete(node);
       return;
     }
     if (previous && original === previous.applied) return;
-    if (fragments.has(key) || grammarFragments.has(key) || countFragments.has(key) ? !fragmentAllowed(node, key) : !uiElement(element, key)) return;
-    const next = translate(original, element);
-    if (next !== original) { node.nodeValue = next; textRecords.set(node, { original, applied: next }); translated++; }
+    if (scopedTranslation === undefined &&
+      (fragments.has(key) || grammarFragments.has(key) || countFragments.has(key) ? !fragmentAllowed(node, key) : !uiElement(element, key))) return;
+    const next = translate(original, element, undefined, scopedTranslation);
+    if (next !== original) { node.nodeValue = next; textRecords.set(node, { original, applied: next, scoped: scopedTranslation !== undefined }); translated++; }
     else textRecords.delete(node);
   }
   const attributes = ['title', 'aria-label', 'placeholder', 'alt'];
@@ -247,13 +259,21 @@ function installChineseUI(dictionary, bridge, config) {
     for (const name of attributes) {
       const current = element.getAttribute(name);
       const previous = attributeRecords.get(element)?.get(name);
-      if (previous && current === previous.applied) continue;
       if (current === null) { attributeRecords.get(element)?.delete(name); continue; }
-      const next = fragments.has(current?.trim()) ? current : translate(current, element, name);
+      const source = previous && current === previous.applied ? previous.original : current;
+      const scopedTranslation = settingsTranslation(element, source.trim(), name);
+      if (previous && current === previous.applied) {
+        if (previous.scoped && scopedTranslation === undefined) {
+          element.setAttribute(name, previous.original);
+          attributeRecords.get(element).delete(name);
+        }
+        continue;
+      }
+      const next = fragments.has(current.trim()) ? current : translate(current, element, name, scopedTranslation);
       if (current !== next) {
         element.setAttribute(name, next);
         if (!attributeRecords.has(element)) attributeRecords.set(element, new Map());
-        attributeRecords.get(element).set(name, { original: current, applied: next });
+        attributeRecords.get(element).set(name, { original: current, applied: next, scoped: scopedTranslation !== undefined });
         translated++;
       } else attributeRecords.get(element)?.delete(name);
     }
@@ -487,6 +507,9 @@ function installChineseUI(dictionary, bridge, config) {
       for (const root of roots) scan(root);
       if (records.some(record => record.type === 'childList')) syncLanguageRow();
       for (const record of records) if (record.type === 'childList' && record.target.nodeType === 1) animatedPrefixes(record.target);
+      const settingsSelector = '.max-w-2xl.mx-auto';
+      if ([...roots].some(node => node.nodeType === 1 && (node.matches(settingsSelector) || node.querySelector(settingsSelector))) ||
+        records.some(record => record.type !== 'attributes' && (record.target.nodeType === 1 ? record.target : record.target.parentElement)?.closest(settingsSelector))) mountSettingsEntry();
       if (records.some(record => record.removedNodes?.length)) {
         for (const node of textRecords.keys()) if (!node.isConnected) textRecords.delete(node);
         for (const element of attributeRecords.keys()) if (!element.isConnected) attributeRecords.delete(element);

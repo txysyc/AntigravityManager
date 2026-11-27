@@ -103,8 +103,11 @@ async function main() {
       await new Promise(resolve => setTimeout(resolve, 400));
     }
     if (!page) throw Error('Main window did not load verification fixture');
+    const audit = require('./verify-audit.cjs');
     if (checkEnglish) {
-      await page.waitForSelector('#antigravity-language-switcher');
+      const settings = await audit.mountLanguageSettingsFixture(page);
+      const select = settings.getByRole('combobox', { name: 'Interface Language' });
+      await select.waitFor();
       assert.equal(await page.locator('html').getAttribute('lang'), 'en');
       assert.equal(await page.locator('#settings').textContent(), 'Settings');
       assert.equal(await page.locator('#input').getAttribute('placeholder'), 'Search conversations...');
@@ -232,8 +235,7 @@ async function main() {
     assert.equal(await languageRow.count(), 1);
     assert.equal(await page.locator('#antigravity-language-value').textContent(), 'English');
     await page.reload();
-    await page.waitForSelector('#antigravity-language-switcher');
-    assert.equal(await page.locator('html').getAttribute('lang'), 'en');
+    await page.waitForFunction(() => document.documentElement.lang === 'en');
     assert.equal(await page.locator('#settings').textContent(), 'Settings');
     await page.screenshot({ path: path.join(output, 'language-switch-en.png') });
     console.log('PASS: Chinese ↔ English, original text/attributes, application updates, persisted setting and reload.');

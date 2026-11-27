@@ -123,12 +123,19 @@ async function verifyModernUi(page) {
       '<button>Downloads</button>' +
       '<div data-testid="browser-autocomplete-option"><span class="truncate">Downloads</span></div>' +
       '<div data-testid="conversation-row-sample"><span class="truncate text-left w-full">Downloads</span></div>' +
-      '<div data-testid="automation-run"><span class="truncate">Downloads</span></div>';
+      '<div data-testid="automation-run"><span class="truncate">Downloads</span></div>' +
+      '<div class="entrance-title">Welcome to Antigravity!</div>' +
+      '<div class="entrance-auth-panel"><button>Continue with Google</button><button>Use Business Account</button></div>' +
+      '<div data-localization-sample="sign-in-help"><button>Having trouble signing in?</button></div>';
     document.body.append(sample);
   });
   const sample = page.locator('#localization-scope-check');
   await page.waitForFunction(() => document.querySelector('#localization-scope-check h1')?.textContent === '你好，Downloads，今天想做些什么？');
-  assert.equal(await sample.locator('button').textContent(), '下载内容');
+  assert.equal(await sample.locator(':scope > button').textContent(), '下载内容');
+  assert.equal(await sample.locator('.entrance-title').textContent(), '欢迎使用 Antigravity！');
+  const dictionary = require('../../engines/localization/translations/zh-CN.json');
+  assert.deepEqual(await sample.locator('.entrance-auth-panel button, [data-localization-sample="sign-in-help"] button').allTextContents(),
+    ['Continue with Google', 'Use Business Account', 'Having trouble signing in?'].map(key => dictionary[key]));
   assert.deepEqual(await sample.locator('span').allTextContents(), ['Downloads', 'Downloads', 'Downloads']);
   await sample.locator('h1').evaluate(heading => { heading.firstChild.nodeValue = 'Hi Release, what can we get done today?'; });
   await page.waitForFunction(() => document.querySelector('#localization-scope-check h1')?.textContent === '你好，Release，今天想做些什么？');
@@ -236,7 +243,14 @@ async function verify(language) {
     assert.equal(mainAssetSha256, sha(fs.readFileSync(path.join(root, 'artifacts/adaptation', applicationVersion, 'embedded', expectedAsset))), '实际服务必须提供新版本原始前端资源');
     const dictionary = require('../../engines/localization/translations/zh-CN.json');
     const welcome = ['Build new features', 'Hand off a feature and come back to working code.', 'Debug and fix', 'Automatically reproduce bugs, trace causes, test fixes.', 'Research anything', 'Ask about your code or any topic, get clear answers.', 'Write and edit docs', 'Draft documents, emails, and notes that sound like you.'];
+    const signInTitle = 'Welcome to Antigravity!';
     const introScreens = [
+      { id: 'sign-in', keys: [signInTitle, 'Continue with Google', 'Use Business Account', 'Having trouble signing in?'] },
+      {
+        id: 'persona',
+        keys: ["Let's tailor the experience for you. What best describes your work?", 'Software Engineering', 'Knowledge Work', 'Data & Analytics', 'Science', 'Design'],
+        chinese: ['我们来为你定制使用体验。以下哪项最符合你的工作？', '软件工程', '知识工作', '数据与分析', '科学', '设计']
+      },
       { id: 'welcome', keys: welcome },
       { id: 'privacy', keys: ['Security Notice & Data Use', 'Get started'] },
       { id: 'terms', keys: ['Terms of Service & Data Use', 'Terms and Privacy:'] }
@@ -264,6 +278,7 @@ async function verify(language) {
     const row = settings.locator('#antigravity-language-switcher');
     assert.equal(await row.locator('#antigravity-language-value').textContent(), language === 'zh-CN' ? '简体中文' : 'English');
     if (language === 'zh-CN') {
+      const audit = require('./verify-audit.cjs');
       const sample = checkModernUi ? await verifyModernUi(page) : null;
       if (checkSettings) evidence.settingsReviewed = await verifySettings(page, settings, dictionary);
       await row.locator('button[aria-haspopup="listbox"]').click();
@@ -287,7 +302,10 @@ async function verify(language) {
       }
       if (sample) {
         assert.equal(await sample.locator('h1').textContent(), 'Hi Release, what can we get done today?');
-        assert.equal(await sample.locator('button').textContent(), 'Downloads');
+        assert.equal(await sample.locator(':scope > button').textContent(), 'Downloads');
+        assert.equal(await sample.locator('.entrance-title').textContent(), signInTitle);
+        assert.deepEqual(await sample.locator('.entrance-auth-panel button, [data-localization-sample="sign-in-help"] button').allTextContents(),
+          ['Continue with Google', 'Use Business Account', 'Having trouble signing in?']);
         assert.deepEqual(await sample.locator('span').allTextContents(), ['Downloads', 'Downloads', 'Downloads']);
         await sample.evaluate(element => element.remove());
         evidence.modernUiScopeVerified = true;

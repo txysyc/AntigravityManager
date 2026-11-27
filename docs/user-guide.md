@@ -22,7 +22,9 @@
 
 应用更新后，点击「检查兼容性」确认能否安装或恢复。需要排查文件变化时，在窗口顶部菜单栏选择「帮助 → 汉化文件诊断」，对照当前应用和参考原版中与汉化相关的文件。安装汉化后，补丁改写过的文件会显示为「内容有变化」。具体安装条件见 [汉化规范](../spec/modules/localization.md)。
 
+
 在 Antigravity 中打开 **设置 → 常规 → 界面语言**，可从下拉框选择「简体中文」或「English」。也可以使用原生语言菜单。网页即时切换，原生界面下次启动生效。语言偏好保存在目标应用用户目录的 `ui-language.json`。
+
 
 ### 命令行
 
@@ -30,9 +32,10 @@
 
 ```powershell
 $appDir = Join-Path $env:LOCALAPPDATA 'Programs/antigravity'
-& ./output/AntigravityManager-0.4.0-win-x64.exe --operation inspect --app-dir $appDir | Out-String
-```
 
+& ./output/AntigravityManager-0.4.0-win-x64.exe --operation inspect --app-dir $appDir | Out-String
+
+```
 可用操作：`inspect`、`compare`、`install`、`restore`、`backups`、`history`。输出为 JSON，失败返回非零退出码。安装或恢复前先退出 Antigravity；开发验证用隔离副本和 `--data-dir`。
 
 ## 更新管理器

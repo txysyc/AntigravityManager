@@ -10,14 +10,18 @@ Go 版在 Windows 上执行 `go test ./...`，使用隔离样本验证安装、�
 
 ## 准备汉化测试资料
 
+
 历史 Node 回归测试需要 2.23.0 原始资源、真实历史 0.4.1 补丁，以及 2.23.1、2.29.0 的完整原版资源。Go 逐版本对照还需要 2.35.2 原版资源。这些第三方程序文件不随 Git 分发。输入必须匹配已验证指纹。
+
 
 ```powershell
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\supported\app.asar'
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\0.4.1\app.asar'
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\2.23.1\resources\app.asar'
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\2.29.0\resources\app.asar'
+
 node tools/verification/prepare-fixtures.cjs 'C:\path\to\2.35.2\resources\app.asar'
+
 ```
 
 新版输入需保留 `resources/bin/language_server.exe` 的相对位置。脚本校验 ASAR，按版本写入 `artifacts/fixtures/<应用版本>/`；新版还校验并复制语言服务。历史样本保存为 `2.23.0/patched-0.4.1.asar`，不能将新产物改名冒充旧版。
@@ -44,12 +48,16 @@ go test ./...
 
 CI 检查规范、运行 Go 和 Node.js 测试并构建单文件。带 `fixture:` 前缀的测试需要真实资料，准备后用 `npm test` 运行。首次发布 Go 版前必须完成 `TestVerifiedFixtures` 逐字节对照。
 
+推送到 `main` 或更新同一个面向 `main` 的 PR 时，新一轮 CI 会取消同组尚未完成的旧测试。GitHub 仍会为每次推送创建运行记录；连续推送时只让最新一轮跑完。不同 PR、手动运行和发行标签调用的测试彼此独立。
+
 ## 管理器 GUI
 
 构建单文件后，传入隔离应用和数据目录。以下用 PowerShell 7 等待验证程序退出：
 
 ```powershell
+
 & ./output/AntigravityManager-0.4.0-win-x64.exe `
+
   --data-dir "$PWD/artifacts/gui-smoke/profile" `
   --app-dir 'C:\path\to\test-app' `
   --smoke-output "$PWD/artifacts/gui-smoke/result.json" | Out-Null
@@ -94,5 +102,6 @@ node tools/verification/verify-version-runtime.cjs --launcher 'C:\path\to\Antigr
 该入口验证启动引导、资源指纹和语言持久化。运行前准备对应版本的 `portable/` 与 `embedded/`。Windows 上 2.35.2 可能通过系统凭据识别现有账户，并在独立数据目录显示个性化引导。验证会检查问候是否保留姓名，并在结果文本和截图中遮盖。测试 ASAR 仅用于隔离运行，不登记为兼容补丁，不可安装到真实应用。启动器需支持 `--executable`、`--report` 与 `--` 参数透传。适配包含可选 WebContentsView 模式时，另传 `--wcv` 和新的 `--output` 路径验证该模式。`--check-modern-ui` 额外在隔离页面插入样本，核对问候节点复用、浏览器建议及自动化摘要保护，以及切换英文后恢复原文。
 
 `--check-settings` 在 2.35.2 隔离实例逐页检查设置，展开权限预设，并从常规页的语言下拉框切换英文。仅查看设置和选项显示，不提交权限改动。
+
 
 验证资料和临时结果放在工作区 `artifacts/`，不使用真实用户目录。`output/` 仅用于发行成品。启动器模式不读取原生菜单；登录后页面和系统集成的未覆盖范围见 [历史适配摘要](../analysis/reports/README.md)。
