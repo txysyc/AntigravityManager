@@ -12,7 +12,7 @@ go test ./...                    # 测试 Go 管理器
 pwsh -File scripts/publish.ps1   # 打包可分发的 Windows x64 单 EXE
 ```
 
-打包生成 `output/AntigravityManager-<版本>-win-x64.exe` 和同名 `.sha256`。脚本嵌入实际依赖的许可原文，可在“许可”页查看。已有成品不会被覆盖，验证构建可用 `-OutputDirectory artifacts/verify-build`。本地打包不上传文件；使用者仅需要 EXE。
+打包生成 `output/AntigravityManager-<版本>-win-x64.exe` 和同名 `.sha256`。脚本嵌入实际依赖的许可原文，可从「帮助 → 许可与声明」查看。已有成品不会被覆盖，验证构建可用 `-OutputDirectory artifacts/verify-build`。本地打包不上传文件；使用者仅需要 EXE。
 
 开发验证时，用独立的应用副本和数据目录：
 
