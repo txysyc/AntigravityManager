@@ -52,7 +52,7 @@ CI 检查规范、运行 Go 和 Node.js 测试并构建单文件。带 `fixture:
 构建单文件后，传入隔离应用和数据目录。以下用 PowerShell 7 等待验证程序退出：
 
 ```powershell
-& ./output/AntigravityManager-0.5.0-win-x64.exe `
+& ./output/AntigravityManager-0.5.1-win-x64.exe `
   --data-dir "$PWD/artifacts/gui-smoke/profile" `
   --app-dir 'C:\path\to\test-app' `
   --smoke-output "$PWD/artifacts/gui-smoke/result.json" | Out-Null

@@ -33,7 +33,7 @@
 ```powershell
 $appDir = Join-Path $env:LOCALAPPDATA 'Programs/antigravity'
 
-& ./output/AntigravityManager-0.5.0-win-x64.exe --operation inspect --app-dir $appDir | Out-String
+& ./output/AntigravityManager-0.5.1-win-x64.exe --operation inspect --app-dir $appDir | Out-String
 
 ```
 可用操作：`inspect`、`compare`、`install`、`restore`、`backups`、`history`。输出为 JSON，失败返回非零退出码。安装或恢复前先退出 Antigravity；开发验证用隔离副本和 `--data-dir`。
