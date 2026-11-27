@@ -5,7 +5,7 @@ const vm = require('node:vm');
 const { isDeepStrictEqual } = require('node:util');
 const { readAsar, writeAsar, sha } = require('../src/asar.cjs');
 const { patchNativeSource, nativeManifest } = require('../src/native-localize.cjs');
-const { loadProfiles, patchHashes } = require('../src/profiles.cjs');
+const { loadProfiles, patchHashes, patchVersionForHash } = require('../src/profiles.cjs');
 const ROOT = path.resolve(__dirname, '..');
 const RELEASE_ROOT = path.resolve(ROOT, '../../artifacts/localization');
 
@@ -123,15 +123,20 @@ function buildPatch({ appDir, outputDirectory, backupPath, profile }) {
   archive.files.set('dist/locale.cjs', { entry: localeEntry, data: localeBytes });
   replacements.set('dist/locale.cjs', localeBytes);
   const output = writeAsar(archive, replacements), check = readAsar(output);
+  const outputHash = sha(output);
+  const expectedHashes = patchHashes(profile).filter(hash => patchVersionForHash(profile, hash) === patchVersion);
+  if (expectedHashes.length && !expectedHashes.includes(outputHash)) {
+    throw Error('生成的补丁与已验证补丁指纹不一致。');
+  }
   for (const [file, original] of archive.files) {
     const expected = replacements.get(file) ?? original.data;
     if (!check.files.get(file).data.equals(expected)) throw Error('补丁归档往返校验失败：' + file);
   }
   const manifest = {
     product: pkg.productName, version: pkg.version, patchVersion,
-    originalSha256: sha(input), patchedSha256: sha(output),
+    originalSha256: sha(input), patchedSha256: outputHash,
     ...(profile.languageServerSha256 ? { languageServerSha256: profile.languageServerSha256 } : {}),
-    acceptedPatchedSha256: patchHashes(profile).filter(value => value !== sha(output)),
+    acceptedPatchedSha256: patchHashes(profile).filter(value => value !== outputHash),
     dictionaryEntries: Object.keys(dictionary).length,
     remoteDictionaryEntries: Object.keys(rendererConfig.remote).length,
     dynamicRules: rendererConfig.rules.length, changedFiles: [...replacements.keys()],

@@ -13,18 +13,41 @@ import (
 	resources "github.com/txysyc/AntigravityManager"
 	"github.com/txysyc/AntigravityManager/src/internal/localization"
 	"github.com/txysyc/AntigravityManager/src/internal/storage"
+	"github.com/txysyc/AntigravityManager/src/internal/update"
 )
 
 //go:embed notices.txt
 var notices string
 
+// The release build embeds only the public key.
+var updatePublicKey string
+
 func main() {
+	args := os.Args[1:]
+	var startupReady func() error
+	if len(args) > 0 {
+		switch args[0] {
+		case update.ApplyFlag:
+			if err := update.Apply(updatePublicKey, managerVersion(), args[1:]); err != nil {
+				errorBox("管理器更新失败", err.Error())
+				os.Exit(1)
+			}
+			return
+		case update.ReadyFlag:
+			var err error
+			args, startupReady, err = update.RelaunchArgs(managerVersion(), args[1:])
+			if err != nil {
+				// 更新进程会处理重启失败，避免在失败的子进程里阻塞回退。
+				os.Exit(1)
+			}
+		}
+	}
 	var opt struct{ data, app, operation, smoke string }
 	flag.StringVar(&opt.data, "data-dir", "", "隔离数据目录")
 	flag.StringVar(&opt.app, "app-dir", "", "Antigravity 安装目录")
 	flag.StringVar(&opt.operation, "operation", "", "执行一项操作并输出 JSON")
 	flag.StringVar(&opt.smoke, "smoke-output", "", "隔离启动检查结果文件")
-	flag.Parse()
+	_ = flag.CommandLine.Parse(args)
 	if opt.operation == "notices" {
 		fmt.Println(notices)
 		return
@@ -48,7 +71,7 @@ func main() {
 		if opt.operation != "" {
 			return runOperation(engine, settings.ApplicationDirectory, opt.operation)
 		}
-		return runGUI(engine, settings, opt.smoke)
+		return runGUI(engine, settings, opt.smoke, args, startupReady)
 	}()
 	if err != nil {
 		if opt.smoke != "" {
@@ -56,7 +79,7 @@ func main() {
 		}
 		if opt.operation != "" {
 			_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"success": false, "message": err.Error()})
-		} else if opt.smoke == "" {
+		} else if opt.smoke == "" && startupReady == nil {
 			startupError(err)
 		}
 		os.Exit(1)
@@ -64,8 +87,12 @@ func main() {
 }
 
 func startupError(err error) {
-	text, _ := syscall.UTF16PtrFromString("无法启动管理器\n\n" + err.Error())
-	title, _ := syscall.UTF16PtrFromString("Antigravity Manager")
+	errorBox("Antigravity Manager", "无法启动管理器\n\n"+err.Error())
+}
+
+func errorBox(caption, message string) {
+	text, _ := syscall.UTF16PtrFromString(message)
+	title, _ := syscall.UTF16PtrFromString(caption)
 	box := syscall.NewLazyDLL("user32.dll").NewProc("MessageBoxW")
 	box.Call(0, uintptr(unsafe.Pointer(text)), uintptr(unsafe.Pointer(title)), 0x10)
 }

@@ -25,6 +25,7 @@ const output = isolatedDirectory(option('output', 'artifacts/adaptation/2.23.1/r
 const launcherPath = option('launcher');
 const wcv = process.argv.includes('--wcv');
 const checkModernUi = process.argv.includes('--check-modern-ui');
+const checkSettings = process.argv.includes('--check-settings');
 const windowArguments = wcv ? ['--enable-wcv-browser'] : [];
 const home = path.join(output, 'home');
 const profile = path.join(output, 'profile');
@@ -141,6 +142,81 @@ async function verifyModernUi(page) {
   return sample;
 }
 
+function personalizationGreeting(page) {
+  return page.locator('p.entrance-step.font-medium:has(+ p.entrance-step[id] + [role="radiogroup"])');
+}
+
+async function capturePage(page, filename) {
+  await page.screenshot({
+    path: path.join(output, filename),
+    fullPage: true,
+    animations: 'disabled',
+    mask: [personalizationGreeting(page), page.locator('[data-testid="settings-nav-item-Account"]')],
+    maskColor: '#607286',
+    timeout: 30000
+  });
+}
+
+async function readPageText(page) {
+  const greeting = await personalizationGreeting(page).allTextContents();
+  let text = await page.locator('body').innerText();
+  for (const value of greeting) if (value.trim()) text = text.replace(value, '[个性化问候]');
+  return text;
+}
+
+async function openSettings(page) {
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,');
+  const settings = page.locator('.settings-modal-container:visible');
+  await settings.getByTestId('settings-nav-item-General').click();
+  const row = settings.locator('#antigravity-language-switcher');
+  await row.waitFor();
+  assert.equal(await row.evaluate(element => element.nextElementSibling?.id), 'agent-permissions');
+  return settings;
+}
+
+async function verifySettings(page, settings, dictionary) {
+  const reviewed = {
+    General: ['Interface Layout', 'Permission preset', 'Tool permissions', 'Network access rules', 'Input Box', 'Choose which key sends a message in the chat composer.'],
+    App: ['Prevent sleep', 'Keep in menu bar', 'Notification settings'],
+    Appearance: ['Chat', 'Conversation steps', 'Verbose', 'Font', 'Font size', 'Code Preview'],
+    Shortcuts: ['Submit Prompt (Alternate to Enter)', 'Jump to Previous Prompt', 'Jump to Next Prompt'],
+    Notifications: [],
+    Models: [],
+    Browser: ['Open links in', 'Download location']
+  };
+  for (const [tab, labels] of Object.entries(reviewed)) {
+    await settings.getByTestId('settings-nav-item-' + tab).click();
+    const panel = settings.locator('.max-w-2xl.mx-auto:visible').first();
+    await panel.waitFor();
+    for (const key of labels) {
+      assert.ok(dictionary[key], key);
+      await panel.getByText(dictionary[key], { exact: true }).first().waitFor();
+    }
+    if (tab !== 'General') await settings.locator('#antigravity-language-switcher').waitFor({ state: 'hidden' });
+    if (tab === 'General') {
+      const preset = panel.locator('#agent-permissions .agy-select-trigger').first();
+      await preset.click();
+      const popup = page.locator('[data-select-popup]:visible');
+      for (const key of ['Request Review', 'Default', 'Auto', 'Turbo', 'Every command requires approval.', 'Ask before sensitive operations.', 'Automatically decide if commands run.', 'Run all commands without restrictions.']) {
+        await popup.getByText(dictionary[key], { exact: true }).first().waitFor();
+      }
+      await page.keyboard.press('Escape');
+      await popup.waitFor({ state: 'hidden' });
+    }
+    if (tab === 'Appearance') {
+      const font = panel.getByText(dictionary.Font, { exact: true }).locator('xpath=ancestor::div[contains(@class,"justify-between")][1]').locator('.agy-select-trigger');
+      await font.click();
+      const popup = page.locator('[data-select-popup]:visible');
+      await popup.getByText('Google Sans', { exact: true }).waitFor();
+      await popup.getByText(dictionary['System UI'], { exact: true }).waitFor();
+      await page.keyboard.press('Escape');
+      await popup.waitFor({ state: 'hidden' });
+    }
+  }
+  await settings.getByTestId('settings-nav-item-General').click();
+  return Object.keys(reviewed);
+}
+
 async function verify(language) {
   let application;
   let page;
@@ -179,30 +255,51 @@ async function verify(language) {
       { id: 'privacy', keys: ['Security Notice & Data Use', 'Get started'] },
       { id: 'terms', keys: ['Terms of Service & Data Use', 'Terms and Privacy:'] }
     ];
-    const expectedScreens = introScreens.map(screen => language === 'en' ? screen.keys :
-      screen.chinese ?? screen.keys.map(key => key === signInTitle ? '欢迎使用 Antigravity！' : dictionary[key]));
-    assert.ok(expectedScreens.flat().every(key => typeof key === 'string' && key), '欢迎页的预期文案不得为空');
+    if (applicationVersion === '2.35.2') {
+      introScreens.push({
+        id: 'personalization',
+        keys: ["Let's tailor the experience for you. What best describes your work?", 'Software Engineering', 'Knowledge Work', 'Data & Analytics', 'Science', 'Design']
+      });
+    }
+    const expectedScreens = introScreens.map(screen => screen.keys.map(key => language === 'zh-CN' ? dictionary[key] : key));
     await page.waitForFunction(screens => screens.some(keys => keys.every(key => document.body.innerText.includes(key))), expectedScreens);
-    const text = await page.locator('body').innerText();
+    const text = await readPageText(page);
     const screen = introScreens[expectedScreens.findIndex(keys => keys.every(key => text.includes(key)))];
-    assert.ok(screen, '未找到已知的登录、欢迎、首次设置或数据使用提示页面');
+    assert.ok(screen, '未找到已知的启动引导页面');
+    const greeting = screen.id === 'personalization' ? personalizationGreeting(page) : null;
+    const originalName = greeting ? (await greeting.textContent()).match(language === 'zh-CN' ? /^你好，(.+)！$/ : /^Hey (.+)!$/)?.[1] : undefined;
+    if (greeting) assert.ok(originalName, '个性化问候必须保留姓名');
     fs.writeFileSync(path.join(output, 'page-' + language + '.txt'), text);
-    await page.screenshot({ path: path.join(output, 'product-' + language + '.png'), fullPage: true, animations: 'disabled', timeout: 30000 });
-    const evidence = { language, screen: screen.id, url: page.url(), state, menus, text, errors, mainAssetSha256 };
+    await capturePage(page, 'product-' + language + '.png');
+    const { origin, pathname } = new URL(page.url());
+    const evidence = { language, screen: screen.id, url: origin + pathname, state, menus, text, errors, mainAssetSha256 };
+    assert.equal(await page.locator('#antigravity-language-switcher').count(), 0, '启动页面没有悬浮切换器');
+    const settings = await openSettings(page);
+    const row = settings.locator('#antigravity-language-switcher');
+    assert.equal(await row.locator('#antigravity-language-value').textContent(), language === 'zh-CN' ? '简体中文' : 'English');
     if (language === 'zh-CN') {
       const audit = require('./verify-audit.cjs');
       const sample = checkModernUi ? await verifyModernUi(page) : null;
-      if (checkModernUi) {
-        await audit.verifyComposerWithoutLanguageOverlay(page);
-        await audit.verifySettingsLanguageEntry(page);
-      }
-      const settings = await audit.mountLanguageSettingsFixture(page);
-      await audit.switchLanguageFromSettings(settings, 'en');
+      if (checkSettings) evidence.settingsReviewed = await verifySettings(page, settings, dictionary);
+      await row.locator('button[aria-haspopup="listbox"]').click();
+      const englishOption = row.getByRole('option', { name: 'English' });
+      await englishOption.waitFor();
+      await settings.screenshot({
+        path: path.join(output, 'settings-language-zh-CN.png'),
+        animations: 'disabled',
+        mask: [settings.getByTestId('settings-nav-item-Account')],
+        maskColor: '#607286'
+      });
+      await englishOption.click();
       await page.waitForFunction(() => document.documentElement.lang === 'en');
       assert.equal(JSON.parse(fs.readFileSync(path.join(profile, 'ui-language.json'))).language, 'en');
-      await settings.evaluate(element => element.remove());
-      evidence.switchedEnglishText = await page.locator('body').innerText();
+      await settings.locator('[data-autofocus="true"]').click();
+      await settings.waitFor({ state: 'hidden' });
+      evidence.switchedEnglishText = await readPageText(page);
       for (const key of screen.keys) assert.ok(evidence.switchedEnglishText.includes(key), '切回原文：' + key);
+      if (greeting) {
+        assert.ok(await greeting.textContent() === 'Hey ' + originalName + '!', '切回英文必须还原问候并保留姓名');
+      }
       if (sample) {
         assert.equal(await sample.locator('h1').textContent(), 'Hi Release, what can we get done today?');
         assert.equal(await sample.locator(':scope > button').textContent(), 'Downloads');
@@ -213,13 +310,15 @@ async function verify(language) {
         await sample.evaluate(element => element.remove());
         evidence.modernUiScopeVerified = true;
       }
-      await page.screenshot({ path: path.join(output, 'product-switched-en.png'), fullPage: true, animations: 'disabled', timeout: 30000 });
+      await capturePage(page, 'product-switched-en.png');
     }
     return evidence;
   } catch (error) {
     if (page && !page.isClosed()) {
-      await page.screenshot({ path: path.join(output, 'failure-' + language + '.png') }).catch(() => {});
-      fs.writeFileSync(path.join(output, 'failure-' + language + '.txt'), await page.locator('body').innerText().catch(() => '页面不可读取'));
+      await capturePage(page, 'failure-' + language + '.png').catch(() => {});
+      if (!await page.locator('.settings-modal-container:visible').count()) {
+        fs.writeFileSync(path.join(output, 'failure-' + language + '.txt'), await readPageText(page).catch(() => '页面不可读取'));
+      }
     }
     throw error;
   } finally {
@@ -239,13 +338,13 @@ async function main() {
   assert.equal(sha(fs.readFileSync(asarPath)), sha(originalBytes), '运行验证不得改变被测 ASAR');
   const result = {
     success: true,
-    scope: '真实 Electron 和语言服务页面；全新隔离用户目录，未登录',
+    scope: '真实 Electron 和语言服务的启动引导与设置；独立应用和数据目录，未完成引导',
     applicationVersion,
     wcvRequested: wcv,
     asarSha256: sha(originalBytes),
     chinese,
     english,
-    limitations: ['未登录页面不能证明登录后会话、配额和市场内容已覆盖；组件 fixture 验证单独记录。', ...(launcherPath ? ['启动器运行使用浏览器调试接口，未读取实际原生菜单；原生分支测试单独记录。'] : [])]
+    limitations: ['启动引导不能证明会话、配额和市场内容已覆盖；组件 fixture 验证单独记录。', ...(launcherPath ? ['启动器运行使用浏览器调试接口，未读取实际原生菜单；原生分支测试单独记录。'] : [])]
   };
   fs.writeFileSync(path.join(output, 'result.json'), JSON.stringify(result, null, 2) + '\n');
   console.log(JSON.stringify({ success: true, applicationVersion, output }));

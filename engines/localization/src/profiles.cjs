@@ -30,6 +30,10 @@ function patchHashes(profile) {
     .filter(value => /^[a-f0-9]{64}$/.test(value));
 }
 
+function patchVersionForHash(profile, fingerprint) {
+  return profile.patchedVersions?.[fingerprint] || (fingerprint === profile.patchedSha256 ? profile.patchVersion : '');
+}
+
 function loadProfiles(directory = profilesDirectory) {
   const profiles = fs.readdirSync(directory).filter(name => name.endsWith('.json')).map(name => {
     const profile = JSON.parse(fs.readFileSync(path.join(directory, name), 'utf8'));
@@ -41,4 +45,4 @@ function loadProfiles(directory = profilesDirectory) {
   return profiles.sort((left, right) => compareVersions(left.version, right.version));
 }
 
-module.exports = { loadProfiles, compareVersions, patchHashes };
+module.exports = { loadProfiles, compareVersions, patchHashes, patchVersionForHash };

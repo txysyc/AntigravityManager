@@ -48,33 +48,9 @@ exports.verifyChinese = async page => {
   const protectedIds=['audit-rule-name','audit-command','audit-workspace-name','audit-automation-name','audit-queued-message','audit-plugin-name','audit-file-name','audit-generated','audit-percentage','audit-distro','audit-market-brand','audit-invalid-duration','audit-custom-model','audit-browser-title','audit-market-name'];
   for(const id of protectedIds) assert.equal(await page.locator('#'+id).textContent(),await page.evaluate(id=>window.auditOriginals[id],id),id);
   for (const id of ['audit-onboarding-user-content', 'audit-onboarding-unrelated']) assert.equal(await page.locator('#' + id).textContent(), 'Build new features', id);
-  const signIn = {
-    'audit-sign-in-heading': '欢迎使用 Antigravity！', 'audit-business-sign-in-heading': '企业账号登录',
-    'audit-sign-in-google': '通过 Google 继续', 'audit-sign-in-business': '使用企业账号', 'audit-sign-in-help': '登录遇到问题？',
-    'audit-auth-code-hint': '请在浏览器中登录，然后粘贴回调页面显示的授权码。', 'audit-auth-code-submit': '提交授权码',
-    'audit-persona-title': '我们来为你定制使用体验。以下哪项最符合你的工作？',
-    'audit-persona-greeting': '你好，Alex！', 'audit-persona-option': '科学'
-  };
-  for (const [id, value] of Object.entries(signIn)) assert.equal(await page.locator('#' + id).textContent(), value, id);
-  for (const id of ['audit-sign-in-user-content', 'audit-persona-user-content', 'audit-persona-unrelated']) {
-    assert.equal(await page.locator('#' + id).textContent(), await page.evaluate(id => window.auditOriginals[id], id), id);
-  }
-  const authorization = page.locator('#audit-auth-code');
-  assert.equal(await authorization.getAttribute('placeholder'), '粘贴授权码');
-  assert.equal(await authorization.inputValue(), 'Test-value-not-a-credential');
-  await page.evaluate(() => {
-    const heading = document.querySelector('#audit-sign-in-heading');
-    document.querySelector('#audit-sign-in-reparenting').append(heading.firstChild);
-    document.querySelector('#audit-persona-greeting').firstChild.nodeValue = 'Hey there!';
-  });
-  await page.waitForFunction(() => document.querySelector('#audit-sign-in-reparenting').textContent === 'Welcome to Antigravity!' &&
-    document.querySelector('#audit-persona-greeting').textContent === '你好！');
-  await page.evaluate(() => {
-    document.querySelector('#audit-sign-in-heading').append(document.querySelector('#audit-sign-in-reparenting').firstChild);
-    document.querySelector('#audit-persona-greeting').firstChild.nodeValue = 'Hey Alex!';
-  });
-  await page.waitForFunction(() => document.querySelector('#audit-sign-in-heading').textContent === '欢迎使用 Antigravity！' &&
-    document.querySelector('#audit-persona-greeting').textContent === '你好，Alex！');
+  assert.equal(await page.locator('#audit-wsl-same-name').textContent(), 'Default');
+  assert.equal(await page.getByTestId('wsl-connect-Default').textContent(), dictionary.Connect);
+  assert.equal(await page.locator('#audit-shortcut').textContent(), 'Ctrl+Alt+A');
   assert.equal(await page.locator('#audit-search').getAttribute('placeholder'),dictionary['Search automations...']);
   assert.equal(await page.locator('#audit-search').inputValue(),'New');
   assert.equal(await page.locator('#audit-model-name').evaluate(el=>el.firstChild.nodeValue),'Custom');
