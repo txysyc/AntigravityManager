@@ -6,7 +6,7 @@ const { execFileSync } = require('node:child_process');
 const { readAsar, sha } = require('./asar.cjs');
 const { nativeManifest, patchNativeSource } = require('./native-localize.cjs');
 const { buildPatch } = require('../scripts/build.cjs');
-const { loadProfiles, patchHashes: hashes } = require('./profiles.cjs');
+const { loadProfiles, patchHashes: hashes, patchVersionForHash } = require('./profiles.cjs');
 const profiles = loadProfiles();
 const targetPath = appDir => path.join(path.resolve(appDir), 'resources/app.asar');
 const backupPath = (dataDir, profile) => path.join(dataDir, 'backups/localization', profile.version, profile.originalSha256, 'app.asar');
@@ -24,7 +24,7 @@ function inspect(appDir, dataDir) {
   const languageServerFingerprint = profile?.languageServerSha256 && fs.existsSync(serverPath) ? sha(fs.readFileSync(serverPath)) : '';
   const serverMatches = !profile?.languageServerSha256 || languageServerFingerprint === profile.languageServerSha256;
   const canRestore = patched && [backupPath(dataDir, profile), file + '.zh-CN-original'].some(p => fs.existsSync(p) && sha(fs.readFileSync(p)) === profile.originalSha256);
-  const knownVersion = patched ? profile.patchedVersions?.[fingerprint] || (fingerprint === profile.patchedSha256 ? profile.patchVersion : '') : '';
+  const knownVersion = patched ? patchVersionForHash(profile, fingerprint) : '';
   const patchVersion = knownVersion || (patched && generated && saved.originalSha256 === profile.originalSha256 ? saved.patchVersion : '');
   const compatibilityIssue = serverMatches ? '' : '语言服务文件与已验证版本不匹配，安装已禁用。已知汉化文件仍可使用匹配的原始备份恢复。';
   return { appDirectory: path.resolve(appDir), version: pkg.version, fingerprint, languageServerFingerprint, compatibilityIssue, status: !profile || (!serverMatches && !patched) ? 'unsupported' : patched ? 'patched' : 'unpatched', patchVersion, baselineVersion: (profile || profiles.at(-1)).version, canInstall: !!profile && serverMatches && (!patched || canRestore), canRestore };

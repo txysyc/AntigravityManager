@@ -30,6 +30,9 @@ exports.verifyChinese = async page => {
   const protectedIds=['audit-rule-name','audit-command','audit-workspace-name','audit-automation-name','audit-queued-message','audit-plugin-name','audit-file-name','audit-generated','audit-percentage','audit-distro','audit-market-brand','audit-invalid-duration','audit-custom-model','audit-browser-title','audit-market-name'];
   for(const id of protectedIds) assert.equal(await page.locator('#'+id).textContent(),await page.evaluate(id=>window.auditOriginals[id],id),id);
   for (const id of ['audit-onboarding-user-content', 'audit-onboarding-unrelated']) assert.equal(await page.locator('#' + id).textContent(), 'Build new features', id);
+  assert.equal(await page.locator('#audit-wsl-same-name').textContent(), 'Default');
+  assert.equal(await page.getByTestId('wsl-connect-Default').textContent(), dictionary.Connect);
+  assert.equal(await page.locator('#audit-shortcut').textContent(), 'Ctrl+Alt+A');
   assert.equal(await page.locator('#audit-search').getAttribute('placeholder'),dictionary['Search automations...']);
   assert.equal(await page.locator('#audit-search').inputValue(),'New');
   assert.equal(await page.locator('#audit-model-name').evaluate(el=>el.firstChild.nodeValue),'Custom');

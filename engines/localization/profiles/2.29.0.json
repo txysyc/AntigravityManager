@@ -308,5 +308,9 @@
   "validation": {
     "frontendSha256": "8d1196a22cd3eb9779e8faf5c31eb732d3df8d9d037b685733ed4e3d6cdfb5a2",
     "runtimeScope": "桌面启动器、隔离未登录欢迎页及默认与 WebContentsView 模式"
+  },
+  "patchedVersions": {
+    "961a2f84d8deee09341bcbcc849303238a81bb93b76b89c630586d20cba35028": "0.3.0",
+    "6c198c2716edbc359bd4169f4430fddc66b830f26f285b50456fc49c7b69a14a": "0.3.1"
   }
 }

@@ -30,11 +30,18 @@ fs.mkdirSync(profile, { recursive: true });
 if (!checkEnglish) fs.writeFileSync(path.join(profile, 'ui-language.json'), JSON.stringify({ language: 'zh-CN' }));
 const archive = readAsar(fs.readFileSync(path.join(portable, 'resources/app.asar')));
 const applicationVersion = JSON.parse(archive.files.get('package.json').data.toString()).version;
+if (process.platform === 'win32') {
+  const main = archive.files.get('dist/main.js')?.data.toString() || '';
+  assert.equal(main.split('/* isolated runtime: preserve protocol association */').length - 1, 2,
+    '先用 prepare-runtime-asar.cjs 制作隔离运行样本');
+  assert.ok(!main.includes('.app.setAsDefaultProtocolClient(PROTOCOL'));
+}
 const constants = archive.files.get('dist/ideInstall/constants.js').data.toString();
 const wizardKey = constants.match(/exports\.WIZARD_SHOWN_KEY = '([^']+)'/)[1];
 fs.writeFileSync(path.join(profile, 'app_storage.json'), JSON.stringify({ [wizardKey]: 'true' }));
 const fixture = `<!doctype html><html><head><meta charset="utf-8"><title>Antigravity 中文验证</title></head><body style="background:#17191d;color:#eee;font:16px system-ui;padding:36px">
 <h1>Settings</h1><button id="settings">Settings</button><button id="cancel">Cancel</button>
+<div class="max-w-2xl mx-auto"><div class="space-y-6"><div id="agent-permissions"></div></div></div>
 <button id="nested"><span>New Window</span></button><input id="input" placeholder="Search conversations..." value="Settings">
 <textarea id="textarea">Settings</textarea><div contenteditable="true" id="editable">Settings</div>
 <pre id="code">Settings</pre><div data-testid="planner-response-text"><button id="response">Settings</button></div>
@@ -69,8 +76,14 @@ async function main() {
   await new Promise(resolve => reservation.listen(0, '127.0.0.1', resolve));
   const debuggingPort = reservation.address().port;
   await new Promise(resolve => reservation.close(resolve));
+  const home = path.join(profile, 'home');
+  const roaming = path.join(home, 'AppData/Roaming');
+  const local = path.join(home, 'AppData/Local');
+  for (const directory of [roaming, local]) fs.mkdirSync(directory, { recursive: true });
   const child = spawn(path.join(portable, 'Antigravity.exe'), ['--remote-debugging-address=127.0.0.1', '--remote-debugging-port=' + debuggingPort, '--user-data-dir=' + profile], {
-    env: { ...process.env, DEV_URL: url }, windowsHide: true, stdio: 'ignore'
+    env: { ...process.env, DEV_URL: url, USERPROFILE: home, HOME: home, APPDATA: roaming, LOCALAPPDATA: local, ANTIGRAVITY_WSL_DISTRO: '' },
+    windowsHide: true,
+    stdio: 'ignore'
   });
   let browser;
   let childError, childExit, connectionError;
@@ -95,8 +108,7 @@ async function main() {
       assert.equal(await page.locator('html').getAttribute('lang'), 'en');
       assert.equal(await page.locator('#settings').textContent(), 'Settings');
       assert.equal(await page.locator('#input').getAttribute('placeholder'), 'Search conversations...');
-      await page.locator('#antigravity-language-switcher summary').click();
-      assert.equal(await page.locator('#antigravity-language-switcher select').inputValue(), 'en');
+      assert.equal(await page.locator('#antigravity-language-value').textContent(), 'English');
       console.log('PASS: new Electron process restores the persisted English preference.');
       return;
     }
@@ -172,9 +184,16 @@ async function main() {
     fs.mkdirSync(output, { recursive: true });
     await page.screenshot({ path: path.join(output, 'preload-smoke.png') });
     console.log('PASS: packaged preload, context isolation, dynamic changes, control events, protected chat/code/input.');
-    await page.locator('#antigravity-language-switcher summary').click();
-    const languageSelect = page.locator('#antigravity-language-switcher select');
-    await languageSelect.selectOption('en');
+    const languageRow = page.locator('#antigravity-language-switcher');
+    const languageTrigger = languageRow.locator('button[aria-haspopup="listbox"]');
+    assert.equal(await languageRow.evaluate(row => row.nextElementSibling?.id), 'agent-permissions');
+    assert.equal(await languageRow.evaluate(row => getComputedStyle(row).position), 'static');
+    await languageTrigger.focus();
+    await languageTrigger.press('ArrowDown');
+    const languageOptions = languageRow.getByRole('option');
+    assert.equal(await languageOptions.nth(0).getAttribute('aria-selected'), 'true');
+    await languageOptions.nth(0).press('ArrowDown');
+    await languageOptions.nth(1).press('Enter');
     await page.waitForFunction(() => document.querySelector('#settings')?.textContent === 'Settings');
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
     assert.equal(await page.locator('#new').textContent(), 'Cancel');
@@ -190,17 +209,28 @@ async function main() {
     assert.equal(await page.locator('#modified-many').textContent(), 'Modified in 5 projects');
     assert.equal(await page.locator('#modified').textContent(), 'Modified in Models');
     await page.evaluate(() => document.querySelector('#new').firstChild.nodeValue = 'Settings');
-    await languageSelect.selectOption('zh-CN');
+    await languageTrigger.click();
+    await languageRow.getByRole('option', { name: '简体中文' }).click();
     await page.waitForFunction(() => document.querySelector('#new')?.textContent === '设置');
     assert.equal(await page.locator('#plan-help').textContent(), '输入 / 并选择 plan ，让代理生成计划。');
     // Application changes after translation must survive a later switch back.
     await page.evaluate(() => { document.querySelector('#new').firstChild.nodeValue = 'Custom value'; document.querySelector('#input').setAttribute('placeholder', 'Custom hint'); });
-    await languageSelect.selectOption('en');
+    await languageTrigger.click();
+    await languageRow.getByRole('option', { name: 'English' }).click();
     await page.waitForFunction(() => document.documentElement.lang === 'en');
     assert.equal(await page.locator('#new').textContent(), 'Custom value');
     assert.equal(await page.locator('#input').getAttribute('placeholder'), 'Custom hint');
     assert.equal(await page.locator('#input').inputValue(), 'Settings');
     assert.equal(JSON.parse(fs.readFileSync(path.join(profile, 'ui-language.json'))).language, 'en');
+    await page.locator('#agent-permissions').evaluate(anchor => {
+      window.languageSettingsFixture = anchor.parentElement.parentElement;
+      window.languageSettingsFixture.remove();
+    });
+    await languageRow.waitFor({ state: 'detached' });
+    await page.evaluate(() => document.body.append(window.languageSettingsFixture));
+    await languageRow.waitFor();
+    assert.equal(await languageRow.count(), 1);
+    assert.equal(await page.locator('#antigravity-language-value').textContent(), 'English');
     await page.reload();
     await page.waitForSelector('#antigravity-language-switcher');
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');

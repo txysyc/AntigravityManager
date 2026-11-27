@@ -164,7 +164,16 @@ func build(input []byte, p Profile, assets payload, locale []byte) ([]byte, erro
 	}
 	a.files["dist/locale.cjs"] = added
 	result := a.write()
-	if p.PatchVersion == assets.PatchVersion && hashPattern.MatchString(p.PatchedSHA256) && digest(result) != p.PatchedSHA256 {
+	resultHash := digest(result)
+	knownOutput := p.PatchVersion == assets.PatchVersion && hashPattern.MatchString(p.PatchedSHA256)
+	outputMatches := knownOutput && resultHash == p.PatchedSHA256
+	for hash, version := range p.PatchedVersions {
+		if version == assets.PatchVersion && hashPattern.MatchString(hash) {
+			knownOutput = true
+			outputMatches = outputMatches || resultHash == hash
+		}
+	}
+	if knownOutput && !outputMatches {
 		return nil, errors.New("生成的补丁与已验证补丁指纹不一致")
 	}
 	verified, err := readASAR(result)

@@ -11,8 +11,8 @@ function installChineseUI(dictionary, bridge, config) {
   const dynamicRules = (config.rules || []).map(rule => ({ ...rule, regex: new RegExp(rule.pattern) }));
   let language = 'en';
   let observer;
-  let selector;
-  let status;
+  let languageRow;
+  let languageControl;
   let started = false;
   let latestEvent = 0;
   const textRecords = new Map();
@@ -24,7 +24,7 @@ function installChineseUI(dictionary, bridge, config) {
     return first?.matches('span.text-muted-foreground:not(.truncate):not(.inline-flex)') && first.contains(element) ? first : null;
   }
   const protectedSelector = [
-    'script', 'style', 'pre', 'code', 'textarea', 'input', '[contenteditable]',
+    'script', 'style', 'pre', 'code', 'kbd', 'textarea', 'input', '[contenteditable]',
     '[data-no-translate]', '[translate="no"]', '.notranslate', '.monaco-editor',
     '.cm-editor', '.xterm', '[class*="markdown"]', '[class*="prose"]',
     '[data-message-author-role]', '[data-testid*="message-content"]',
@@ -54,13 +54,14 @@ function installChineseUI(dictionary, bridge, config) {
     '[data-testid^="new-tab-result-"] span.truncate',
     '[data-testid="automation-instructions-markdown"]', '[data-testid="automation-run"] span.truncate',
     'button.-ml-1.min-w-0 > span.min-w-0.truncate.whitespace-nowrap',
-    '.font-mono'
+    '[aria-label^="Shortcut "]:has(> span.text-sm)', '.font-mono'
   ].join(',');
   const attributeProtectedSelector = protectedSelector.split(',').filter(selector => !['input', 'textarea'].includes(selector.trim())).join(',');
   const controlSelector = [
     'button', '[role="button"]', '[role="menuitem"]', '[role="tab"]',
     'label', 'legend', 'option', 'h1', 'h2', 'h3', 'h4', '[data-zh-ui]',
     '[data-testid="new-conversation-button"]', '[data-testid="history-button"]',
+    '[data-testid^="mode-option-"]', '[data-testid="voice-settings-name"]',
     'a[href$="/customizations"]', '[data-testid="title-menu-bar"]',
     '[role="option"]',
     '[data-testid="plugins-tabs"]', '[role="dialog"]', '[role="alertdialog"]',
@@ -94,8 +95,16 @@ function installChineseUI(dictionary, bridge, config) {
     const title = notice?.querySelector('span.font-medium.text-foreground');
     return title && originalText(title) === 'This page is going away soon';
   }
+  function onboardingGreeting(element) {
+    if (!element.matches('p.entrance-step.font-medium')) return false;
+    const label = element.nextElementSibling;
+    const choices = label?.nextElementSibling;
+    return label?.matches('p.entrance-step[id]') && choices?.matches('[role="radiogroup"]')
+      && label.id === choices.getAttribute('aria-labelledby')
+      && originalText(label) === "Let's tailor the experience for you. What best describes your work?";
+  }
   function uiElement(element, key) {
-    if (element.closest(controlSelector) || historyNotice(element) || marketplaceElement(element) || toolPrefix(element)) return true;
+    if (element.closest(controlSelector) || historyNotice(element) || marketplaceElement(element) || toolPrefix(element) || onboardingGreeting(element)) return true;
     // Exact, reviewed full UI sentences can occur in otherwise unmarked empty
     // states/descriptions. Names and arbitrary generated text remain protected.
     return key.length >= 40 && /\s/.test(key) && Object.prototype.hasOwnProperty.call(dictionary, key);
@@ -114,7 +123,10 @@ function installChineseUI(dictionary, bridge, config) {
     let next;
     const greetingName = !attributeName && element.closest('[data-testid="home-greeting"] h1')
       ? /^Hi (\S+), what can we get done today\?$/.exec(key)?.[1] : undefined;
+    const onboardingName = !attributeName && onboardingGreeting(element)
+      ? /^Hey ([^\r\n]+)!$/.exec(key)?.[1] : undefined;
     if (greetingName) next = `你好，${greetingName}，今天想做些什么？`;
+    else if (onboardingName) next = `你好，${onboardingName}！`;
     else if (key === 'Press' && element.closest('[data-testid="post-onboarding-welcome-tip"]')) next = '按';
     else if (key === 'Type' && element.closest('[data-testid="plan-command-fyi-alert"]')) next = '输入';
     else if (historyNotice(element) && key === '(') next = '（';
@@ -155,6 +167,9 @@ function installChineseUI(dictionary, bridge, config) {
     if (modelName?.contains(element) && !element.closest('span.opacity-70')) return true;
     if (element.closest(prefixSelector) && !toolPrefix(element)) return true;
     if (settingsElement(element) && element.closest('span.text-sm.font-medium.truncate,span.text-lg.font-medium.truncate')) return true;
+    // 发行版名称是用户数据，即使恰好与 Default 等界面词条同名。
+    const settingRow = element.closest('.w-full.justify-between.gap-4:has([data-testid^="wsl-connect-"])');
+    if (settingRow?.firstElementChild?.querySelector(':scope > div > span:first-child')?.contains(element)) return true;
     if (element.closest('[data-file-uri] .truncate')) return true;
     const suggestions = element.closest('[role="listbox"]');
     if (suggestions) {
@@ -167,7 +182,7 @@ function installChineseUI(dictionary, bridge, config) {
     const nav = element.closest('[data-testid^="settings-nav-item-"]');
     if (nav) {
       const heading = nav.parentElement?.previousElementSibling?.querySelector('h2');
-      if (heading && ['Projects', 'Workspaces'].includes(originalText(heading))) return true;
+      if (heading && ['Projects', 'Workspaces', 'Ungrouped Projects', 'Unassigned Projects'].includes(originalText(heading))) return true;
     }
     // Override links and their portaled menu entries contain user project names.
     if (element.closest('[data-testid$="-overrides-trigger"]')) return true;
@@ -325,48 +340,143 @@ function installChineseUI(dictionary, bridge, config) {
     prefixRecords.clear();
     document.documentElement.lang = language;
     if (language === 'zh-CN') scan(document.body);
-    selector.value = language;
-    status.textContent = language === 'zh-CN' ? '网页立即生效；原生菜单下次启动生效' : 'Page applies now; native menus apply after restart';
+    syncLanguageRow();
+    languageControl?.update();
     observe();
   }
-  function addSwitcher() {
-    const prefixStyle = document.createElement('style');
-    prefixStyle.textContent = '[data-antigravity-zh-prefix]>*{display:none!important}[data-antigravity-zh-prefix]::after{content:attr(data-antigravity-zh-prefix)}';
-    document.head.append(prefixStyle);
-    const host = document.createElement('div');
-    host.id = 'antigravity-language-switcher';
-    host.setAttribute('data-no-translate', '');
-    host.setAttribute('translate', 'no');
-    Object.assign(host.style, { position: 'fixed', right: '16px', bottom: '16px', zIndex: '2147483647' });
-    const shadow = host.attachShadow({ mode: 'open' });
-    const style = document.createElement('style');
-    style.textContent = ':host{font:12px system-ui;color:#eee}details{background:#24262b;border:1px solid #62666f;border-radius:8px;padding:8px;box-shadow:0 2px 10px #0005}summary{cursor:pointer;user-select:none}label{display:flex;align-items:center;gap:8px;padding-top:10px}select{font:inherit;padding:4px;border-radius:4px;background:#17191d;color:#eee;border:1px solid #62666f}p{max-width:240px;margin:8px 0 0;line-height:1.5}';
-    const details = document.createElement('details');
-    const summary = document.createElement('summary'); summary.textContent = 'Language / 语言';
-    const label = document.createElement('label'); label.textContent = 'Language / 语言';
-    selector = document.createElement('select'); selector.setAttribute('aria-label', 'Language / 语言');
-    for (const [value, caption] of [['zh-CN', '简体中文'], ['en', 'English']]) {
-      const option = document.createElement('option'); option.value = value; option.textContent = caption; selector.append(option);
+  function createLanguageRow() {
+    const row = document.createElement('div');
+    row.id = 'antigravity-language-switcher';
+    row.className = 'agy-card bg-transparent rounded-xl border border-border';
+    row.setAttribute('data-no-translate', '');
+    row.innerHTML = `
+      <div class="py-2 px-3 w-full bg-transparent flex justify-between gap-4 items-center">
+        <div class="flex-1 flex flex-col gap-0.5">
+          <span id="antigravity-language-label"></span>
+          <span id="antigravity-language-description" class="text-sm text-muted-foreground whitespace-pre-wrap" role="status"></span>
+        </div>
+        <div class="shrink-0">
+          <button type="button" class="agy-select-trigger appearance-none px-2 py-1 bg-secondary text-secondary-foreground hover:text-foreground rounded-md border-none cursor-pointer flex items-center gap-1 justify-between min-w-[140px]" aria-labelledby="antigravity-language-label antigravity-language-value" aria-describedby="antigravity-language-description" aria-haspopup="listbox" aria-controls="antigravity-language-options" aria-expanded="false">
+            <span id="antigravity-language-value" class="truncate"></span>
+            <svg aria-hidden="true" class="w-3 h-3 shrink-0 opacity-70 ml-auto" viewBox="0 0 16 16" fill="none"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div id="antigravity-language-options" popover="auto" role="listbox" aria-labelledby="antigravity-language-label" class="agy-overlay surface-glass border rounded-lg bg-card text-foreground shadow-md p-1"></div>
+        </div>
+      </div>`;
+    const label = row.querySelector('#antigravity-language-label');
+    const status = row.querySelector('#antigravity-language-description');
+    const value = row.querySelector('#antigravity-language-value');
+    const trigger = row.querySelector('button');
+    const list = row.querySelector('[role="listbox"]');
+    const choices = [['zh-CN', '简体中文'], ['en', 'English']];
+    const options = choices.map(([code, caption]) => {
+      const option = document.createElement('button');
+      option.type = 'button';
+      option.tabIndex = -1;
+      option.dataset.language = code;
+      option.setAttribute('role', 'option');
+      option.className = 'agy-overlay-item w-full text-left whitespace-nowrap transition-colors duration-150 select-none rounded-md flex items-center justify-between gap-2 px-2 py-1 text-compact outline-none cursor-pointer focus:bg-secondary focus:text-foreground hover:bg-secondary';
+      option.innerHTML = '<span class="truncate"></span><svg aria-hidden="true" class="w-4 h-4 shrink-0" viewBox="0 0 16 16" fill="none"><path d="m3.5 8 3 3 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      option.firstElementChild.textContent = caption;
+      option.addEventListener('click', () => choose(code));
+      list.append(option);
+      return option;
+    });
+    const index = () => Number(language === 'en');
+    const isOpen = () => list.matches(':popover-open');
+    function update() {
+      label.textContent = language === 'zh-CN' ? '界面语言' : 'Interface language';
+      status.textContent = language === 'zh-CN' ? '当前界面立即切换，原生菜单重启后生效。' : 'The interface changes immediately. Native menus update after restart.';
+      value.textContent = choices[index()][1];
+      for (const [i, option] of options.entries()) {
+        option.setAttribute('aria-selected', String(i === index()));
+        option.toggleAttribute('data-selected', i === index());
+        option.lastElementChild.style.visibility = i === index() ? '' : 'hidden';
+      }
     }
-    selector.addEventListener('change', async () => {
-      const requested = selector.value;
+    function close(restoreFocus) {
+      if (isOpen()) list.hidePopover();
+      if (restoreFocus) trigger.focus();
+    }
+    function position() {
+      if (!isOpen()) return;
+      const rect = trigger.getBoundingClientRect();
+      const width = Math.max(rect.width, list.offsetWidth);
+      const height = list.offsetHeight;
+      const below = rect.bottom + 6;
+      const above = rect.top - height - 6;
+      list.style.left = Math.max(8, Math.min(rect.right - width, innerWidth - width - 8)) + 'px';
+      list.style.top = Math.max(8, below + height <= innerHeight - 8 || above < 8 ? below : above) + 'px';
+      list.style.minWidth = rect.width + 'px';
+    }
+    function open() {
+      if (trigger.disabled || isOpen()) return;
+      Object.assign(list.style, { position: 'fixed', inset: 'auto', margin: '0', minWidth: trigger.offsetWidth + 'px' });
+      list.showPopover({ source: trigger });
+      position();
+      options[index()].focus({ preventScroll: true });
+    }
+    async function choose(requested) {
+      close(false);
+      if (requested === language) { trigger.focus(); return; }
       const eventAtRequest = latestEvent;
-      selector.disabled = true;
+      trigger.disabled = true;
       try {
         const saved = await bridge.setLanguage(requested);
         if (latestEvent === eventAtRequest) applyLanguage(saved);
       }
-      catch { selector.value = language; status.textContent = '保存失败，请重试 / Could not save. Please retry.'; }
-      finally { selector.disabled = false; }
+      catch { status.textContent = language === 'zh-CN' ? '保存语言失败，请重试。' : 'Could not save the language. Please try again.'; }
+      finally {
+        trigger.disabled = false;
+        if (row.isConnected && [document.body, trigger].includes(document.activeElement)) trigger.focus();
+      }
+    }
+    trigger.addEventListener('click', () => isOpen() ? close(true) : open());
+    trigger.addEventListener('keydown', event => {
+      if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+      event.preventDefault();
+      open();
     });
-    status = document.createElement('p'); status.setAttribute('role', 'status');
-    label.append(selector); details.append(summary, label, status); shadow.append(style, details); document.body.append(host);
-    document.addEventListener('keydown', event => {
-      if (event.ctrlKey && event.altKey && event.code === 'KeyL') { event.preventDefault(); details.open = true; selector.focus(); }
+    list.addEventListener('toggle', () => trigger.setAttribute('aria-expanded', String(isOpen())));
+    list.addEventListener('keydown', event => {
+      const current = options.indexOf(document.activeElement);
+      if (event.key === 'Tab') { close(true); return; }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        close(true);
+        return;
+      }
+      const target = { ArrowDown: current + 1, ArrowUp: current - 1, Home: 0, End: options.length - 1 }[event.key];
+      if (target === undefined) return;
+      event.preventDefault();
+      options[(target + options.length) % options.length].focus({ preventScroll: true });
     });
+    return { row, update, position, close };
+  }
+  function syncLanguageRow() {
+    // 两代设置页的常规面板都用这个标记；它在切换到其他页时卸载。
+    const anchor = document.querySelector('.max-w-2xl.mx-auto .space-y-6 > #agent-permissions');
+    if (!anchor) {
+      languageRow?.remove();
+      languageRow = null;
+      languageControl = null;
+      return;
+    }
+    if (languageRow?.nextElementSibling === anchor) return;
+    languageControl?.close(false);
+    languageRow?.remove();
+    languageControl = createLanguageRow();
+    languageRow = languageControl.row;
+    languageControl.update();
+    anchor.before(languageRow);
   }
   function start() {
-    addSwitcher();
+    const prefixStyle = document.createElement('style');
+    prefixStyle.textContent = '[data-antigravity-zh-prefix]>*{display:none!important}[data-antigravity-zh-prefix]::after{content:attr(data-antigravity-zh-prefix)}';
+    document.head.append(prefixStyle);
+    window.addEventListener('resize', () => languageControl?.position());
+    document.addEventListener('scroll', () => languageControl?.position(), { capture: true, passive: true });
     observer = new MutationObserver(records => {
       const roots = new Set();
       for (const record of records) {
@@ -375,6 +485,7 @@ function installChineseUI(dictionary, bridge, config) {
         else for (const node of record.addedNodes) roots.add(node);
       }
       for (const root of roots) scan(root);
+      if (records.some(record => record.type === 'childList')) syncLanguageRow();
       for (const record of records) if (record.type === 'childList' && record.target.nodeType === 1) animatedPrefixes(record.target);
       if (records.some(record => record.removedNodes?.length)) {
         for (const node of textRecords.keys()) if (!node.isConnected) textRecords.delete(node);
