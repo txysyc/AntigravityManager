@@ -313,7 +313,8 @@
     "39ff4c4e1599a5289a53d2460df82c697f3ef4ec2f0ede726af0902f04d3b0c0": "0.3.0",
     "ac9e32fab8d90b32d232a1fbc5df5a0bae9be1673f2cd83e9f24bca31ffb23e3": "0.3.1",
     "49df3eb9af01662e3f33afca9e402cf7b10e59c59d4f4b699f2fd7bf594b71f9": "0.3.2",
-    "3b2bf693107aaf0fb59fac5e77a1b383ba71a371793c60a3c5a6dd15b5c565c2": "0.3.2"
+    "3b2bf693107aaf0fb59fac5e77a1b383ba71a371793c60a3c5a6dd15b5c565c2": "0.3.2",
+    "92d3967f36f44fd88ef6fbeb0d855f1f9e10cf31fa40b7114924c9a90b5e7b43": "0.4.0"
   },
   "hubWindowApi": true,
   "validation": {

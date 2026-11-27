@@ -111,6 +111,47 @@ function installChineseUI(dictionary, bridge, config) {
       && label.id === choices.getAttribute('aria-labelledby')
       && originalText(label) === "Let's tailor the experience for you. What best describes your work?";
   }
+  const personaLabels = {
+    'Software Engineering': '软件工程', 'Knowledge Work': '知识工作',
+    'Data & Analytics': '数据与分析', Science: '科学', Design: '设计'
+  };
+  function onboardingTranslation(element, key) {
+    if (key === 'Welcome to Antigravity!' && element.matches('div.entrance-title')) return '欢迎使用 Antigravity！';
+    if (key === 'Business Account Sign In' &&
+      element.matches('.entrance-auth-panel div.text-lg.font-medium.text-center')) return dictionary[key];
+    if (element.matches('p.entrance-step.text-xl') &&
+      element.parentElement?.querySelector('[role="radiogroup"] [role="radio"][data-testid^="persona-option-"]')) {
+      const name = /^Hey ([^\r\n]+)!$/.exec(key)?.[1];
+      if (name) return name === 'there' ? '你好！' : `你好，${name}！`;
+    }
+    if (element.matches('[role="radiogroup"] [role="radio"][data-testid^="persona-option-"] > span.line-clamp-2') &&
+      Object.prototype.hasOwnProperty.call(personaLabels, key)) return personaLabels[key];
+  }
+  function settingsTranslation(element, key, attributeName) {
+    const isLayoutLabel = layoutLabels.has(key);
+    if (isLayoutLabel || layoutDescriptions.has(key)) {
+      const layoutCard = element.closest('#project4kMode [data-testid^="mode-option-"]');
+      if (!layoutCard) return;
+      if (attributeName === 'aria-label' && element === layoutCard && isLayoutLabel ||
+        !attributeName && (isLayoutLabel || element.id.includes('-mode-description-'))) return remoteDictionary[key];
+      return;
+    }
+    if (attributeName || !settingsElement(element)) return;
+    if (key === 'Chat' && element.matches('h3.m-0.font-medium')) return '对话';
+    if (element.closest('button,[role="button"],[role="radio"]')) {
+      if (key === 'Verbose') return '详细';
+      if (key === 'External Browser') return '外部浏览器';
+    }
+    // 套餐名称和说明由服务返回，只翻译已核对的套餐行。
+    if (key === 'Your Plan: ' + starterQuota && element.matches('div.font-medium')) return '当前方案：' + remoteDictionary[starterQuota];
+    if (key !== starterQuota && key !== starterDescription) return;
+    const row = element.closest('.flex-1.flex.flex-col.gap-0\\.5');
+    const plan = row?.querySelector('div.font-medium');
+    if (plan?.firstChild?.nodeType !== 3 || !originalText(plan).startsWith('Your Plan:')) return;
+    if (key === starterQuota && plan.contains(element)) return remoteDictionary[key];
+    if (key === starterDescription &&
+      element.matches('span.text-sm.text-muted-foreground.whitespace-pre-wrap')) return remoteDictionary[key];
+  }
   function uiElement(element, key) {
     if (element.closest(controlSelector) || historyNotice(element) || marketplaceElement(element) || toolPrefix(element) || onboardingGreeting(element)) return true;
     // Exact, reviewed full UI sentences can occur in otherwise unmarked empty
@@ -133,13 +174,14 @@ function installChineseUI(dictionary, bridge, config) {
       ? /^Hi (\S+), what can we get done today\?$/.exec(key)?.[1] : undefined;
     const onboardingName = !attributeName && onboardingGreeting(element)
       ? /^Hey ([^\r\n]+)!$/.exec(key)?.[1] : undefined;
-    if (greetingName) next = `你好，${greetingName}，今天想做些什么？`;
+    if (scopedTranslation !== undefined) next = scopedTranslation;
+    else if (greetingName) next = `你好，${greetingName}，今天想做些什么？`;
     else if (onboardingName) next = `你好，${onboardingName}！`;
     else if (key === 'Press' && element.closest('[data-testid="post-onboarding-welcome-tip"]')) next = '按';
     else if (key === 'Type' && element.closest('[data-testid="plan-command-fyi-alert"]')) next = '输入';
     else if (historyNotice(element) && key === '(') next = '（';
     else if (historyNotice(element) && key === '.') next = '。';
-    else if (Object.prototype.hasOwnProperty.call(dictionary, key)) next = dictionary[key];
+    else if (!scopedRemoteKeys.has(key) && Object.prototype.hasOwnProperty.call(dictionary, key)) next = dictionary[key];
     else if (!scopedRemoteKeys.has(key) && (settingsElement(element) || marketplaceElement(element)) &&
       Object.prototype.hasOwnProperty.call(remoteDictionary, key)) next = remoteDictionary[key];
     else for (const rule of dynamicRules) {
@@ -507,9 +549,6 @@ function installChineseUI(dictionary, bridge, config) {
       for (const root of roots) scan(root);
       if (records.some(record => record.type === 'childList')) syncLanguageRow();
       for (const record of records) if (record.type === 'childList' && record.target.nodeType === 1) animatedPrefixes(record.target);
-      const settingsSelector = '.max-w-2xl.mx-auto';
-      if ([...roots].some(node => node.nodeType === 1 && (node.matches(settingsSelector) || node.querySelector(settingsSelector))) ||
-        records.some(record => record.type !== 'attributes' && (record.target.nodeType === 1 ? record.target : record.target.parentElement)?.closest(settingsSelector))) mountSettingsEntry();
       if (records.some(record => record.removedNodes?.length)) {
         for (const node of textRecords.keys()) if (!node.isConnected) textRecords.delete(node);
         for (const element of attributeRecords.keys()) if (!element.isConnected) attributeRecords.delete(element);

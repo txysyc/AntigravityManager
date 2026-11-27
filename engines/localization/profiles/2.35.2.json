@@ -308,6 +308,7 @@
   },
   "hubWindowApi": true,
   "patchedVersions": {
-    "5de10484fed330b55b37fe0d75ca8e14c1d2e5e728a26b957d163f316894cf99": "0.3.0"
+    "5de10484fed330b55b37fe0d75ca8e14c1d2e5e728a26b957d163f316894cf99": "0.3.0",
+    "77ea336a4b8d3a7c6af23217c4dedcaa50ade993aeb30e0016290e40c52c28e6": "0.4.0"
   }
 }
